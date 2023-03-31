@@ -1,0 +1,25 @@
+{
+  "Skills": [
+    {
+      "name": "Percieve",
+      "id": 0
+    }
+  ],
+  "Behaviours": [
+    {
+      "name": "A",
+      "id": 0,
+      "skills": [
+        0
+      ]
+    },
+    {
+      "name": "B",
+      "id": 1,
+      "skills": [
+        0,
+        1
+      ]
+    }
+  ]
+}
