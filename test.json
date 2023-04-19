@@ -1,18 +1,25 @@
 {
   "Skills": [
     {
-      "name": "Percieve",
-      "id": 0
+      "name": "Manipulate",
+      "id": 1,
+      "parameters": [
+        {
+          "name": "Dimensions",
+          "resolution": 4.0,
+          "accuracy": 0.0,
+          "responseTime": 0.0
+        },
+        {
+          "name": "Type",
+          "resolution": 6.0,
+          "accuracy": 0.0,
+          "responseTime": 0.0
+        }
+      ]
     }
   ],
   "Behaviours": [
-    {
-      "name": "A",
-      "id": 0,
-      "skills": [
-        0
-      ]
-    },
     {
       "name": "B",
       "id": 1,

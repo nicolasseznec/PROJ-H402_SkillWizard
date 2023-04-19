@@ -2,11 +2,24 @@
   "Skills": [
     {
       "name": "Percieve",
-      "id": 0
+      "id": 0,
+      "parameters": [
+        {
+          "name": "Distance"
+        }
+      ]
     },
     {
       "name": "Manipulate",
-      "id": 1
+      "id": 1,
+      "parameters": [
+        {
+          "name": "Dimensions"
+        },
+        {
+          "name": "Type"
+        }
+      ]
     }
   ],
   "Behaviours": [
@@ -19,6 +32,11 @@
       "name": "B",
       "id": 1,
       "skills": [0, 1]
+    },
+    {
+      "name": "C",
+      "id": 2,
+      "skills": [1]
     }
   ]
 }

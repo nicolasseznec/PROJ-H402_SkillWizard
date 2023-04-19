@@ -108,9 +108,13 @@ class MissionController:
         # TODO : check if there already is a mission open
         self.setCurrentMission(Mission(data))
 
-    def setCurrentMission(self, mission):  # TODO : load behaviours
+    def setCurrentMission(self, mission):
         self.current_mission = mission
-        skill_data = mission.getSkillData()
+        self.update_behaviours(mission.getBehaviourData())
+
+        self.update_skills(mission.getSkillData())
+
+    def update_skills(self, skill_data):
         if skill_data is not None:
             for data in skill_data:
                 skill_id = data["id"]
@@ -118,8 +122,18 @@ class MissionController:
                     continue
 
                 controller = self.skillControllers[skill_id]
-                controller.skill.loadFromData(data)
+                controller.loadFromData(data)
                 controller.onAdded(True)
+
+    def update_behaviours(self, behaviour_data):
+        if behaviour_data is not None:
+            for data in behaviour_data:
+                behaviour_id = data["id"]
+                if behaviour_id not in self.behaviourControllers:
+                    continue
+
+                controller = self.behaviourControllers[behaviour_id]
+                controller.loadFromData(data)
 
     def getMissionData(self):
         if self.current_mission is None:
@@ -147,9 +161,10 @@ class MissionController:
             self.createSkill(skill_def)
 
     def createSkill(self, data):
+        # print("first loading", data)
         skill = Skill(data)
         controller = SkillController(skill)
-        controller.onSkillSelected += self.onItemSelected
+        controller.onSkillSelected += self.onSkillSelected
         controller.onSkillAdded += self.onSkillAdded
 
         self.skillControllers[skill.id] = controller
@@ -197,6 +212,10 @@ class MissionController:
 
     def onItemSelected(self, item):
         # item is a controller that can be selected/unselected and displayed in the center panel
+
+        for b_id in self.behaviourControllers:
+            self.behaviourControllers[b_id].setHighlighted(False)
+
         view = item.getView()
 
         if self.selectedItem is not None:
@@ -209,3 +228,9 @@ class MissionController:
         widget = view.getCenterWidget()
         self.mission_view.setCenterPanel(widget)
 
+
+    def onSkillSelected(self, skillController):
+        self.onItemSelected(skillController)
+
+        for b_id in skillController.skill.behaviours:
+            self.behaviourControllers[b_id].setHighlighted(True)

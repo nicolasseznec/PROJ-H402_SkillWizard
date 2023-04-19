@@ -30,6 +30,7 @@ class Behaviour:
 class BehaviourView:
     def __init__(self):
         self.behaviourItem = ResourceLoader.loadWidget("BehaviourItem.ui")
+        self.setActive(False)
         self.inspector = ResourceLoader.loadWidget("BehaviourInspector.ui")
         self.inspectorLayout = self.inspector.layout()
         self.baseItemColor = self.behaviourItem.palette().color(QPalette.Window)
@@ -61,6 +62,15 @@ class BehaviourView:
         palette.setColor(QPalette.Window, color)
         self.behaviourItem.setPalette(palette)
 
+    def setActive(self, active):
+        self.behaviourItem.setEnabled(active)
+
+    def setHighlighted(self, highlighted):
+        if highlighted:
+            self.behaviourItem.setStyleSheet("QFrame {\n	border: 2px solid blue;\n}")
+        else:
+            self.behaviourItem.setStyleSheet("")
+
 
 class BehaviourController:
     def __init__(self, behaviour):
@@ -80,6 +90,15 @@ class BehaviourController:
     def setActive(self, active):
         self.behaviour.setActive(active)
         # TODO : update view
+        self.behaviourView.setActive(active)
 
     def setSelected(self, selected):
         self.behaviourView.setSelected(selected)
+
+    def loadFromData(self, data):
+        self.behaviour.loadFromData(data)
+        # for param, controller in zip(self.behaviour.parameters, self.parameterControllers):
+        #     controller.loadParameter(param)
+
+    def setHighlighted(self, highlighted):
+        self.behaviourView.setHighlighted(highlighted)
