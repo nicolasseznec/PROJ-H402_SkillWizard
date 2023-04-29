@@ -1,32 +1,56 @@
 {
   "Skills": [
     {
-      "name": "Manipulate",
-      "id": 1,
+      "name": "Percieve",
+      "id": 0,
       "parameters": [
         {
-          "name": "Dimensions",
-          "resolution": 4.0,
-          "accuracy": 0.0,
-          "responseTime": 0.0
-        },
-        {
-          "name": "Type",
-          "resolution": 6.0,
-          "accuracy": 0.0,
-          "responseTime": 0.0
+          "name": "Distance",
+          "resolution": 0,
+          "accuracy": 0,
+          "responseTime": 0
         }
       ]
     }
   ],
   "Behaviours": [
     {
-      "name": "B",
-      "id": 1,
+      "name": "Phototaxis",
+      "id": 2,
       "skills": [
-        0,
-        1
+        0
+      ],
+      "parameters": []
+    },
+    {
+      "name": "Anti-Phototaxis",
+      "id": 3,
+      "skills": [
+        0
+      ],
+      "parameters": []
+    },
+    {
+      "name": "Color-Following",
+      "id": 6,
+      "skills": [
+        0
+      ],
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "color": 5
+        }
       ]
+    },
+    {
+      "name": "Color-Elusion",
+      "id": 7,
+      "skills": [
+        0
+      ],
+      "parameters": []
     }
   ]
 }

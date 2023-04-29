@@ -228,7 +228,6 @@ class MissionController:
         widget = view.getCenterWidget()
         self.mission_view.setCenterPanel(widget)
 
-
     def onSkillSelected(self, skillController):
         self.onItemSelected(skillController)
 

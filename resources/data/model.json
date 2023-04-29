@@ -10,33 +10,87 @@
       ]
     },
     {
-      "name": "Manipulate",
+      "name": "Navigate",
       "id": 1,
       "parameters": [
-        {
-          "name": "Dimensions"
-        },
-        {
-          "name": "Type"
-        }
+
+      ]
+    },
+    {
+      "name": "Communicate",
+      "id": 2,
+      "parameters": [
+
       ]
     }
   ],
   "Behaviours": [
     {
-      "name": "A",
+      "name": "Exploration",
       "id": 0,
-      "skills": [0]
+      "skills": [1],
+      "parameters": [
+
+      ]
     },
     {
-      "name": "B",
+      "name": "Stop",
       "id": 1,
-      "skills": [0, 1]
+      "skills": [1],
+      "parameters": [
+
+      ]
     },
     {
-      "name": "C",
+      "name": "Phototaxis",
       "id": 2,
-      "skills": [1]
+      "skills": [0],
+      "parameters": [
+
+      ]
+    },
+    {
+      "name": "Anti-Phototaxis",
+      "id": 3,
+      "skills": [0],
+      "parameters": [
+
+      ]
+    },
+    {
+      "name": "Attraction",
+      "id": 4,
+      "skills": [2],
+      "parameters": [
+
+      ]
+    },
+    {
+      "name": "Repulsion",
+      "id": 5,
+      "skills": [2],
+      "parameters": [
+
+      ]
+    },
+    {
+      "name": "Color-Following",
+      "id": 6,
+      "skills": [0],
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color"
+        }
+      ]
+    },
+    {
+      "name": "Color-Elusion",
+      "id": 7,
+      "skills": [0],
+      "parameters": [
+
+      ]
     }
   ]
 }
