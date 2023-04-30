@@ -30,7 +30,12 @@
       "id": 0,
       "skills": [1],
       "parameters": [
-
+        {
+          "name": "Random step range [0-100]",
+          "type": "int",
+          "desc": "When the robot detects an obstacle, it rotates for a number of control cycles determined by the integer parameter.",
+          "range": [0,100]
+        }
       ]
     },
     {
@@ -39,7 +44,8 @@
       "skills": [1],
       "parameters": [
 
-      ]
+      ],
+      "desc": "Maintains the robot standing still."
     },
     {
       "name": "Phototaxis",
@@ -47,7 +53,8 @@
       "skills": [0],
       "parameters": [
 
-      ]
+      ],
+      "desc": "The robot goes towards the light source, if perceived."
     },
     {
       "name": "Anti-Phototaxis",
@@ -55,14 +62,20 @@
       "skills": [0],
       "parameters": [
 
-      ]
+      ],
+      "desc": "The robot goes away from light sources, if perceived."
     },
     {
       "name": "Attraction",
       "id": 4,
       "skills": [2],
       "parameters": [
-
+        {
+          "name": "Attraction factor [0,5]",
+          "type": "float",
+          "desc": "Move closer to neighboring peers, with a velocity that depends on the number of robots detected and the attraction factor",
+          "range": [0,5]
+        }
       ]
     },
     {
@@ -70,7 +83,12 @@
       "id": 5,
       "skills": [2],
       "parameters": [
-
+        {
+          "name": "Repulsion factor [0,5]",
+          "type": "float",
+          "desc": "Move farther from neighboring peers, with a velocity that depends on the number of robots detected and the repulsion factor",
+          "range": [0,5]
+        }
       ]
     },
     {
@@ -79,8 +97,9 @@
       "skills": [0],
       "parameters": [
         {
-          "name": "color",
-          "type": "color"
+          "name": "Color to which the behaviors react : ",
+          "type": "color",
+          "desc": "Steady movement towards robots/objects of a specific color."
         }
       ]
     },
@@ -89,7 +108,11 @@
       "id": 7,
       "skills": [0],
       "parameters": [
-
+        {
+          "name": "Color to which the behaviors react : ",
+          "type": "color",
+          "desc": "Steady movement away from robots/objects of a specific color."
+        }
       ]
     }
   ]

@@ -11,6 +11,16 @@
           "responseTime": 0
         }
       ]
+    },
+    {
+      "name": "Navigate",
+      "id": 1,
+      "parameters": []
+    },
+    {
+      "name": "Communicate",
+      "id": 2,
+      "parameters": []
     }
   ],
   "Behaviours": [
@@ -38,9 +48,9 @@
       ],
       "parameters": [
         {
-          "name": "color",
+          "name": "Color to which the behaviors react : ",
           "type": "color",
-          "color": 5
+          "color": 0
         }
       ]
     },
@@ -50,7 +60,63 @@
       "skills": [
         0
       ],
+      "parameters": [
+        {
+          "name": "Color to which the behaviors react : ",
+          "type": "color",
+          "color": 0
+        }
+      ]
+    },
+    {
+      "name": "Exploration",
+      "id": 0,
+      "skills": [
+        1
+      ],
+      "parameters": [
+        {
+          "name": "Random step range [0-100]",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "Stop",
+      "id": 1,
+      "skills": [
+        1
+      ],
       "parameters": []
+    },
+    {
+      "name": "Attraction",
+      "id": 4,
+      "skills": [
+        2
+      ],
+      "parameters": [
+        {
+          "name": "Attraction factor [0,5]",
+          "type": "int",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "Repulsion",
+      "id": 5,
+      "skills": [
+        2
+      ],
+      "parameters": [
+        {
+          "name": "Repulsion factor [0,5]",
+          "type": "int",
+          "value": 0
+        }
+      ]
     }
   ]
 }

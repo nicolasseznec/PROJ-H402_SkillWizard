@@ -22,11 +22,16 @@ class Behaviour:
         self.name = data["name"]
         self.id = data["id"]
         self.skills = data["skills"]
+        self.description = "" if "desc" not in data else data["desc"]
         self.parameters.clear()
         for param in data["parameters"]:
             parameter = None
             if param["type"] == "color":
                 parameter = BpColor(param)  # TODO : switch depending on type
+            elif param["type"] == "int":
+                parameter = BpInt(param)
+            elif param["type"] == "float":
+                parameter = BpFloat(param)
 
             if parameter is not None:
                 self.parameters.append(parameter)
@@ -55,6 +60,7 @@ class BehaviourView:
     def updateView(self, behaviour):
         self.behaviourItem.LabelButton.setText(behaviour.name)
         self.inspector.BehaviourName.setText(behaviour.name)
+        self.inspector.description.setText(behaviour.description)
 
     def connectButtons(self):
         self.behaviourItem.LabelButton.clicked.connect(self.labelClicked)
@@ -117,8 +123,6 @@ class BehaviourController:
 
     def loadFromData(self, data):
         self.behaviour.loadFromData(data)
-        # for param, controller in zip(self.behaviour.parameters, self.parameterControllers):
-        #     controller.loadParameter(param)
         for controller in self.parameterControllers:
             for param in self.behaviour.parameters:
                 if param.name == controller.parameter.name:
@@ -141,6 +145,7 @@ class BehaviourParameter:
     def loadFromData(self, data):
         self.name = data["name"]
         self.type = data["type"]
+        self.description = "" if "desc" not in data else data["desc"]
 
     def update(self, values):
         pass
@@ -175,8 +180,7 @@ class BehaviourParameterView(QWidget):
 
     def loadWidget(self, parameter):
         pass
-        # ResourceLoader.loadWidget("ParameterInspector.ui", self)
-        # self.setTitle(parameter.name)
+        # ResourceLoader.loadWidget(self.uiFile, self)
 
     def getValues(self):
         pass  # return values in dict
@@ -191,6 +195,10 @@ class BehaviourParameterController:
 
         if parameter.type == "color":
             self.view = BpColorView(parameter)  # TODO : switch depending on type
+        elif parameter.type == "int":
+            self.view = BpIntView(parameter)
+        elif parameter.type == "float":
+            self.view = BpFloatView(parameter)
         else:
             self.view = BehaviourParameterView(parameter)
 
@@ -213,7 +221,6 @@ class BpColor(BehaviourParameter):
 
     def update(self, values):
         self.color = values["color"]
-        print(self.color)
 
     def toJson(self):
         return {
@@ -230,6 +237,7 @@ class BpColorView(BehaviourParameterView):
     def loadWidget(self, parameter):
         ResourceLoader.loadWidget("BpColorInspector.ui", self)
         self.name.setText(parameter.name)
+        self.description.setText(parameter.description)
 
     def getValues(self):
         return {
@@ -238,3 +246,53 @@ class BpColorView(BehaviourParameterView):
 
     def setValues(self, parameter):
         self.color.setCurrentIndex(parameter.color)
+
+
+class BpInt(BehaviourParameter):
+    def loadFromData(self, data):
+        super(BpInt, self).loadFromData(data)
+        self.value = 0 if "value" not in data else data["value"]
+        self.range = [] if "range" not in data else data["range"]
+
+    def update(self, values):
+        self.value = values["value"]
+
+    def toJson(self):
+        return {
+            "name": self.name,
+            "type": "int",
+            "value": self.value
+        }
+
+
+class BpIntView(BehaviourParameterView):
+    def connectView(self):
+        self.value.valueChanged.connect(self.onValueChanged)
+
+    def loadWidget(self, parameter):
+        ResourceLoader.loadWidget("BpIntInspector.ui", self)
+        self.setupWidget(parameter)
+
+    def setupWidget(self, parameter):
+        self.name.setText(parameter.name)
+        self.description.setText(parameter.description)
+        if parameter.range:
+            self.value.setRange(parameter.range[0], parameter.range[1])
+
+    def getValues(self):
+        return {
+            "value": self.value.value()
+        }
+
+    def setValues(self, parameter):
+        self.value.setValue(parameter.value)
+
+
+class BpFloat(BpInt):
+    pass
+
+
+class BpFloatView(BpIntView):
+    def loadWidget(self, parameter):
+        ResourceLoader.loadWidget("BpFloatInspector.ui", self)
+        self.setupWidget(parameter)
