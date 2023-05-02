@@ -1,17 +1,14 @@
 from PyQt5.QtWidgets import (
     QWidget,
-    QHBoxLayout,
     QVBoxLayout,
-    QFrame,
-    QPushButton,
-    QStackedLayout
 )
 from PyQt5.QtCore import Qt
+import json
 
-from src.util import ResourceLoader, displayError
+from src.util import ResourceLoader, displayError, Event
 from src.skill import SkillController, SkillView, Skill
 from src.behaviour import Behaviour, BehaviourController
-import json
+from src.arena import ArenaController
 
 
 class Mission:
@@ -59,7 +56,7 @@ class Mission:
 
 class MissionView(QWidget):
     """
-    Interface for a mission
+    UI for a mission
     """
 
     def __init__(self):
@@ -87,6 +84,9 @@ class MissionView(QWidget):
     def registerToCenterPanel(self, view):
         self.CenterPanel.addWidget(view)
 
+    def addSettingsTab(self, view, name):
+        self.SettingsTabs.addTab(view, name)
+
 
 class MissionController:
     """
@@ -97,6 +97,12 @@ class MissionController:
     def __init__(self):
         self.mission_view = MissionView()
         self.current_mission = None
+
+        self.arenaController = ArenaController()
+        self.mission_view.registerToCenterPanel(self.arenaController.view)
+        self.arenaController.onArenaSelected += self.onItemSelected
+        self.mission_view.addSettingsTab(self.arenaController.getTab(), "Arena")
+        self.mission_view.addSettingsTab(QWidget(), "Mission")
 
         self.skillControllers = {}  # skill controllers mapped to the id of their skill
         self.behaviourControllers = {}  # behaviour controllers mapped to the id of their behaviour
@@ -210,7 +216,7 @@ class MissionController:
         view = controller.getView()
         self.mission_view.registerToCenterPanel(view.getCenterWidget())
 
-    def onItemSelected(self, item):
+    def onItemSelected(self, item):  # TODO : interface for item and itemView ?
         # item is a controller that can be selected/unselected and displayed in the center panel
 
         for b_id in self.behaviourControllers:
@@ -233,3 +239,6 @@ class MissionController:
 
         for b_id in skillController.skill.behaviours:
             self.behaviourControllers[b_id].setHighlighted(True)
+
+    def selectArena(self):
+        self.onItemSelected(self.arenaController)
