@@ -1,4 +1,5 @@
 from importlib import resources
+from enum import Enum
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMessageBox
@@ -39,6 +40,32 @@ class Event:
     def __call__(self, *args, **kwargs):
         for handler in self.__handlers:
             handler(*args, **kwargs)
+
+
+class DataContainer:
+    def __init__(self, data):
+        self.loadFromData(data)
+
+    def loadFromData(self, data):
+        attributes = self.getAttributes()
+        for attribute in attributes:
+            value = attributes[attribute] if attribute not in data else data[attribute]
+            setattr(self, attribute, value)
+
+    def toJson(self):
+        return {attribute: getattr(self, attribute) for attribute in self.getAttributes()}
+
+    def getAttributes(self):
+        return {}
+
+
+class Shape(Enum):
+    Square = 1
+    Hexagon = 2
+    Octagon = 3
+    Dodecagon = 4
+    Circle = 5
+    Rectangle = 6
 
 
 def displayError(title, message):

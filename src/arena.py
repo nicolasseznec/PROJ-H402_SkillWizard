@@ -1,111 +1,34 @@
-from enum import Enum
 import math
 
-from PyQt5.QtWidgets import QGroupBox, QGraphicsScene, QGraphicsItem, QGraphicsEllipseItem, QGraphicsView, \
+from PyQt5.QtWidgets import QGroupBox, QGraphicsScene, QGraphicsItem, QGraphicsView, \
     QGraphicsPathItem
 from PyQt5.QtGui import QPainter, QColor, QPainterPath, QPolygonF, QPen, QBrush
 from PyQt5.QtCore import Qt, QPoint, QPointF
 
-from src.util import ResourceLoader, Event
-
-
-class Shape(Enum):
-    Square = 1
-    Hexagon = 2
-    Octagon = 3
-    Dodecagon = 4
-    Circle = 5
-    Rectangle = 6
-
+from src.util import ResourceLoader, Event, Shape
+from src.startArea import StartArea, StartAreaView
 
 ArenaShape = [Shape(i) for i in range(1, 6)]
-StartShape = [Shape.Circle, Shape.Rectangle]
 
 
 # Holds the parameters values
 class Arena:
-    def __init__(self):
+    def __init__(self, data=None):
         self.shape = Shape.Square
+
+        if data is None:
+            data = {}
+        self.loadFromData(data)
+
         # self.sideLength = 66
 
+    def loadFromData(self, data):
+        self.startArea = StartArea({} if "StartArea" not in data else data["StartArea"])
 
-class StartArea(QGraphicsPathItem):
-    def __init__(self, arenaPath, *__args):
-        super().__init__(*__args)
-        self.setBrush(QBrush(QColor(224, 126, 134, 255)))
-        pen = QPen(QColor(Qt.black))
-        pen.setWidth(3)
-        pen.setStyle(Qt.DashDotLine)
-        self.setPen(pen)
-
-        self.radius = 50
-        self.width = 100
-        self.height = 100
-        self.setShape(Shape.Circle)
-        self.updateDimensions()
-
-        self.arenaPath = arenaPath
-
-    def paint(self, painter, option, widget=None):
-        intersect = self.arenaPath.intersected(self.shapePaths[self.shape].translated(self.scenePos())) \
-            .translated(-self.scenePos())
-        intersect.closeSubpath()
-        self.setPath(intersect)
-        super(StartArea, self).paint(painter, option, widget)
-
-    def getShapePath(self, shape):
-        path = QPainterPath()
-        if shape == Shape.Rectangle:
-            path.addRect(-self.width/2, -self.height/2, self.width, self.height)
-        elif shape == Shape.Circle:
-            path.addEllipse(-self.radius, -self.radius, self.radius*2, self.radius*2)
-        return path
-
-    def setShape(self, shape):
-        self.shape = shape
-
-    def setPosition(self, pos):
-        self.setPos(pos)
-
-    def setTabFocus(self, focus):
-        self.setOpacity(1.0 if focus else 0.4)
-
-    def connectSettings(self, container):
-        container.StartAreaShape.currentIndexChanged.connect(self.startAreaShapeChanged)
-        container.StartAreaReset.clicked.connect(self.resetStartArea)
-
-        container.StartAreaRadius.valueChanged.connect(self.radiusChanged)
-        container.StartAreaWidth.valueChanged.connect(self.widthChanged)
-        container.StartAreaHeight.valueChanged.connect(self.heightChanged)
-
-    def startAreaShapeChanged(self, index):
-        self.setShape(StartShape[index])
-        self.scene().update()
-
-    def resetStartArea(self):
-        self.setPosition(self.scene().center)
-
-    def radiusChanged(self, value):
-        self.radius = value
-        self.updateDimensions(Shape.Circle)
-
-    def widthChanged(self, value):
-        self.width = value
-        self.updateDimensions(Shape.Rectangle)
-
-    def heightChanged(self, value):
-        self.height = value
-        self.updateDimensions(Shape.Rectangle)
-
-    def updateDimensions(self, shape=None):
-        if shape is not None:
-            self.shapePaths[shape] = self.getShapePath(shape)
-        else:
-            self.shapePaths = {s: self.getShapePath(s) for s in StartShape}  # QGraphicsPathItem
-
-        scene = self.scene()
-        if scene is not None:
-            scene.update()
+    def toJson(self):
+        return {
+            "StartArea": self.startArea.toJson()
+        }
 
 
 class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
@@ -119,7 +42,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.shapePaths = {shape: self.getShapePath(shape) for shape in ArenaShape}  # QGraphicsPathItem
         self.initShapes()
 
-        self.startArea = StartArea(self.shapePaths[self.shape].path())
+        self.startArea = StartAreaView(self.shapePaths[self.shape].path())
         self.startArea.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
         self.addItem(self.startArea)
 
@@ -159,7 +82,9 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         for path in self.shapePaths.values():
             self.addItem(path)
             path.setBrush(QBrush(QColor(200, 200, 200)))
-            path.setPen(QPen(QColor(Qt.black)))
+            pen = QPen(QColor(Qt.black))
+            pen.setWidth(3)
+            path.setPen(pen)
             path.setVisible(False)
 
         self.shapePaths[self.shape].setVisible(True)
@@ -172,11 +97,15 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.update()
 
     def connectSettings(self, container):
+        self.settingsContainer = container
         self.startArea.connectSettings(container)
         container.ArenaEditSettings.currentChanged.connect(self.onTabChange)
 
     def onTabChange(self, index):
         self.startArea.setTabFocus(index == 0)
+
+    def updateView(self, arena):
+        self.startArea.updateProperties(arena.startArea)
 
 
 class ArenaView(QGroupBox):
@@ -208,13 +137,18 @@ class ArenaView(QGroupBox):
         # TODO : notify controller to update Arena model
         self.arenaRenderArea.setShape(newShape)
 
+    def updateView(self, arena):
+        self.arenaRenderArea.updateView(arena)
+
 
 class ArenaController:
-    def __init__(self):
+    def __init__(self, arena=None):
+        self.setArena(arena)
         self.view = ArenaView()
         self.onArenaSelected = Event()
 
         self.view.onArenaClicked += self.onArenaClicked
+        self.view.arenaRenderArea.startArea.onItemChanged += self.onStartAreaChanged
 
     def getView(self):
         return self.view
@@ -227,3 +161,13 @@ class ArenaController:
 
     def onArenaClicked(self):
         self.onArenaSelected(self)
+
+    def setArena(self, arena):
+        self.arena = arena
+
+        if arena is not None:
+            self.view.updateView(arena)
+
+    def onStartAreaChanged(self, values):
+        if self.arena is not None:
+            self.arena.startArea.loadFromData(values)

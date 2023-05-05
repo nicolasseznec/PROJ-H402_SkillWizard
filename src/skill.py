@@ -146,13 +146,6 @@ class SkillParameter:
         self.attributes = attributes if attributes is not None else \
             ["name", "resolution", "accuracy", "responseTime"]
 
-        # Range of parameters, distribution
-        # self.name = ""
-        # self.resolution = 0
-        # self.resolutionType = None
-        # self.accuracy = 0
-        # self.accuracyType = None
-        # self.responseTime = 0
         self.loadFromData(data)
 
     def loadFromData(self, data):
@@ -161,17 +154,7 @@ class SkillParameter:
             setattr(self, attribute, value)
 
     def toJson(self):
-        # return {
-        #     "name": self.name,
-        #     "resolution": self.resolution,
-        #     "accuracy": self.accuracy,
-        #     "responseTime": self.responseTime,
-        # }
-        data = {}
-        for attribute in self.attributes:
-            data[attribute] = getattr(self, attribute)
-
-        return data
+        return {attribute: getattr(self, attribute) for attribute in self.attributes}
 
 
 class SkillParameterView(QGroupBox):

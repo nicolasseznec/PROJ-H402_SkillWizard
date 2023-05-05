@@ -1,122 +1,14 @@
 {
-  "Skills": [
-    {
-      "name": "Percieve",
-      "id": 0,
-      "parameters": [
-        {
-          "name": "Distance",
-          "resolution": 0,
-          "accuracy": 0,
-          "responseTime": 0
-        }
-      ]
-    },
-    {
-      "name": "Navigate",
-      "id": 1,
-      "parameters": []
-    },
-    {
-      "name": "Communicate",
-      "id": 2,
-      "parameters": []
+  "Skills": [],
+  "Behaviours": [],
+  "Arena": {
+    "StartArea": {
+      "x": -188,
+      "y": 105,
+      "width": 200,
+      "height": 100,
+      "radius": 100,
+      "shape": "Circle"
     }
-  ],
-  "Behaviours": [
-    {
-      "name": "Phototaxis",
-      "id": 2,
-      "skills": [
-        0
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Anti-Phototaxis",
-      "id": 3,
-      "skills": [
-        0
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Color-Following",
-      "id": 6,
-      "skills": [
-        0
-      ],
-      "parameters": [
-        {
-          "name": "Color to which the behaviors react : ",
-          "type": "color",
-          "color": 0
-        }
-      ]
-    },
-    {
-      "name": "Color-Elusion",
-      "id": 7,
-      "skills": [
-        0
-      ],
-      "parameters": [
-        {
-          "name": "Color to which the behaviors react : ",
-          "type": "color",
-          "color": 0
-        }
-      ]
-    },
-    {
-      "name": "Exploration",
-      "id": 0,
-      "skills": [
-        1
-      ],
-      "parameters": [
-        {
-          "name": "Random step range [0-100]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Stop",
-      "id": 1,
-      "skills": [
-        1
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Attraction",
-      "id": 4,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Attraction factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Repulsion",
-      "id": 5,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Repulsion factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    }
-  ]
+  }
 }

@@ -8,7 +8,7 @@ import json
 from src.util import ResourceLoader, displayError, Event
 from src.skill import SkillController, SkillView, Skill
 from src.behaviour import Behaviour, BehaviourController
-from src.arena import ArenaController
+from src.arena import ArenaController, Arena
 
 
 class Mission:
@@ -22,21 +22,28 @@ class Mission:
 
         if data is not None:
             self.loadFromData(data)
+        else:
+            self.arena = Arena()
 
     def toJson(self):
         return {
             "Skills": [s.toJson() for s in self.selected_skills if s.active],
             "Behaviours": [b.toJson() for b in self.behaviours if b.active],
+            "Arena": self.arena.toJson()
         }
 
     def loadFromData(self, data):
         self.model_data = data
+        self.arena = Arena(data["Arena"])
 
     def getSkillData(self):
         return {} if self.model_data is None else self.model_data["Skills"]
 
     def getBehaviourData(self):
         return {} if self.model_data is None else self.model_data["Behaviours"]
+
+    def getArenaData(self):
+        return {} if self.model_data is None else self.model_data["Arena"]
 
     def addSkill(self, skill):
         self.selected_skills.append(skill)
@@ -92,8 +99,6 @@ class MissionController:
     """
     Controller for the current opened mission
     """
-    pass
-
     def __init__(self):
         self.mission_view = MissionView()
         self.current_mission = None
@@ -117,8 +122,8 @@ class MissionController:
     def setCurrentMission(self, mission):
         self.current_mission = mission
         self.update_behaviours(mission.getBehaviourData())
-
         self.update_skills(mission.getSkillData())
+        self.update_arena(mission.arena)
 
     def update_skills(self, skill_data):
         if skill_data is not None:
@@ -140,6 +145,9 @@ class MissionController:
 
                 controller = self.behaviourControllers[behaviour_id]
                 controller.loadFromData(data)
+
+    def update_arena(self, arena):
+        self.arenaController.setArena(arena)
 
     def getMissionData(self):
         if self.current_mission is None:
