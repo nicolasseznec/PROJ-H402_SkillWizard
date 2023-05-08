@@ -68,6 +68,18 @@ class Shape(Enum):
     Rectangle = 6
 
 
+class Color(Enum):
+    Red = 1
+    Green = 2
+    Blue = 3
+    Cyan = 4
+    Magenta = 5
+    Yellow = 6
+    Black = 7
+    Gray = 8
+    White = 9
+
+
 def displayError(title, message):
     error_message = QMessageBox()
     error_message.setIcon(QMessageBox.Critical)
