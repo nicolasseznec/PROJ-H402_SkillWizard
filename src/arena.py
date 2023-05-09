@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QPoint, QPointF
 
 from src.util import ResourceLoader, Event, Shape
 from src.startArea import StartArea, StartAreaView, SpecialGroundList
+from src.obstacle import ObstacleView, ObstacleList
 
 ArenaShape = [Shape(i) for i in range(1, 6)]
 
@@ -47,6 +48,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.initShapes()
 
         self.groundList = SpecialGroundList()
+        self.obstacleList = ObstacleList()
         self.startArea = StartAreaView(self.shapePaths[self.shape].path())
         self.startArea.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
         self.addItem(self.startArea)
@@ -108,8 +110,10 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.shapePaths[shape].setVisible(True)
         self.shapeContours[shape].setVisible(True)
 
-        self.startArea.arenaPath = self.shapePaths[shape].path()
-        self.groundList.setArenaPath(self.shapePaths[shape].path())
+        path = self.shapePaths[shape].path()
+        self.startArea.arenaPath = path
+        self.groundList.setArenaPath(path)
+        self.obstacleList.setArenaPath(path)
         self.shape = shape
         self.update()
 
@@ -123,9 +127,15 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.groundList.onItemRemoved += self.onItemRemoved
         self.groundList.onItemAdded += self.onItemAdded
 
+        self.obstacleList.connectWidgets(container)
+        self.obstacleList.onItemSelected += self.onItemSelected
+        self.obstacleList.onItemRemoved += self.onItemRemoved
+        self.obstacleList.onItemAdded += self.onItemAdded
+
     def onTabChange(self, index):
         self.startArea.setTabFocus(index == 0)
         self.groundList.setTabFocus(index == 1)
+        self.obstacleList.setTabFocus(index == 2)
 
     def updateView(self, arena):
         self.setShape(Shape[arena.shape])
@@ -133,6 +143,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
 
     def onItemSelected(self, item):
         self.groundList.unselectAll()
+        self.obstacleList.unselectAll()
         item.setSelected(True)
 
     def onItemRemoved(self, item):

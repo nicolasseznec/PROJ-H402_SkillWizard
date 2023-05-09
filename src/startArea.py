@@ -20,7 +20,6 @@ class StartArea(DataContainer):
         }
 
 
-# class StartAreaView(QGraphicsPathItem):
 class ArenaZone(QGraphicsPathItem):
     def __init__(self, arenaPath, *__args):
         super().__init__(*__args)
@@ -52,7 +51,6 @@ class ArenaZone(QGraphicsPathItem):
             self.prev_pos = self.scenePos()
             self.updatePos()
 
-        # super(StartAreaView, self).paint(painter, option, widget)
         super(ArenaZone, self).paint(painter, option, widget)
 
     def getShapePath(self, shape):
@@ -186,6 +184,36 @@ class StartAreaView(ArenaZone):
         self.settingsContainer.StartAreaY.setValue(int(self.y()))
 
 
+class MultiArenaZone(ArenaZone):
+    def __init__(self, arenaPath, *__args):
+        super().__init__(arenaPath, *__args)
+        self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
+        self.onSelected = Event()
+
+    def setTabFocus(self, focus):
+        if focus:
+            self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
+        else:
+            self.setFlag(QGraphicsItem.ItemIsMovable, False)
+            self.setFlag(QGraphicsItem.ItemIsSelectable, False)
+            self.setSelected(False)
+
+    def setSelected(self, focus):
+        super(MultiArenaZone, self).setSelected(focus)
+        if focus:
+            self.blockSignal = False
+            self.updateView()
+        else:
+            self.blockSignal = True
+
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemSelectedHasChanged:
+            if value:
+                self.onSelected(self)
+
+        return super(MultiArenaZone, self).itemChange(change, value)
+
+
 GrounColor = [Color.Black, Color.Gray, Color.White]
 
 
@@ -198,7 +226,7 @@ class SpecialGround(StartArea):
         return attributes
 
 
-class SpecialGroundView(ArenaZone):
+class SpecialGroundView(MultiArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
@@ -209,24 +237,6 @@ class SpecialGroundView(ArenaZone):
         self.color = Color.Black
         self.name = "New Floor"
         self.onSelected = Event()
-
-    def setTabFocus(self, focus):
-        if focus:
-            self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
-        else:
-            self.setFlag(QGraphicsItem.ItemIsMovable, False)
-            self.setFlag(QGraphicsItem.ItemIsSelectable, False)
-            self.setSelected(False)
-
-    def setSelected(self, focus):
-        super(SpecialGroundView, self).setSelected(focus)
-        if focus:
-            # self.setPen(Qt.red)
-            self.blockSignal = False
-            self.updateView()
-        else:
-            # self.setPen(QPen(Qt.NoPen))
-            self.blockSignal = True
 
     def connectSettings(self, container):
         if container is None:
@@ -301,27 +311,20 @@ class SpecialGroundView(ArenaZone):
         self.settingsContainer.GroundX.setValue(int(self.x()))
         self.settingsContainer.GroundY.setValue(int(self.y()))
 
-    def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemSelectedHasChanged:
-            if value:
-                self.onSelected(self)
 
-        return super(SpecialGroundView, self).itemChange(change, value)
-
-
-class SpecialGroundList(ItemList):
+class ArenaList(ItemList):
     def createNewItem(self):
-        item = SpecialGroundView(self.arenaPath)
+        item: MultiArenaZone = self.itemFactory(self.arenaPath)
         item.onSelected += self.selectItem
         item.connectSettings(self.container)
         return item
 
+    def itemFactory(self, arenaPath):
+        return MultiArenaZone(arenaPath)
+
     def handleRemoval(self, item):
         item.onSelected -= self.selectItem
         item.disconnectSettings()
-
-    def getDefaultName(self):
-        return "New Floor"
 
     def setArenaPath(self, arenaPath):
         self.arenaPath = arenaPath
@@ -329,14 +332,9 @@ class SpecialGroundList(ItemList):
             item.arenaPath = arenaPath
 
     def connectWidgets(self, container):
-        super(SpecialGroundList, self).connectWidgets(container)
+        super(ArenaList, self).connectWidgets(container)
         for item in self.items:
             item.connectSettings(container)
-
-    def getWidgets(self, container):
-        self.listWidget = container.GroundList
-        self.addButton = container.GroundAdd
-        self.removeButton = container.GroundRemove
 
     def unselectAll(self):
         for item in self.items:
@@ -361,3 +359,16 @@ class SpecialGroundList(ItemList):
             if line_edit_value:
                 item.setText(line_edit_value)
                 self.items[index].name = line_edit_value
+
+
+class SpecialGroundList(ArenaList):
+    def itemFactory(self, arenaPath):
+        return SpecialGroundView(self.arenaPath)
+
+    def getDefaultName(self):
+        return "New Floor"
+
+    def getWidgets(self, container):
+        self.listWidget = container.GroundList
+        self.addButton = container.GroundAdd
+        self.removeButton = container.GroundRemove
