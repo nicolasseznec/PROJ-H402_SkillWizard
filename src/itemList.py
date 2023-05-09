@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QListWidget, QToolButton
+from PyQt5.QtWidgets import QListWidget, QToolButton, QDialog, QVBoxLayout, QLineEdit, QHBoxLayout, QPushButton
 
 from src.util import Event
 
@@ -9,6 +9,7 @@ class ItemList:
         self.onItemRemoved = Event()
         self.onItemSelected = Event()
         self.onItemAdded = Event()
+        self.container = None
 
         if container is not None:
             self.connectWidgets(container)
@@ -33,7 +34,6 @@ class ItemList:
         return "New Item"
 
     def onSelectedChanged(self, index):
-        print(index)
         self.onItemSelected(self.items[index])
 
     def createNewItem(self):
@@ -43,8 +43,10 @@ class ItemList:
         pass
 
     def connectWidgets(self, container):
+        self.container = container
         self.getWidgets(container)
         self.listWidget.currentRowChanged.connect(self.onSelectedChanged)
+        self.listWidget.itemDoubleClicked.connect(self.onItemDoubleClicked)
         self.addButton.clicked.connect(self.onAdd)
         self.removeButton.clicked.connect(self.onRemove)
 
@@ -52,3 +54,34 @@ class ItemList:
         self.listWidget = QListWidget()
         self.addButton = QToolButton()
         self.removeButton = QToolButton()
+
+    def onItemDoubleClicked(self, item):
+        pass
+
+
+class TextDialog(QDialog):
+    def __init__(self, parent=None, initialText='', dialogName=''):
+        super().__init__(parent)
+        if dialogName:
+            self.setWindowTitle(dialogName)
+        self.setLayout(QVBoxLayout())
+
+        lineEdit = QLineEdit()
+        if initialText:
+            lineEdit.setText(initialText)
+            lineEdit.selectAll()
+        self.layout().addWidget(lineEdit)
+
+        buttons_layout = QHBoxLayout()
+        self.layout().addLayout(buttons_layout)
+
+        ok_button = QPushButton("OK")
+        ok_button.clicked.connect(self.accept)
+        buttons_layout.addWidget(ok_button)
+
+        cancel_button = QPushButton("Cancel")
+        cancel_button.clicked.connect(self.reject)
+        buttons_layout.addWidget(cancel_button)
+
+    def getLineEditValue(self):
+        return self.layout().itemAt(0).widget().text()

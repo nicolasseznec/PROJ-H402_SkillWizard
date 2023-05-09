@@ -1,8 +1,8 @@
-from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem
+from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem, QDialog
 from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush
 from PyQt5.QtCore import Qt, QPointF
 
-from src.itemList import ItemList
+from src.itemList import ItemList, TextDialog
 from src.util import Event, DataContainer, Shape, Color
 
 StartShape = [Shape.Circle, Shape.Rectangle]  # TODO : ZoneShape
@@ -50,7 +50,7 @@ class ArenaZone(QGraphicsPathItem):
         self.setPath(intersect)
         if self.scenePos() != self.prev_pos:
             self.prev_pos = self.scenePos()
-            self.updateView()
+            self.updatePos()
 
         # super(StartAreaView, self).paint(painter, option, widget)
         super(ArenaZone, self).paint(painter, option, widget)
@@ -66,21 +66,6 @@ class ArenaZone(QGraphicsPathItem):
     def setShape(self, shape):
         self.shape = shape
 
-    # def setTabFocus(self, focus):
-    #     self.setOpacity(1.0 if focus else 0.3)
-
-    # def connectSettings(self, container):
-    #     self.settingsContainer = container
-    #     container.StartAreaShape.currentIndexChanged.connect(self.shapeChanged)
-    #     container.StartAreaReset.clicked.connect(self.resetPosition)
-    #
-    #     container.StartAreaRadius.valueChanged.connect(self.radiusChanged)
-    #     container.StartAreaWidth.valueChanged.connect(self.widthChanged)
-    #     container.StartAreaHeight.valueChanged.connect(self.heightChanged)
-    #
-    #     container.StartAreaX.valueChanged.connect(self.posXChanged)
-    #     container.StartAreaY.valueChanged.connect(self.posYChanged)
-
     def shapeChanged(self, index):
         if self.blockSignal:
             return
@@ -89,6 +74,8 @@ class ArenaZone(QGraphicsPathItem):
         self.onItemChanged(self.packChanges())
 
     def resetPosition(self):
+        if self.blockSignal:
+            return
         self.setPos(self.scene().center)
         self.onItemChanged(self.packChanges())
 
@@ -124,10 +111,14 @@ class ArenaZone(QGraphicsPathItem):
             scene.update()
 
     def posXChanged(self, value):
+        if self.blockSignal:
+            return
         self.setX(value)
         self.onItemChanged(self.packChanges())
 
     def posYChanged(self, value):
+        if self.blockSignal:
+            return
         self.setY(value)
         self.onItemChanged(self.packChanges())
 
@@ -141,29 +132,9 @@ class ArenaZone(QGraphicsPathItem):
             "shape": self.shape.name
         }
 
-    # def updateProperties(self, startArea):
-    #     self.radius = startArea.radius
-    #     self.width = startArea.width
-    #     self.height = startArea.height
-    #     self.shape = Shape[startArea.shape]
-    #     self.setPos(startArea.x, startArea.y)
-    #     self.updateDimensions()
-    #
-    #     if self.settingsContainer is None:
-    #         return
-    #
-    #     self.blockSignal = True
-    #     self.settingsContainer.StartAreaWidth.setValue(self.width)
-    #     self.settingsContainer.StartAreaHeight.setValue(self.height)
-    #     self.settingsContainer.StartAreaRadius.setValue(self.radius)
-    #     self.settingsContainer.StartAreaShape.setCurrentIndex(StartShape.index(self.shape))
-    #     self.blockSignal = False
-    #
-    # def updateView(self):
-    #     if self.settingsContainer is None:
-    #         return
-    #     self.settingsContainer.StartAreaX.setValue(int(self.x()))
-    #     self.settingsContainer.StartAreaY.setValue(int(self.y()))
+    def updatePos(self):
+        if self.settingsContainer is None:
+            return
 
 
 class StartAreaView(ArenaZone):
@@ -172,7 +143,7 @@ class StartAreaView(ArenaZone):
         self.setZValue(2)
 
     def setTabFocus(self, focus):
-        self.setOpacity(1.0 if focus else 0.3)
+        self.setOpacity(0.9 if focus else 0.3)
         if focus:
             self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
         else:
@@ -209,9 +180,8 @@ class StartAreaView(ArenaZone):
         self.settingsContainer.StartAreaShape.setCurrentIndex(StartShape.index(self.shape))
         self.blockSignal = False
 
-    def updateView(self):
-        if self.settingsContainer is None:
-            return
+    def updatePos(self):
+        super(StartAreaView, self).updatePos()
         self.settingsContainer.StartAreaX.setValue(int(self.x()))
         self.settingsContainer.StartAreaY.setValue(int(self.y()))
 
@@ -232,10 +202,12 @@ class SpecialGroundView(ArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
-        self.setBrush(QBrush(Qt.white))
+        self.setBrush(QBrush(Qt.black))
         pen = QPen(Qt.NoPen)
         self.setPen(pen)
 
+        self.color = Color.Black
+        self.name = "New Floor"
         self.onSelected = Event()
 
     def setTabFocus(self, focus):
@@ -249,21 +221,57 @@ class SpecialGroundView(ArenaZone):
     def setSelected(self, focus):
         super(SpecialGroundView, self).setSelected(focus)
         if focus:
-            self.setPen(Qt.red)
+            # self.setPen(Qt.red)
+            self.blockSignal = False
+            self.updateView()
         else:
-            self.setPen(QPen(Qt.NoPen))
+            # self.setPen(QPen(Qt.NoPen))
+            self.blockSignal = True
 
     def connectSettings(self, container):
+        if container is None:
+            return
         self.settingsContainer = container
-        # container.StartAreaShape.currentIndexChanged.connect(self.shapeChanged)
-        # container.StartAreaReset.clicked.connect(self.resetPosition)
-        #
-        # container.StartAreaRadius.valueChanged.connect(self.radiusChanged)
-        # container.StartAreaWidth.valueChanged.connect(self.widthChanged)
-        # container.StartAreaHeight.valueChanged.connect(self.heightChanged)
-        #
-        # container.StartAreaX.valueChanged.connect(self.posXChanged)
-        # container.StartAreaY.valueChanged.connect(self.posYChanged)
+        container.GroundShape.currentIndexChanged.connect(self.shapeChanged)
+        container.GroundColor.currentIndexChanged.connect(self.colorChanged)
+        container.GroundReset.clicked.connect(self.resetPosition)
+
+        container.GroundRadius.valueChanged.connect(self.radiusChanged)
+        container.GroundWidth.valueChanged.connect(self.widthChanged)
+        container.GroundHeight.valueChanged.connect(self.heightChanged)
+
+        container.GroundX.valueChanged.connect(self.posXChanged)
+        container.GroundY.valueChanged.connect(self.posYChanged)
+
+    def disconnectSettings(self):
+        if self.settingsContainer is None:
+            return
+
+        self.settingsContainer.GroundShape.currentIndexChanged.disconnect(self.shapeChanged)
+        self.settingsContainer.GroundColor.currentIndexChanged.disconnect(self.colorChanged)
+        self.settingsContainer.GroundReset.clicked.disconnect(self.resetPosition)
+
+        self.settingsContainer.GroundRadius.valueChanged.disconnect(self.radiusChanged)
+        self.settingsContainer.GroundWidth.valueChanged.disconnect(self.widthChanged)
+        self.settingsContainer.GroundHeight.valueChanged.disconnect(self.heightChanged)
+
+        self.settingsContainer.GroundX.valueChanged.disconnect(self.posXChanged)
+        self.settingsContainer.GroundY.valueChanged.disconnect(self.posYChanged)
+
+    def colorChanged(self, index):
+        if self.blockSignal:
+            return
+        self.color = GrounColor[index]
+
+        if self.color == Color.Black:
+            self.setBrush(QBrush(Qt.black))
+        elif self.color == Color.White:
+            self.setBrush(QBrush(Qt.white))
+        elif self.color == Color.Gray:
+            self.setBrush(QBrush(Qt.gray))
+
+        self.scene().update()
+        self.onItemChanged(self.packChanges())
 
     def updateProperties(self, ground):
         # self.radius = startArea.radius
@@ -271,23 +279,27 @@ class SpecialGroundView(ArenaZone):
         # self.height = startArea.height
         # self.shape = Shape[startArea.shape]
         # self.setPos(startArea.x, startArea.y)
+        # self name =
         self.updateDimensions()
-
-        if self.settingsContainer is None:
-            return
-
-        self.blockSignal = True
-        # self.settingsContainer.StartAreaWidth.setValue(self.width)
-        # self.settingsContainer.StartAreaHeight.setValue(self.height)
-        # self.settingsContainer.StartAreaRadius.setValue(self.radius)
-        # self.settingsContainer.StartAreaShape.setCurrentIndex(StartShape.index(self.shape))
-        self.blockSignal = False
+        self.updateView()
 
     def updateView(self):
         if self.settingsContainer is None:
             return
-        # self.settingsContainer.StartAreaX.setValue(int(self.x()))
-        # self.settingsContainer.StartAreaY.setValue(int(self.y()))
+
+        self.blockSignal = True
+        self.settingsContainer.GroundWidth.setValue(self.width)
+        self.settingsContainer.GroundHeight.setValue(self.height)
+        self.settingsContainer.GroundRadius.setValue(self.radius)
+        self.settingsContainer.GroundShape.setCurrentIndex(StartShape.index(self.shape))
+        self.settingsContainer.GroundColor.setCurrentIndex(GrounColor.index(self.color))
+        self.updatePos()
+        self.blockSignal = False
+
+    def updatePos(self):
+        super(SpecialGroundView, self).updatePos()
+        self.settingsContainer.GroundX.setValue(int(self.x()))
+        self.settingsContainer.GroundY.setValue(int(self.y()))
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedHasChanged:
@@ -301,10 +313,12 @@ class SpecialGroundList(ItemList):
     def createNewItem(self):
         item = SpecialGroundView(self.arenaPath)
         item.onSelected += self.selectItem
+        item.connectSettings(self.container)
         return item
 
     def handleRemoval(self, item):
         item.onSelected -= self.selectItem
+        item.disconnectSettings()
 
     def getDefaultName(self):
         return "New Floor"
@@ -313,6 +327,11 @@ class SpecialGroundList(ItemList):
         self.arenaPath = arenaPath
         for item in self.items:
             item.arenaPath = arenaPath
+
+    def connectWidgets(self, container):
+        super(SpecialGroundList, self).connectWidgets(container)
+        for item in self.items:
+            item.connectSettings(container)
 
     def getWidgets(self, container):
         self.listWidget = container.GroundList
@@ -333,3 +352,12 @@ class SpecialGroundList(ItemList):
     def selectItem(self, item):
         index = self.items.index(item)
         self.listWidget.setCurrentRow(index)
+
+    def onItemDoubleClicked(self, item):
+        index = self.listWidget.row(item)
+        dialog = TextDialog(self.listWidget, item.text(), "Change name")
+        if dialog.exec_() == QDialog.Accepted:
+            line_edit_value = dialog.getLineEditValue()
+            if line_edit_value:
+                item.setText(line_edit_value)
+                self.items[index].name = line_edit_value

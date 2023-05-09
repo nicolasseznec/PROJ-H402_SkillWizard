@@ -153,6 +153,8 @@ class ArenaView(QGroupBox):
         self.settingsTab = ResourceLoader.loadWidget("ArenaSettingsTab.ui")
         self.settingsTab.layout().setAlignment(Qt.AlignTop)
 
+        self.ArenaEditSettings.setCurrentIndex(0)
+
         self.blockSignal = False
         self.settingsTab.ArenaEditButton.clicked.connect(self.arenaClicked)
         self.settingsTab.Shape.currentIndexChanged.connect(self.shapeChanged)

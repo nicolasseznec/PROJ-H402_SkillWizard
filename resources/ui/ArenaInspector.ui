@@ -63,7 +63,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="StartAreaSettings">
       <attribute name="title">
@@ -195,7 +195,7 @@
        <item row="2" column="1">
         <widget class="QStackedWidget" name="StartAreaDimensionSettings">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="CirclePage">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -343,6 +343,274 @@
          <property name="frameShadow">
           <enum>QFrame::Sunken</enum>
          </property>
+         <layout class="QFormLayout" name="formLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Shape</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="GroundShape">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>Circle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Rectangle</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QStackedWidget" name="GroundDimensionSettings">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="CirclePage_2">
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Radius</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="GroundRadius">
+                <property name="maximum">
+                 <number>250</number>
+                </property>
+                <property name="value">
+                 <number>50</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="RectanglePage_2">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_11">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>width</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="GroundWidth">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_12">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>height</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="GroundHeight">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Position</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QWidget" name="StartAreaPosVector_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>x</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="GroundX">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>2</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimum">
+                <number>-250</number>
+               </property>
+               <property name="maximum">
+                <number>250</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="GroundY">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>2</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimum">
+                <number>-250</number>
+               </property>
+               <property name="maximum">
+                <number>250</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QPushButton" name="GroundReset">
+            <property name="text">
+             <string>Reset Position</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="GroundColor">
+            <item>
+             <property name="text">
+              <string>Black</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Gray</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>White</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item alignment="Qt::AlignRight">
@@ -418,6 +686,22 @@
     <hint type="destinationlabel">
      <x>655</x>
      <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GroundShape</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GroundDimensionSettings</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>678</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>651</x>
+     <y>113</y>
     </hint>
    </hints>
   </connection>
