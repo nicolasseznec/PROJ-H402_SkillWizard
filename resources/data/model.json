@@ -114,6 +114,24 @@
           "desc": "Steady movement away from robots/objects of a specific color."
         }
       ]
+    },
+    {
+      "name": "Message-Attraction",
+      "id": 8,
+      "skills": [2],
+      "parameters": [
+
+      ],
+      "desc": "The robot goes towards messaging peers."
+    },
+    {
+      "name": "Message-Repulsion",
+      "id": 9,
+      "skills": [2],
+      "parameters": [
+
+      ],
+      "desc": "The robot goes away from messaging peers."
     }
   ]
 }

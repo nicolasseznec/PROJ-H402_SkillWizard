@@ -42,6 +42,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.center = QPointF(0, 0)
         self.shape = Shape.Dodecagon
         self.setSceneRect(-250, -250, 500, 500)
+        self.addRect(-250, -250, 500, 500, QPen(Qt.NoPen), QBrush(Qt.black, Qt.Dense2Pattern))
 
         self.shapePaths = {shape: self.getShapePath(shape) for shape in ArenaShape}  # QGraphicsPathItem
         self.shapeContours = {shape: self.getShapePath(shape) for shape in ArenaShape}

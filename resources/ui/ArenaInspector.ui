@@ -63,7 +63,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="StartAreaSettings">
       <attribute name="title">
@@ -317,7 +317,7 @@
      </widget>
      <widget class="QWidget" name="ObjectsSettings">
       <attribute name="title">
-       <string>Objects</string>
+       <string>Floor</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="leftMargin">

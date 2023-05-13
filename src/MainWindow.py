@@ -1,10 +1,6 @@
 import json
 
-from PyQt5.QtWidgets import (
-    QMainWindow,
-    QFileDialog,
-    QMessageBox
-)
+from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
 from src.mission import MissionController
 from src.util import ResourceLoader, displayError

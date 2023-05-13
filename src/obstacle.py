@@ -1,10 +1,9 @@
-from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem, QDialog
+from PyQt5.QtWidgets import QGraphicsItem
 from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush
-from PyQt5.QtCore import Qt, QPointF
+from PyQt5.QtCore import Qt
 
-from src.itemList import ItemList, TextDialog
 from src.startArea import StartArea, MultiArenaZone, StartShape, ArenaList
-from src.util import Event, DataContainer, Shape
+from src.util import Event, Shape
 
 
 class Obstacle(StartArea):
@@ -24,7 +23,9 @@ class ObstacleView(MultiArenaZone):
 
         brush = QBrush(Qt.black, Qt.Dense2Pattern)
         self.setBrush(brush)
-        self.setPen(QPen(Qt.black))
+        pen = QPen(Qt.gray)
+        pen.setWidth(2)
+        self.setPen(pen)
 
         self.orientation = 0
         self.name = "New Obstacle"

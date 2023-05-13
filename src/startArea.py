@@ -141,7 +141,7 @@ class StartAreaView(ArenaZone):
         self.setZValue(2)
 
     def setTabFocus(self, focus):
-        self.setOpacity(0.9 if focus else 0.3)
+        self.setOpacity(0.7 if focus else 0.3)
         if focus:
             self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
         else:
