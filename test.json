@@ -1,65 +1,10 @@
 {
-  "Skills": [
-    {
-      "name": "Communicate",
-      "id": 2,
-      "parameters": []
-    }
-  ],
-  "Behaviours": [
-    {
-      "name": "Attraction",
-      "id": 4,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Attraction factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Repulsion",
-      "id": 5,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Repulsion factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Message-Attraction",
-      "id": 8,
-      "skills": [
-        2
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Message-Repulsion",
-      "id": 9,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Repulsion factor [0,5]",
-          "type": "int",
-          "value": 2.0
-        }
-      ]
-    }
-  ],
+  "Skills": [],
+  "Behaviours": [],
   "Arena": {
-    "shape": "Dodecagon",
+    "shape": "Octagon",
+    "sideLength": 1,
+    "robotNumber": 1,
     "StartArea": {
       "x": 0,
       "y": 0,

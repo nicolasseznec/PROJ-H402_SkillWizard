@@ -1,9 +1,11 @@
 import json
 
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from os.path import basename
 
 from src.mission import MissionController
 from src.util import ResourceLoader, displayError
+from src.argosGenerator import generateArgosFile
 
 
 class MainWindow(QMainWindow):  # TODO : Controller/View?
@@ -22,6 +24,7 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
         self.actionOpenMission.triggered.connect(self.onOpenMission)
         self.actionSave.triggered.connect(self.onSave)
         self.actionSave_as.triggered.connect(self.onSaveAs)
+        self.actionGenerateArgosFile.triggered.connect(self.onGenerateArgos)
 
     def onCreateMission(self):
         self.mission_controller.createMission()
@@ -68,4 +71,18 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
 
     def openMissionView(self):
         self.setCentralWidget(self.mission_controller.getView())
+
+    def onGenerateArgos(self):
+        if not self.mission_controller.hasCurrentMission():
+            return
+
+        file_dialog = QFileDialog()
+        file_path = file_dialog.getSaveFileName(None, "Export to Argos", "", "Argos files (*.argos)")[0]
+
+        if file_path:
+            options = {}
+            if self.currentSavePath:
+                options["source"] = basename(self.currentSavePath)
+
+            generateArgosFile(self.mission_controller.current_mission, file_path, **options)
 

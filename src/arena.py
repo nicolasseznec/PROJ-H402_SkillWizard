@@ -16,21 +16,25 @@ ArenaShape = [Shape(i) for i in range(1, 6)]
 class Arena:
     def __init__(self, data=None):
         self.shape = Shape.Square.name
+        self.sideLength = 1
+        self.robotNumber = 1
 
         if data is None:
             data = {}
         self.loadFromData(data)
 
-        # self.sideLength = 66
-
     def loadFromData(self, data, updateStartArea=True):
         self.shape = Shape.Dodecagon.name if "shape" not in data else data["shape"]
+        self.sideLength = 1 if "sideLength" not in data else data["sideLength"]
+        self.robotNumber = 1 if "robotNumber" not in data else data["robotNumber"]
         if updateStartArea:
             self.startArea = StartArea({} if "StartArea" not in data else data["StartArea"])
 
     def toJson(self):
         return {
             "shape": self.shape,
+            "sideLength": self.sideLength,
+            "robotNumber": self.robotNumber,
             "StartArea": self.startArea.toJson()
         }
 
@@ -38,6 +42,9 @@ class Arena:
 class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
     def __init__(self, *__args):
         super().__init__(*__args)
+
+        self.sideLength = 1
+        self.robotNumber = 1
         self.areaSize = QPoint(500, 500)
         self.center = QPointF(0, 0)
         self.shape = Shape.Dodecagon
@@ -118,6 +125,12 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.shape = shape
         self.update()
 
+    def setSideLength(self, value):
+        self.sideLength = value
+
+    def setRobotNumber(self, value):
+        self.robotNumber = value
+
     def connectSettings(self, container):
         self.settingsContainer = container
         self.startArea.connectSettings(container)
@@ -170,6 +183,8 @@ class ArenaView(QGroupBox):
         self.blockSignal = False
         self.settingsTab.ArenaEditButton.clicked.connect(self.arenaClicked)
         self.settingsTab.Shape.currentIndexChanged.connect(self.shapeChanged)
+        self.settingsTab.RobotNumber.valueChanged.connect(self.numberRobotsChanged)
+        self.settingsTab.SideLength.valueChanged.connect(self.sideLengthChanged)
         self.onArenaClicked = Event()
 
         self.arenaRenderArea = ArenaRenderArea()
@@ -194,16 +209,32 @@ class ArenaView(QGroupBox):
 
         self.onArenaSettingsChanged(self.packChanges())
 
+    def numberRobotsChanged(self, value):
+        if self.blockSignal:
+            return
+        self.arenaRenderArea.setRobotNumber(value)
+        self.onArenaSettingsChanged(self.packChanges())
+
+    def sideLengthChanged(self, value):
+        if self.blockSignal:
+            return
+        self.arenaRenderArea.setSideLength(value)
+        self.onArenaSettingsChanged(self.packChanges())
+
     def updateView(self, arena):
         self.arenaRenderArea.updateView(arena)
 
         self.blockSignal = True
         self.settingsTab.Shape.setCurrentIndex(ArenaShape.index(self.arenaRenderArea.shape))
+        self.settingsTab.RobotNumber.setValue(arena.robotNumber)
+        self.settingsTab.SideLength.setValue(arena.sideLength)
         self.blockSignal = False
 
     def packChanges(self):
         return {
-            "shape": self.arenaRenderArea.shape.name
+            "shape": self.arenaRenderArea.shape.name,
+            "sideLength": self.arenaRenderArea.sideLength,
+            "robotNumber": self.arenaRenderArea.robotNumber,
         }
 
 

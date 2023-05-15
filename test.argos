@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+  <!--Gnerated from test.json-->
+   
+  <!-- ************* -->
+  <!-- * Framework * -->
+  <!-- ************* -->
+  <framework>
+    <experiment length="60" ticks_per_second="10" random_seed="0"/>
+  </framework>
+   
+  <!-- ****************** -->
+  <!-- * Loop functions * -->
+  <!-- ****************** -->
+  <loop_functions/>
+   
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers/>
+   
+  <!-- ********* -->
+  <!-- * Arena * -->
+  <!-- ********* -->
+  <arena size="10, 10, 1" center="0,0,0">
+    <!--Octagon arena with side of length 1-->
+    <box id="wall_1" size="0.01,1,0.08" movable="false">
+      <body position="1.207,0.0,0" orientation="0.0,0,0"/>
+    </box>
+    <box id="wall_2" size="0.01,1,0.08" movable="false">
+      <body position="0.854,0.854,0" orientation="45.0,0,0"/>
+    </box>
+    <box id="wall_3" size="0.01,1,0.08" movable="false">
+      <body position="0.0,1.207,0" orientation="90.0,0,0"/>
+    </box>
+    <box id="wall_4" size="0.01,1,0.08" movable="false">
+      <body position="-0.854,0.854,0" orientation="135.0,0,0"/>
+    </box>
+    <box id="wall_5" size="0.01,1,0.08" movable="false">
+      <body position="-1.207,0.0,0" orientation="180.0,0,0"/>
+    </box>
+    <box id="wall_6" size="0.01,1,0.08" movable="false">
+      <body position="-0.854,-0.854,0" orientation="225.0,0,0"/>
+    </box>
+    <box id="wall_7" size="0.01,1,0.08" movable="false">
+      <body position="-0.0,-1.207,0" orientation="270.0,0,0"/>
+    </box>
+    <box id="wall_8" size="0.01,1,0.08" movable="false">
+      <body position="0.854,-0.854,0" orientation="315.0,0,0"/>
+    </box>
+  </arena>
+   
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics2d id="dyn2d"/>
+  </physics_engines>
+   
+  <!-- ********* -->
+  <!-- * Media * -->
+  <!-- ********* -->
+  <media>
+    <led id="leds" grid_size="1,1,1"/>
+    <range_and_bearing id="ircom"/>
+    <range_and_bearing id="rab"/>
+  </media>
+   
+  <!-- ***************** -->
+  <!-- * Visualization * -->
+  <!-- ***************** -->
+  <visualization/>
+   
+</argos-configuration>
