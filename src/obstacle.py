@@ -1,24 +1,17 @@
-from PyQt5.QtWidgets import QGraphicsItem
-from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush
+from PyQt5.QtGui import QPen, QBrush
 from PyQt5.QtCore import Qt
 
-from src.startArea import StartArea, MultiArenaZone, StartShape, ArenaList
+from src.startArea import MultiArenaZone, StartShape, ArenaList, MultiArenaZoneModel
 from src.util import Event, Shape
 
 
-class Obstacle(StartArea):
-    def getAttributes(self):
-        attributes = super(Obstacle, self).getAttributes()
-        attributes.update({
-            "orientation": 0
-        })
-        return attributes
+class Obstacle(MultiArenaZoneModel):
+    pass
 
 
 class ObstacleView(MultiArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
-        self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.setZValue(1)
 
         brush = QBrush(Qt.black, Qt.Dense2Pattern)
@@ -66,15 +59,8 @@ class ObstacleView(MultiArenaZone):
         self.updateDimensions(Shape.Rectangle)
         self.onItemChanged(self.packChanges())
 
-    def updateProperties(self, ground):
-        # self.radius = startArea.radius
-        # self.width = startArea.width
-        # self.height = startArea.height
-        # self.shape = Shape[startArea.shape]
-        # self.setPos(startArea.x, startArea.y)
-        # self name =
-        # self.orientation = 
-        self.updateDimensions()
+    def updateProperties(self, model):
+        super(ObstacleView, self).updateProperties(model)
         self.updateView()
 
     def updateView(self):
@@ -106,3 +92,8 @@ class ObstacleList(ArenaList):
         self.listWidget = container.ObstacleList
         self.addButton = container.ObstacleAdd
         self.removeButton = container.ObstacleRemove
+
+    def packChanges(self):
+        return {
+            "obstacles": [item.packChanges() for item in self.items]
+        }

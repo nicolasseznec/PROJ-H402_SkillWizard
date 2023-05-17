@@ -135,6 +135,14 @@ class ArenaZone(QGraphicsPathItem):
         if self.settingsContainer is None:
             return
 
+    def updateProperties(self, model):
+        self.radius = model.radius
+        self.width = model.width
+        self.height = model.height
+        self.shape = Shape[model.shape]
+        self.setPos(model.x, model.y)
+        self.updateDimensions()
+
 
 class StartAreaView(ArenaZone):
     def __init__(self, arenaPath):
@@ -161,13 +169,8 @@ class StartAreaView(ArenaZone):
         container.StartAreaX.valueChanged.connect(self.posXChanged)
         container.StartAreaY.valueChanged.connect(self.posYChanged)
 
-    def updateProperties(self, startArea):
-        self.radius = startArea.radius
-        self.width = startArea.width
-        self.height = startArea.height
-        self.shape = Shape[startArea.shape]
-        self.setPos(startArea.x, startArea.y)
-        self.updateDimensions()
+    def updateProperties(self, model):
+        super(StartAreaView, self).updateProperties(model)
 
         if self.settingsContainer is None:
             return
@@ -185,11 +188,30 @@ class StartAreaView(ArenaZone):
         self.settingsContainer.StartAreaY.setValue(int(self.y()))
 
 
+class MultiArenaZoneModel(StartArea):
+    def __init__(self, data):
+        super(MultiArenaZoneModel, self).__init__(data)
+
+        if "caller" in data:
+            self.uuid = data["caller"].uuid
+        else:
+            self.uuid = generateUuid()
+
+    def getAttributes(self):
+        attributes = super(MultiArenaZoneModel, self).getAttributes()
+        attributes.update({
+            "name": "new (model)",
+        })
+        return attributes
+
+
 class MultiArenaZone(ArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.onSelected = Event()
+        self.uuid = generateUuid()
+        self.name = "new (view)"
 
     def setTabFocus(self, focus):
         if focus:
@@ -215,21 +237,22 @@ class MultiArenaZone(ArenaZone):
         return super(MultiArenaZone, self).itemChange(change, value)
 
     def updateProperties(self, model):
-        pass
+        super(MultiArenaZone, self).updateProperties(model)
+        self.uuid = model.uuid
+        self.name = model.name
+
+    def packChanges(self):
+        changes = super(MultiArenaZone, self).packChanges()
+        changes.update({
+            "name": self.name,
+        })
+        return changes
 
 
 GrounColor = [Color.Black, Color.Gray, Color.White]
 
 
-class SpecialGround(StartArea):
-    def __init__(self, data):
-        super(SpecialGround, self).__init__(data)
-
-        if "caller" in data:
-            self.uuid = data["caller"].uuid
-        else:
-            self.uuid = generateUuid()
-
+class SpecialGround(MultiArenaZoneModel):
     def getAttributes(self):
         attributes = super(SpecialGround, self).getAttributes()
         attributes.update({
@@ -241,12 +264,10 @@ class SpecialGround(StartArea):
 class SpecialGroundView(MultiArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
-        self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.setBrush(QBrush(Qt.black))
         pen = QPen(Qt.NoPen)
         self.setPen(pen)
 
-        self.uuid = generateUuid()
         self.color = Color.Black
         self.name = "New Floor"
         self.onSelected = Event()
@@ -284,7 +305,6 @@ class SpecialGroundView(MultiArenaZone):
     def colorChanged(self, index):
         if self.blockSignal:
             return
-        print("color changed", self.uuid, index)
         self.color = GrounColor[index]
 
         self.updateColor()
@@ -299,16 +319,9 @@ class SpecialGroundView(MultiArenaZone):
         elif self.color == Color.Gray:
             self.setBrush(QBrush(Qt.gray))
 
-    def updateProperties(self, ground):
-        self.radius = ground.radius
-        self.width = ground.width
-        self.height = ground.height
-        self.shape = Shape[ground.shape]
-        self.setPos(ground.x, ground.y)
-        self.color = Color[ground.color]
-        self.uuid = ground.uuid
-        # self.name =
-        self.updateDimensions()
+    def updateProperties(self, model):
+        super(SpecialGroundView, self).updateProperties(model)
+        self.color = Color[model.color]
         self.updateView()
 
     def updateView(self):
@@ -330,7 +343,7 @@ class SpecialGroundView(MultiArenaZone):
         self.settingsContainer.GroundY.setValue(int(self.y()))
 
     def packChanges(self):
-        changes = super(MultiArenaZone, self).packChanges()
+        changes = super(SpecialGroundView, self).packChanges()
         changes.update({
             "color": self.color.name,
         })
@@ -388,17 +401,17 @@ class ArenaList(ItemList):
             line_edit_value = dialog.getLineEditValue()
             if line_edit_value:
                 item.setText(line_edit_value)
-                self.items[index].name = line_edit_value
-                # self.onListChanged()  # TODO : save names in model
+                grahpicsItem = self.items[index]
+                grahpicsItem.name = line_edit_value
+                grahpicsItem.onItemChanged(grahpicsItem.packChanges())
 
     def loadItem(self, model):
         item = self.createNewItem()
         item.updateProperties(model)
-        item.setSelected(False)
-        self.listWidget.addItem(self.getDefaultName())  # TODO : load name
+        item.setTabFocus(False)
+        self.listWidget.addItem(model.name)
         self.items.append(item)
         self.onItemAdded(item)
-        # self.listWidget.setCurrentRow(self.listWidget.count() - 1)
 
 
 class SpecialGroundList(ArenaList):
