@@ -9,6 +9,8 @@ class ItemList:
         self.onItemRemoved = Event()
         self.onItemSelected = Event()
         self.onItemAdded = Event()
+        self.onListChanged = Event()
+        self.onItemChanged = Event()
         self.container = None
 
         if container is not None:
@@ -19,6 +21,7 @@ class ItemList:
         item = self.createNewItem()
         self.items.append(item)
         self.onItemAdded(item)
+        self.onListChanged(self.packChanges())
         self.listWidget.setCurrentRow(self.listWidget.count()-1)
 
     def onRemove(self):
@@ -28,6 +31,7 @@ class ItemList:
         self.listWidget.takeItem(index)
         item = self.items.pop(index)
         self.onItemRemoved(item)
+        self.onListChanged(self.packChanges())
         self.handleRemoval(item)
 
     def getDefaultName(self):
@@ -57,6 +61,11 @@ class ItemList:
 
     def onItemDoubleClicked(self, item):
         pass
+
+    def packChanges(self):
+        return {
+            "items": self.items
+        }
 
 
 class TextDialog(QDialog):

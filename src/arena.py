@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPainter, QColor, QPainterPath, QPolygonF, QPen, QBrush
 from PyQt5.QtCore import Qt, QPoint, QPointF
 
 from src.util import ResourceLoader, Event, Shape
-from src.startArea import StartArea, StartAreaView, SpecialGroundList
+from src.startArea import StartArea, StartAreaView, SpecialGroundList, SpecialGround
 from src.obstacle import ObstacleView, ObstacleList
 
 ArenaShape = [Shape(i) for i in range(1, 6)]
@@ -18,6 +18,8 @@ class Arena:
         self.shape = Shape.Square.name
         self.sideLength = 1
         self.robotNumber = 1
+        self.obstacles = []
+        self.floors = []
 
         if data is None:
             data = {}
@@ -29,13 +31,16 @@ class Arena:
         self.robotNumber = 1 if "robotNumber" not in data else data["robotNumber"]
         if updateStartArea:
             self.startArea = StartArea({} if "StartArea" not in data else data["StartArea"])
+            if "floors" in data:
+                self.floors = [SpecialGround(f) for f in data["floors"]]
 
     def toJson(self):
         return {
             "shape": self.shape,
             "sideLength": self.sideLength,
             "robotNumber": self.robotNumber,
-            "StartArea": self.startArea.toJson()
+            "StartArea": self.startArea.toJson(),
+            "floors": [f.toJson() for f in self.floors],
         }
 
 
@@ -43,6 +48,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
     def __init__(self, *__args):
         super().__init__(*__args)
 
+        self.blockSignal = False
         self.sideLength = 1
         self.robotNumber = 1
         self.areaSize = QPoint(500, 500)
@@ -152,21 +158,34 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.obstacleList.setTabFocus(index == 2)
 
     def updateView(self, arena):
+
         self.setShape(Shape[arena.shape])
         self.startArea.updateProperties(arena.startArea)
 
+        for elem in arena.floors:
+            self.groundList.loadItem(elem)  # TODO : item name
+
     def onItemSelected(self, item):
+        if self.blockSignal:
+            return
+
         self.groundList.unselectAll()
         self.obstacleList.unselectAll()
         item.setSelected(True)
 
     def onItemRemoved(self, item):
+        if self.blockSignal:
+            return
+
         self.removeItem(item)
         self.update()
 
     def onItemAdded(self, item):
+        if self.blockSignal:
+            return
+
         self.addItem(item)
-        item.setSelected(True)
+        # item.setSelected(True)
         self.update()
 
 
@@ -247,6 +266,8 @@ class ArenaController:
         self.view.onArenaClicked += self.onArenaClicked
         self.view.onArenaSettingsChanged += self.onSettingsChanged
         self.view.arenaRenderArea.startArea.onItemChanged += self.onStartAreaChanged
+        self.view.arenaRenderArea.groundList.onListChanged += self.onFloorsChanged
+        self.view.arenaRenderArea.groundList.onItemChanged += self.onFloorsItemChanged
 
     def getView(self):
         return self.view
@@ -269,6 +290,21 @@ class ArenaController:
     def onStartAreaChanged(self, values):
         if self.arena is not None:
             self.arena.startArea.loadFromData(values)
+
+    def onFloorsChanged(self, values):
+        if self.arena is not None:
+            self.arena.loadFromData(values)
+
+    def onFloorsItemChanged(self, values):
+        if self.arena is not None:
+            uuid = values["caller"].uuid
+            updated = False
+            for f in self.arena.floors:
+                if uuid == f.uuid:
+                    f.loadFromData(values)
+                    updated = True
+            if not updated:
+                self.arena.floors.append(SpecialGround(values))  # TODO : in arena object
 
     def onSettingsChanged(self, values):
         if self.arena is not None:

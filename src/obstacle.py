@@ -96,7 +96,7 @@ class ObstacleView(MultiArenaZone):
 
 
 class ObstacleList(ArenaList):
-    def itemFactory(self, arenaPath):
+    def itemFactory(self, arenaPath, model=None):
         return ObstacleView(self.arenaPath)
 
     def getDefaultName(self):

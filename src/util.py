@@ -1,5 +1,6 @@
 from importlib import resources
 from enum import Enum
+import uuid
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMessageBox
@@ -87,3 +88,6 @@ def displayError(title, message):
     error_message.setText(message)
     error_message.exec()
 
+
+def generateUuid():
+    return uuid.uuid4()

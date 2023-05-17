@@ -3,7 +3,7 @@ from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush
 from PyQt5.QtCore import Qt, QPointF
 
 from src.itemList import ItemList, TextDialog
-from src.util import Event, DataContainer, Shape, Color
+from src.util import Event, DataContainer, Shape, Color, generateUuid
 
 StartShape = [Shape.Circle, Shape.Rectangle]  # TODO : ZoneShape
 
@@ -122,6 +122,7 @@ class ArenaZone(QGraphicsPathItem):
 
     def packChanges(self):
         return {
+            "caller": self,
             "radius": self.radius,
             "width": self.width,
             "height": self.height,
@@ -213,15 +214,26 @@ class MultiArenaZone(ArenaZone):
 
         return super(MultiArenaZone, self).itemChange(change, value)
 
+    def updateProperties(self, model):
+        pass
+
 
 GrounColor = [Color.Black, Color.Gray, Color.White]
 
 
 class SpecialGround(StartArea):
+    def __init__(self, data):
+        super(SpecialGround, self).__init__(data)
+
+        if "caller" in data:
+            self.uuid = data["caller"].uuid
+        else:
+            self.uuid = generateUuid()
+
     def getAttributes(self):
         attributes = super(SpecialGround, self).getAttributes()
         attributes.update({
-            "color": Color.Black.name
+            "color": Color.Black.name,
         })
         return attributes
 
@@ -234,6 +246,7 @@ class SpecialGroundView(MultiArenaZone):
         pen = QPen(Qt.NoPen)
         self.setPen(pen)
 
+        self.uuid = generateUuid()
         self.color = Color.Black
         self.name = "New Floor"
         self.onSelected = Event()
@@ -271,8 +284,14 @@ class SpecialGroundView(MultiArenaZone):
     def colorChanged(self, index):
         if self.blockSignal:
             return
+        print("color changed", self.uuid, index)
         self.color = GrounColor[index]
 
+        self.updateColor()
+        self.scene().update()
+        self.onItemChanged(self.packChanges())
+
+    def updateColor(self):
         if self.color == Color.Black:
             self.setBrush(QBrush(Qt.black))
         elif self.color == Color.White:
@@ -280,23 +299,21 @@ class SpecialGroundView(MultiArenaZone):
         elif self.color == Color.Gray:
             self.setBrush(QBrush(Qt.gray))
 
-        self.scene().update()
-        self.onItemChanged(self.packChanges())
-
     def updateProperties(self, ground):
-        # self.radius = startArea.radius
-        # self.width = startArea.width
-        # self.height = startArea.height
-        # self.shape = Shape[startArea.shape]
-        # self.setPos(startArea.x, startArea.y)
-        # self name =
+        self.radius = ground.radius
+        self.width = ground.width
+        self.height = ground.height
+        self.shape = Shape[ground.shape]
+        self.setPos(ground.x, ground.y)
+        self.color = Color[ground.color]
+        self.uuid = ground.uuid
+        # self.name =
         self.updateDimensions()
         self.updateView()
 
     def updateView(self):
         if self.settingsContainer is None:
             return
-
         self.blockSignal = True
         self.settingsContainer.GroundWidth.setValue(self.width)
         self.settingsContainer.GroundHeight.setValue(self.height)
@@ -304,6 +321,7 @@ class SpecialGroundView(MultiArenaZone):
         self.settingsContainer.GroundShape.setCurrentIndex(StartShape.index(self.shape))
         self.settingsContainer.GroundColor.setCurrentIndex(GrounColor.index(self.color))
         self.updatePos()
+        self.updateColor()
         self.blockSignal = False
 
     def updatePos(self):
@@ -311,19 +329,31 @@ class SpecialGroundView(MultiArenaZone):
         self.settingsContainer.GroundX.setValue(int(self.x()))
         self.settingsContainer.GroundY.setValue(int(self.y()))
 
+    def packChanges(self):
+        changes = super(MultiArenaZone, self).packChanges()
+        changes.update({
+            "color": self.color.name,
+        })
+        return changes
+
 
 class ArenaList(ItemList):
     def createNewItem(self):
         item: MultiArenaZone = self.itemFactory(self.arenaPath)
         item.onSelected += self.selectItem
+        item.onItemChanged += self.onItemChange
         item.connectSettings(self.container)
         return item
+
+    def onItemChange(self, value):
+        self.onItemChanged(value)
 
     def itemFactory(self, arenaPath):
         return MultiArenaZone(arenaPath)
 
     def handleRemoval(self, item):
         item.onSelected -= self.selectItem
+        item.onItemChanged -= self.onItemChange
         item.disconnectSettings()
 
     def setArenaPath(self, arenaPath):
@@ -359,11 +389,21 @@ class ArenaList(ItemList):
             if line_edit_value:
                 item.setText(line_edit_value)
                 self.items[index].name = line_edit_value
+                # self.onListChanged()  # TODO : save names in model
+
+    def loadItem(self, model):
+        item = self.createNewItem()
+        item.updateProperties(model)
+        item.setSelected(False)
+        self.listWidget.addItem(self.getDefaultName())  # TODO : load name
+        self.items.append(item)
+        self.onItemAdded(item)
+        # self.listWidget.setCurrentRow(self.listWidget.count() - 1)
 
 
 class SpecialGroundList(ArenaList):
-    def itemFactory(self, arenaPath):
-        return SpecialGroundView(self.arenaPath)
+    def itemFactory(self, arenaPath, model=None):
+        return SpecialGroundView(self.arenaPath, model)
 
     def getDefaultName(self):
         return "New Floor"
@@ -372,3 +412,8 @@ class SpecialGroundList(ArenaList):
         self.listWidget = container.GroundList
         self.addButton = container.GroundAdd
         self.removeButton = container.GroundRemove
+
+    def packChanges(self):
+        return {
+            "floors": [item.packChanges() for item in self.items]
+        }
