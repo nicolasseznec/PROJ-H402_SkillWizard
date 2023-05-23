@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem, QDialog
-from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush
+from PyQt5.QtGui import QColor, QPainterPath, QPen, QBrush, QTransform
 from PyQt5.QtCore import Qt, QPointF
 
 from src.itemList import ItemList, TextDialog
@@ -16,7 +16,8 @@ class StartArea(DataContainer):
             "width": 100,
             "height": 100,
             "radius": 50,
-            "shape": Shape.Circle.name
+            "shape": Shape.Circle.name,
+            "orientation": 0,
         }
 
 
@@ -37,6 +38,7 @@ class ArenaZone(QGraphicsPathItem):
         self.radius = 50
         self.width = 100
         self.height = 100
+        self.orientation = 0
         self.setShape(Shape.Circle)
         self.updateDimensions()
 
@@ -57,8 +59,12 @@ class ArenaZone(QGraphicsPathItem):
         path = QPainterPath()
         if shape == Shape.Rectangle:
             path.addRect(-self.width/2, -self.height/2, self.width, self.height)
+            rotation = QTransform()
+            rotation.rotate(self.orientation)
+            path = rotation.map(path)
         elif shape == Shape.Circle:
             path.addEllipse(-self.radius, -self.radius, self.radius*2, self.radius*2)
+
         return path
 
     def setShape(self, shape):
@@ -82,6 +88,13 @@ class ArenaZone(QGraphicsPathItem):
             return
         self.radius = value
         self.updateDimensions(Shape.Circle)
+        self.onItemChanged(self.packChanges())
+
+    def orientationChanged(self, value):
+        if self.blockSignal:
+            return
+        self.orientation = value
+        self.updateDimensions(Shape.Rectangle)
         self.onItemChanged(self.packChanges())
 
     def widthChanged(self, value):
@@ -128,7 +141,8 @@ class ArenaZone(QGraphicsPathItem):
             "height": self.height,
             "x": int(self.x()),
             "y": int(self.y()),
-            "shape": self.shape.name
+            "shape": self.shape.name,
+            "orientation": self.orientation,
         }
 
     def updatePos(self):
@@ -137,6 +151,7 @@ class ArenaZone(QGraphicsPathItem):
 
     def updateProperties(self, model):
         self.radius = model.radius
+        self.orientation = model.orientation
         self.width = model.width
         self.height = model.height
         self.shape = Shape[model.shape]
@@ -163,6 +178,7 @@ class StartAreaView(ArenaZone):
         container.StartAreaReset.clicked.connect(self.resetPosition)
 
         container.StartAreaRadius.valueChanged.connect(self.radiusChanged)
+        container.StartAreaOrientation.valueChanged.connect(self.orientationChanged)
         container.StartAreaWidth.valueChanged.connect(self.widthChanged)
         container.StartAreaHeight.valueChanged.connect(self.heightChanged)
 
@@ -179,6 +195,7 @@ class StartAreaView(ArenaZone):
         self.settingsContainer.StartAreaWidth.setValue(self.width)
         self.settingsContainer.StartAreaHeight.setValue(self.height)
         self.settingsContainer.StartAreaRadius.setValue(self.radius)
+        self.settingsContainer.StartAreaOrientation.setValue(self.orientation)
         self.settingsContainer.StartAreaShape.setCurrentIndex(StartShape.index(self.shape))
         self.blockSignal = False
 
@@ -283,6 +300,7 @@ class SpecialGroundView(MultiArenaZone):
         container.GroundRadius.valueChanged.connect(self.radiusChanged)
         container.GroundWidth.valueChanged.connect(self.widthChanged)
         container.GroundHeight.valueChanged.connect(self.heightChanged)
+        container.GroundOrientation.valueChanged.connect(self.orientationChanged)
 
         container.GroundX.valueChanged.connect(self.posXChanged)
         container.GroundY.valueChanged.connect(self.posYChanged)
@@ -298,6 +316,7 @@ class SpecialGroundView(MultiArenaZone):
         self.settingsContainer.GroundRadius.valueChanged.disconnect(self.radiusChanged)
         self.settingsContainer.GroundWidth.valueChanged.disconnect(self.widthChanged)
         self.settingsContainer.GroundHeight.valueChanged.disconnect(self.heightChanged)
+        self.settingsContainer.GroundOrientation.valueChanged.disconnect(self.orientationChanged)
 
         self.settingsContainer.GroundX.valueChanged.disconnect(self.posXChanged)
         self.settingsContainer.GroundY.valueChanged.disconnect(self.posYChanged)
@@ -329,6 +348,7 @@ class SpecialGroundView(MultiArenaZone):
             return
         self.blockSignal = True
         self.settingsContainer.GroundWidth.setValue(self.width)
+        self.settingsContainer.GroundOrientation.setValue(self.orientation)
         self.settingsContainer.GroundHeight.setValue(self.height)
         self.settingsContainer.GroundRadius.setValue(self.radius)
         self.settingsContainer.GroundShape.setCurrentIndex(StartShape.index(self.shape))

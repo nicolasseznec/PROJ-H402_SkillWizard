@@ -6,53 +6,36 @@
     "sideLength": 1,
     "robotNumber": 1,
     "StartArea": {
-      "x": 0,
-      "y": 0,
+      "x": -84,
+      "y": -113,
       "width": 100,
       "height": 100,
       "radius": 50,
-      "shape": "Circle"
+      "shape": "Rectangle",
+      "orientation": 51
     },
     "floors": [
       {
-        "x": 138,
-        "y": -80,
-        "width": 100,
-        "height": 100,
-        "radius": 50,
-        "shape": "Circle",
-        "name": "1",
-        "color": "White"
-      },
-      {
-        "x": 158,
-        "y": 45,
-        "width": 100,
-        "height": 100,
-        "radius": 50,
-        "shape": "Circle",
-        "name": "2",
-        "color": "Gray"
-      },
-      {
-        "x": 62,
-        "y": 145,
-        "width": 100,
-        "height": 100,
-        "radius": 50,
-        "shape": "Circle",
-        "name": "3",
-        "color": "Black"
-      }
-    ],
-    "obstacles": [
-      {
-        "x": 12,
-        "y": -170,
+        "x": 113,
+        "y": -104,
         "width": 100,
         "height": 100,
         "radius": 50,
         "shape": "Rectangle",
+        "orientation": 60,
+        "name": "New Floor",
+        "color": "White"
+      }
+    ],
+    "obstacles": [
+      {
+        "x": -128,
+        "y": 30,
+        "width": 10,
+        "height": 100,
+        "radius": 50,
+        "shape": "Rectangle",
+        "orientation": 235,
         "name": "New Obstacle"
       }
     ]

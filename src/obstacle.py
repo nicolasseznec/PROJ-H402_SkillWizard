@@ -34,6 +34,7 @@ class ObstacleView(MultiArenaZone):
         container.ObstacleRadius.valueChanged.connect(self.radiusChanged)
         container.ObstacleWidth.valueChanged.connect(self.widthChanged)
         container.ObstacleHeight.valueChanged.connect(self.heightChanged)
+        container.ObstacleOrientation.valueChanged.connect(self.orientationChanged)
 
         container.ObstacleX.valueChanged.connect(self.posXChanged)
         container.ObstacleY.valueChanged.connect(self.posYChanged)
@@ -48,6 +49,7 @@ class ObstacleView(MultiArenaZone):
         self.settingsContainer.ObstacleRadius.valueChanged.disconnect(self.radiusChanged)
         self.settingsContainer.ObstacleWidth.valueChanged.disconnect(self.widthChanged)
         self.settingsContainer.ObstacleHeight.valueChanged.disconnect(self.heightChanged)
+        self.settingsContainer.ObstacleOrientation.valueChanged.disconnect(self.orientationChanged)
 
         self.settingsContainer.ObstacleX.valueChanged.disconnect(self.posXChanged)
         self.settingsContainer.ObstacleY.valueChanged.disconnect(self.posYChanged)
@@ -71,6 +73,7 @@ class ObstacleView(MultiArenaZone):
         self.settingsContainer.ObstacleWidth.setValue(self.width)
         self.settingsContainer.ObstacleHeight.setValue(self.height)
         self.settingsContainer.ObstacleRadius.setValue(self.radius)
+        self.settingsContainer.ObstacleOrientation.setValue(self.orientation)
         self.settingsContainer.ObstacleShape.setCurrentIndex(StartShape.index(self.shape))
         self.updatePos()
         self.blockSignal = False

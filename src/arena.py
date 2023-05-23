@@ -220,6 +220,9 @@ class ArenaView(QGroupBox):
     def __init__(self, *__args):
         super().__init__(*__args)
         ResourceLoader.loadWidget("ArenaInspector.ui", self)
+        self.StartAreaSettings.layout().setAlignment(Qt.AlignTop)
+        self.GroundFrame.layout().setAlignment(Qt.AlignTop)
+        self.ObstacleFrame.layout().setAlignment(Qt.AlignTop)
 
         self.settingsTab = ResourceLoader.loadWidget("ArenaSettingsTab.ui")
         self.settingsTab.layout().setAlignment(Qt.AlignTop)
