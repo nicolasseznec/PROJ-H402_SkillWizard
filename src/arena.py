@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt, QPoint, QPointF
 from src.util import ResourceLoader, Event, Shape
 from src.startArea import StartArea, StartAreaView, SpecialGroundList, SpecialGround, SpecialGroundView
 from src.obstacle import ObstacleView, ObstacleList, Obstacle
+from src.light import LightView, LightList, Light
 
 ArenaShape = [Shape(i) for i in range(1, 6)]
 
@@ -20,6 +21,7 @@ class Arena:
         self.robotNumber = 1
         self.obstacles = []
         self.floors = []
+        self.lights = []
 
         if data is None:
             data = {}
@@ -35,6 +37,8 @@ class Arena:
                 self.floors = [SpecialGround(f) for f in data["floors"]]
             if "obstacles" in data:
                 self.obstacles = [Obstacle(o) for o in data["obstacles"]]
+            if "lights" in data:
+                self.lights = [Light(li) for li in data["lights"]]
 
     def updateItem(self, values):
         # Update a single item from one of the object list (floors, obstacles, lights ...)
@@ -50,6 +54,9 @@ class Arena:
         elif isinstance(caller, ObstacleView):
             objects = self.obstacles
             objectFactory = Obstacle
+        elif isinstance(caller, LightView):
+            objects = self.lights
+            objectFactory = Light
 
         updated = False
         for item in objects:
@@ -67,6 +74,7 @@ class Arena:
             "StartArea": self.startArea.toJson(),
             "floors": [f.toJson() for f in self.floors],
             "obstacles": [o.toJson() for o in self.obstacles],
+            "lights": [li.toJson() for li in self.lights],
         }
 
 
@@ -89,7 +97,8 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
 
         self.groundList = SpecialGroundList()
         self.obstacleList = ObstacleList()
-        self.objectLists = [self.groundList, self.obstacleList]
+        self.lightList = LightList()
+        self.objectLists = [self.groundList, self.obstacleList, self.lightList]
 
         self.startArea = StartAreaView(self.shapePaths[self.shape].path())
         self.startArea.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
@@ -181,6 +190,7 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
         self.startArea.setTabFocus(index == 0)
         self.groundList.setTabFocus(index == 1)
         self.obstacleList.setTabFocus(index == 2)
+        self.lightList.setTabFocus(index == 3)
 
     def updateView(self, arena):
 
@@ -191,6 +201,8 @@ class ArenaRenderArea(QGraphicsScene):    # Handles Arena graphics
             self.groundList.loadItem(elem)
         for elem in arena.obstacles:
             self.obstacleList.loadItem(elem)
+        for elem in arena.lights:
+            self.lightList.loadItem(elem)
 
     def onItemSelected(self, item):
         if self.blockSignal:

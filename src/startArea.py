@@ -49,6 +49,7 @@ class ArenaZone(QGraphicsPathItem):
             .translated(-self.scenePos())
         intersect.closeSubpath()
         self.setPath(intersect)
+
         if self.scenePos() != self.prev_pos:
             self.prev_pos = self.scenePos()
             self.updatePos()
@@ -254,9 +255,9 @@ class MultiArenaZone(ArenaZone):
         return super(MultiArenaZone, self).itemChange(change, value)
 
     def updateProperties(self, model):
-        super(MultiArenaZone, self).updateProperties(model)
         self.uuid = model.uuid
         self.name = model.name
+        super(MultiArenaZone, self).updateProperties(model)
 
     def packChanges(self):
         changes = super(MultiArenaZone, self).packChanges()
@@ -287,7 +288,6 @@ class SpecialGroundView(MultiArenaZone):
 
         self.color = Color.Black
         self.name = "New Floor"
-        self.onSelected = Event()
 
     def connectSettings(self, container):
         if container is None:
@@ -339,8 +339,8 @@ class SpecialGroundView(MultiArenaZone):
             self.setBrush(QBrush(Qt.gray))
 
     def updateProperties(self, model):
-        super(SpecialGroundView, self).updateProperties(model)
         self.color = Color[model.color]
+        super(SpecialGroundView, self).updateProperties(model)
         self.updateView()
 
     def updateView(self):
@@ -436,7 +436,7 @@ class ArenaList(ItemList):
 
 class SpecialGroundList(ArenaList):
     def itemFactory(self, arenaPath, model=None):
-        return SpecialGroundView(self.arenaPath, model)
+        return SpecialGroundView(arenaPath, model)
 
     def getDefaultName(self):
         return "New Floor"

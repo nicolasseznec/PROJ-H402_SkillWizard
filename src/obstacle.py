@@ -12,7 +12,7 @@ class Obstacle(MultiArenaZoneModel):
 class ObstacleView(MultiArenaZone):
     def __init__(self, arenaPath, *__args):
         super().__init__(arenaPath, *__args)
-        self.setZValue(1)
+        self.setZValue(2)
 
         brush = QBrush(Qt.black, Qt.Dense2Pattern)
         self.setBrush(brush)
@@ -22,7 +22,6 @@ class ObstacleView(MultiArenaZone):
 
         self.orientation = 0
         self.name = "New Obstacle"
-        self.onSelected = Event()
 
     def connectSettings(self, container):
         if container is None:
