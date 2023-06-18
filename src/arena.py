@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPainter, QColor, QPainterPath, QPolygonF, QPen, QBrush
 from PyQt5.QtCore import Qt, QPoint, QPointF
 
 from src.util import ResourceLoader, Event, Shape
-from src.startArea import StartArea, StartAreaView, SpecialGroundList, SpecialGround, SpecialGroundView
+from src.arenaObjects import StartArea, StartAreaView, SpecialGroundList, SpecialGround, SpecialGroundView
 from src.obstacle import ObstacleView, ObstacleList, Obstacle
 from src.light import LightView, LightList, Light
 

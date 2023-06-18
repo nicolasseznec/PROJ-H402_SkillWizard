@@ -3,7 +3,7 @@ from enum import Enum
 from PyQt5.QtGui import QPen, QBrush, QPainterPath, QRadialGradient, QTransform, QLinearGradient
 from PyQt5.QtCore import Qt, QPoint
 
-from src.startArea import MultiArenaZone, ArenaList, MultiArenaZoneModel, ArenaZone
+from src.arenaObjects import MultiArenaZone, ArenaList, MultiArenaZoneModel, ArenaZone
 from src.util import Color
 
 LightColor = [Color.Red, Color.Green, Color.Blue, Color.Cyan, Color.Magenta, Color.Yellow]

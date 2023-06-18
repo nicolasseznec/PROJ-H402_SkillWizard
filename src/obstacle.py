@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QPen, QBrush
 from PyQt5.QtCore import Qt
 
-from src.startArea import MultiArenaZone, StartShape, ArenaList, MultiArenaZoneModel
+from src.arenaObjects import MultiArenaZone, StartShape, ArenaList, MultiArenaZoneModel
 from src.util import Event, Shape
 
 

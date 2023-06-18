@@ -15,42 +15,8 @@
       "orientation": 0
     },
     "floors": [],
-    "obstacles": [
-      {
-        "x": -75,
-        "y": 120,
-        "width": 50,
-        "height": 200,
-        "radius": 50,
-        "shape": "Rectangle",
-        "orientation": 30,
-        "name": "New Obstacle"
-      },
-      {
-        "x": -107,
-        "y": -112,
-        "width": 100,
-        "height": 100,
-        "radius": 50,
-        "shape": "Rectangle",
-        "orientation": 80,
-        "name": "New Obstacle"
-      }
-    ],
-    "lights": [
-      {
-        "x": 120,
-        "y": -206,
-        "width": 120,
-        "height": 30,
-        "radius": 50,
-        "shape": "Circle",
-        "orientation": 30,
-        "name": "new (view)",
-        "color": "Red",
-        "lightType": "WallLight",
-        "strength": 10
-      }
-    ]
-  }
+    "obstacles": [],
+    "lights": []
+  },
+  "ReferenceModel": "RM1"
 }

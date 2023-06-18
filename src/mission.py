@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 import json
 
+from src.model import RobotModelController
 from src.util import ResourceLoader, displayError, Event
 from src.skill import SkillController, SkillView, Skill
 from src.behaviour import Behaviour, BehaviourController
@@ -19,6 +20,7 @@ class Mission:
         self.selected_skills = []  # list of selected skills
         self.behaviours = []  # list of behaviours related to selected skills
         self.model_data = None
+        self.reference_model = None
 
         if data is not None:
             self.loadFromData(data)
@@ -29,7 +31,8 @@ class Mission:
         return {
             "Skills": [s.toJson() for s in self.selected_skills if s.active],
             "Behaviours": [b.toJson() for b in self.behaviours if b.active],
-            "Arena": self.arena.toJson()
+            "Arena": self.arena.toJson(),
+            "ReferenceModel": self.reference_model.toJson(),
         }
 
     def loadFromData(self, data):
@@ -44,6 +47,12 @@ class Mission:
 
     def getArenaData(self):
         return {} if self.model_data is None else self.model_data["Arena"]
+
+    def setModel(self, model):
+        self.reference_model = model
+
+    def getReferenceData(self):
+        return None if self.model_data is None else self.model_data["ReferenceModel"]
 
     def addSkill(self, skill):
         self.selected_skills.append(skill)
@@ -65,7 +74,6 @@ class MissionView(QWidget):
     """
     UI for a mission
     """
-
     def __init__(self):
         super(MissionView, self).__init__()
 
@@ -104,10 +112,13 @@ class MissionController:
         self.current_mission = None
 
         self.arenaController = ArenaController()
+        self.robotModelController = RobotModelController()
+
         self.mission_view.registerToCenterPanel(self.arenaController.view)
         self.arenaController.onArenaSelected += self.onItemSelected
         self.mission_view.addSettingsTab(self.arenaController.getTab(), "Arena")
         self.mission_view.addSettingsTab(QWidget(), "Mission")
+        self.mission_view.addSettingsTab(self.robotModelController.getTab(), "Model")
 
         self.skillControllers = {}  # skill controllers mapped to the id of their skill
         self.behaviourControllers = {}  # behaviour controllers mapped to the id of their behaviour
@@ -124,6 +135,11 @@ class MissionController:
         self.update_behaviours(mission.getBehaviourData())
         self.update_skills(mission.getSkillData())
         self.update_arena(mission.arena)
+        self.update_robot_model(mission.getReferenceData())
+
+    def update_robot_model(self, reference):
+        self.robotModelController.setModel(reference)
+        self.current_mission.setModel(self.robotModelController.current)
 
     def update_skills(self, skill_data):
         if skill_data is not None:
@@ -166,9 +182,13 @@ class MissionController:
                 model_data = json.load(model_file)
                 self.loadSkills(model_data)
                 self.loadBehaviours(model_data)
+                self.loadRobotModels(model_data)
 
             except json.JSONDecodeError:
                 displayError("Invalid Model File", "The model could not be loaded properly.")
+
+    def loadRobotModels(self, model_data):
+        self.robotModelController.loadModels(model_data["ReferenceModels"])
 
     def loadSkills(self, model_data):
         for skill_def in model_data["Skills"]:

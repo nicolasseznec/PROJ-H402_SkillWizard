@@ -133,5 +133,22 @@
       ],
       "desc": "The robot goes away from messaging peers."
     }
+  ],
+  "ReferenceModels": [
+    {
+      "model": "RM1",
+      "name": "Reference Model RM1",
+      "desc": "[...]&"
+    },
+    {
+      "model": "RM2",
+      "name": "Reference Model RM2",
+      "desc": "[...]é"
+    },
+    {
+      "model": "RM3",
+      "name": "Reference Model RM3",
+      "desc": "[...]'"
+    }
   ]
 }
