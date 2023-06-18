@@ -1,11 +1,10 @@
 from enum import Enum
 
-from PyQt5.QtGui import QPen, QBrush, QGradient, QPainterPath, QRadialGradient, QColor, QTransform, QLinearGradient
+from PyQt5.QtGui import QPen, QBrush, QPainterPath, QRadialGradient, QTransform, QLinearGradient
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtWidgets import QGraphicsPathItem
 
-from src.startArea import MultiArenaZone, StartShape, ArenaList, MultiArenaZoneModel, ArenaZone
-from src.util import Event, Shape, Color, DataContainer
+from src.startArea import MultiArenaZone, ArenaList, MultiArenaZoneModel, ArenaZone
+from src.util import Color
 
 LightColor = [Color.Red, Color.Green, Color.Blue, Color.Cyan, Color.Magenta, Color.Yellow]
 
@@ -141,7 +140,7 @@ class LightView(MultiArenaZone):
 
         self.setBrush(QBrush(gradient))
 
-    def getTypePath(self, lightType):  # TODO : radius, height -> Strength, wall
+    def getTypePath(self, lightType):
         path = QPainterPath()
 
         if lightType == LightType.PointLight:

@@ -15,6 +15,10 @@ def addTitle(element, title):
     element.append(ET.Comment(line))
 
 
+def addComment(element, comment):
+    element.append(ET.Comment(" " + comment + " "))
+
+
 def addBox(parent, id, size=(1, 1, 1), position=(0, 0, 0), orientation=(0, 0, 0), movable=False):
     size_str = "{},{},{}".format(*size)
     position_str = "{},{},{}".format(*position)
@@ -30,7 +34,7 @@ def addWall(parent, index, length, angle, x, y):
 
 def generateArenaBorders(arena: Arena, element):
     shape = Shape[arena.shape]
-
+    # TODO : Square, Circle shapes
     if shape == Shape.Square:
         pass
     elif shape == Shape.Circle:
@@ -46,22 +50,55 @@ def generateArenaBorders(arena: Arena, element):
             n = 3
 
         angle = 360 / n
-
         radius = arena.sideLength / (2 * math.tan(math.radians(angle/2)))
-
         offset = angle / 2 if shape == Shape.Hexagon else 0
-
         for i in range(n):
             x = radius * math.cos(math.radians(angle * i + offset))
             y = radius * math.sin(math.radians(angle * i + offset))
             addWall(element, i+1, arena.sideLength, angle * i + offset, round(x, 3), round(y, 3))
 
 
+def addLight(element, light, coord_scale, id_=0):
+    # TODO : Points lights
+    color = light.color.lower()
+    angle = "{},0,0".format(light.orientation)
+    pos = "{},{},0".format(light.x * coord_scale, light.y * coord_scale)
+    intensity = str(round(light.strength/10, 2))
+
+    ET.SubElement(element, "light", id="light_" + str(id_), position=pos, orientation=angle, color=color, intensity=intensity, medium="leds")
+
+
+def addFloor(element, floors):
+    # TODO : Generate a picture from the floors
+    addComment(element, "TO COMPLETE ! : User needs to complete some of the following fields")
+    ET.SubElement(element, "floor", id="floor", source="image", path="PATH_TO_FLOOR_IMAGE")
+
+
+def addObstacle(element, obstacle, coord_scale, id_=0):
+    # TODO : circle shape
+    angle = (obstacle.orientation, 0, 0)
+    size = (obstacle.width * coord_scale, obstacle.height * coord_scale, 0.08)
+    pos = (obstacle.x * coord_scale, obstacle.y * coord_scale, 0)
+    addBox(element, "obstacle_" + str(id_), size=size, position=pos, orientation=angle)
+
+
 def generateArena(arena: Arena, element):
     arenaElement = ET.SubElement(element, "arena", size="10, 10, 1", center="0,0,0")
-
-    arenaElement.append(ET.Comment("{} arena with side of length {}".format(arena.shape, arena.sideLength)))
+    addComment(arenaElement, "{} arena with side of length {}".format(arena.shape, arena.sideLength))
     generateArenaBorders(arena, arenaElement)
+
+    addComment(arenaElement, "Arena floor")
+    addFloor(arenaElement, arena.floors)
+
+    coord_scale = arena.sideLength / 250
+    addComment(arenaElement, "Arena lights")
+    for l_id, light in enumerate(arena.lights):
+        addLight(arenaElement, light, coord_scale, l_id)
+
+    addComment(arenaElement, "Arena obstacles")
+    for o_id, obstacle in enumerate(arena.obstacles):
+        addObstacle(arenaElement, obstacle, coord_scale, o_id)
+
     arenaElement.tail = " "
 
 
@@ -81,8 +118,9 @@ def generateArgosFile(mission: Mission, file_name, **options):
 
     # Loop functions
     addTitle(root, "Loop functions")
-    loop_functions = ET.SubElement(root, "loop_functions")  # TODO : library, lable
-    # ET.SubElement(loop_functions, "params", )
+    addComment(root, "TO COMPLETE ! : User needs to complete some of the following fields")
+    loop_functions = ET.SubElement(root, "loop_functions", library="PATH_TO_LOOP_FUNCTION", label="LOOP_FUNCTIONS_LABEL")
+    ET.SubElement(loop_functions, "params", dist_radius="1.2", number_robots=str(mission.arena.robotNumber))
     loop_functions.tail = " "
 
     # Controllers
@@ -93,11 +131,6 @@ def generateArgosFile(mission: Mission, file_name, **options):
     # Arena
     addTitle(root, "Arena")
     generateArena(mission.arena, root)
-
-    # all floors
-    # all lights
-    # all walls
-    # all obstacles
 
     # E-Puck
     # distribute

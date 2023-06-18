@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <argos-configuration>
-  <!--Gnerated from test.json-->
+  <!--Generated from test.json-->
    
   <!-- ************* -->
   <!-- * Framework * -->
@@ -12,7 +12,10 @@
   <!-- ****************** -->
   <!-- * Loop functions * -->
   <!-- ****************** -->
-  <loop_functions/>
+  <!-- TO COMPLETE ! : User needs to complete some of the following fields -->
+  <loop_functions library="PATH_TO_LOOP_FUNCTION" label="LOOP_FUNCTIONS_LABEL">
+    <params dist_radius="1.2" number_robots="1"/>
+  </loop_functions>
    
   <!-- *************** -->
   <!-- * Controllers * -->
@@ -23,30 +26,54 @@
   <!-- * Arena * -->
   <!-- ********* -->
   <arena size="10, 10, 1" center="0,0,0">
-    <!--Octagon arena with side of length 1-->
+    <!-- Dodecagon arena with side of length 1 -->
     <box id="wall_1" size="0.01,1,0.08" movable="false">
-      <body position="1.207,0.0,0" orientation="0.0,0,0"/>
+      <body position="1.866,0.0,0" orientation="0.0,0,0"/>
     </box>
     <box id="wall_2" size="0.01,1,0.08" movable="false">
-      <body position="0.854,0.854,0" orientation="45.0,0,0"/>
+      <body position="1.616,0.933,0" orientation="30.0,0,0"/>
     </box>
     <box id="wall_3" size="0.01,1,0.08" movable="false">
-      <body position="0.0,1.207,0" orientation="90.0,0,0"/>
+      <body position="0.933,1.616,0" orientation="60.0,0,0"/>
     </box>
     <box id="wall_4" size="0.01,1,0.08" movable="false">
-      <body position="-0.854,0.854,0" orientation="135.0,0,0"/>
+      <body position="0.0,1.866,0" orientation="90.0,0,0"/>
     </box>
     <box id="wall_5" size="0.01,1,0.08" movable="false">
-      <body position="-1.207,0.0,0" orientation="180.0,0,0"/>
+      <body position="-0.933,1.616,0" orientation="120.0,0,0"/>
     </box>
     <box id="wall_6" size="0.01,1,0.08" movable="false">
-      <body position="-0.854,-0.854,0" orientation="225.0,0,0"/>
+      <body position="-1.616,0.933,0" orientation="150.0,0,0"/>
     </box>
     <box id="wall_7" size="0.01,1,0.08" movable="false">
-      <body position="-0.0,-1.207,0" orientation="270.0,0,0"/>
+      <body position="-1.866,0.0,0" orientation="180.0,0,0"/>
     </box>
     <box id="wall_8" size="0.01,1,0.08" movable="false">
-      <body position="0.854,-0.854,0" orientation="315.0,0,0"/>
+      <body position="-1.616,-0.933,0" orientation="210.0,0,0"/>
+    </box>
+    <box id="wall_9" size="0.01,1,0.08" movable="false">
+      <body position="-0.933,-1.616,0" orientation="240.0,0,0"/>
+    </box>
+    <box id="wall_10" size="0.01,1,0.08" movable="false">
+      <body position="-0.0,-1.866,0" orientation="270.0,0,0"/>
+    </box>
+    <box id="wall_11" size="0.01,1,0.08" movable="false">
+      <body position="0.933,-1.616,0" orientation="300.0,0,0"/>
+    </box>
+    <box id="wall_12" size="0.01,1,0.08" movable="false">
+      <body position="1.616,-0.933,0" orientation="330.0,0,0"/>
+    </box>
+    <!-- Arena floor -->
+    <!-- TO COMPLETE ! : User needs to complete some of the following fields -->
+    <floor id="floor" source="image" path="PATH_TO_FLOOR_IMAGE"/>
+    <!-- Arena lights -->
+    <light id="light_0" position="0.48,-0.8240000000000001,0" orientation="30,0,0" color="red" intensity="1.0" medium="leds"/>
+    <!-- Arena obstacles -->
+    <box id="obstacle_0" size="0.2,0.8,0.08" movable="false">
+      <body position="-0.3,0.48,0" orientation="30,0,0"/>
+    </box>
+    <box id="obstacle_1" size="0.4,0.4,0.08" movable="false">
+      <body position="-0.428,-0.448,0" orientation="80,0,0"/>
     </box>
   </arena>
    

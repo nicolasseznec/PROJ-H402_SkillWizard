@@ -6,37 +6,50 @@
     "sideLength": 1,
     "robotNumber": 1,
     "StartArea": {
-      "x": -84,
-      "y": -113,
+      "x": 0,
+      "y": 0,
       "width": 100,
       "height": 100,
       "radius": 50,
-      "shape": "Rectangle",
-      "orientation": 51
+      "shape": "Circle",
+      "orientation": 0
     },
-    "floors": [
+    "floors": [],
+    "obstacles": [
       {
-        "x": 113,
-        "y": -104,
+        "x": -75,
+        "y": 120,
+        "width": 50,
+        "height": 200,
+        "radius": 50,
+        "shape": "Rectangle",
+        "orientation": 30,
+        "name": "New Obstacle"
+      },
+      {
+        "x": -107,
+        "y": -112,
         "width": 100,
         "height": 100,
         "radius": 50,
         "shape": "Rectangle",
-        "orientation": 60,
-        "name": "New Floor",
-        "color": "White"
+        "orientation": 80,
+        "name": "New Obstacle"
       }
     ],
-    "obstacles": [
+    "lights": [
       {
-        "x": -128,
-        "y": 30,
-        "width": 10,
-        "height": 100,
+        "x": 120,
+        "y": -206,
+        "width": 120,
+        "height": 30,
         "radius": 50,
-        "shape": "Rectangle",
-        "orientation": 235,
-        "name": "New Obstacle"
+        "shape": "Circle",
+        "orientation": 30,
+        "name": "new (view)",
+        "color": "Red",
+        "lightType": "WallLight",
+        "strength": 10
       }
     ]
   }
