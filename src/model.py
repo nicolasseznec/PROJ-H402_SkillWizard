@@ -7,13 +7,23 @@ class RobotModel(DataContainer):
     # Reference model
     def __init__(self, data):
         self.model = "None"
+        self.inputs = None
+        self.outputs = None
+
         super(RobotModel, self).__init__(data)
+
+        if self.inputs is None:
+            self.inputs = []
+        if self.outputs is None:
+            self.outputs = []
 
     def getAttributes(self):
         return {
             "model": "None",
             "name": "None",
-            "desc": "[...]"
+            "desc": "[...]",
+            "inputs": None,
+            "outputs": None,
         }
 
     def toJson(self):
@@ -35,6 +45,11 @@ class RobotModelView(QWidget):
 
     def updateView(self, model):
         self.ModelDescription.setText(model.desc)
+        self.ModelInfo.setTitle(model.name)
+
+        self.RobotModel.blockSignals(True)
+        self.RobotModel.setCurrentIndex(self.RobotModel.findText(model.model))
+        self.RobotModel.blockSignals(False)
 
 
 class RobotModelController:
@@ -42,7 +57,8 @@ class RobotModelController:
         self.models = {}
         self.current = None
         self.view = RobotModelView()
-        self.view.onModelChanged += self.setModel
+        self.modelChanged = Event()
+        self.view.onModelChanged += self.modelChanged
 
     def loadModels(self, data):
         for model in data:
@@ -54,13 +70,9 @@ class RobotModelController:
             self.view.updateView(self.current)
 
     def setModel(self, reference):
-        # print(reference)
         if reference in self.models:
             self.current = self.models[reference]
             self.view.updateView(self.current)
-            # TODO : notify mission controller, to update model object in the mission
-
-        # print(self.models.keys())
 
     def getTab(self):
         return self.view

@@ -27,6 +27,12 @@ class Light(MultiArenaZoneModel):
         })
         return attributes
 
+    @classmethod
+    def dummyLight(cls):
+        return Light({
+            "strength": 0,
+        })
+
 
 class LightView(MultiArenaZone):
     def __init__(self, arenaPath, *__args):

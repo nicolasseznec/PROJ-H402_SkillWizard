@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 from src.mission import Mission, Arena
 from src.util import Shape
+from src.light import Light
 
 
 def addTitle(element, title):
@@ -92,6 +93,8 @@ def generateArena(arena: Arena, element):
 
     coord_scale = arena.sideLength / 250
     addComment(arenaElement, "Arena lights")
+    if not arena.lights:
+        addLight(arenaElement, Light.dummyLight(), 0, 0)
     for l_id, light in enumerate(arena.lights):
         addLight(arenaElement, light, coord_scale, l_id)
 
@@ -100,6 +103,46 @@ def generateArena(arena: Arena, element):
         addObstacle(arenaElement, obstacle, coord_scale, o_id)
 
     arenaElement.tail = " "
+
+
+# sensors
+controller_input = {
+    "prox": ET.Element("epuck_proximity", implementation="default", show_rays="false", noise_level="0.05", calibrated="true"),
+    "gnd": ET.Element("epuck_ground", implementation="rot_z_only", noise_level="0.05", calibrated="true"),
+    "light": ET.Element("epuck_light", implementation="default", show_rays="false", noise_level="0.05", calibrated="true"),
+    "cam": ET.Element("epuck_omnidirectional_camera", implementation="rot_z_only", medium="leds", show_rays="false")
+}
+
+# actuators
+controller_output = {
+    "wheels": ET.Element("epuck_wheels", implementation="default", noise_std_dev="0.05"),
+    "leds": ET.Element("epuck_rgb_leds", implementation="default", medium="leds"),
+}
+
+
+def generateController(mission, element):
+    # TODO : controllers
+    controllers = ET.SubElement(element, "controllers")
+    controllers.tail = " "
+
+    addComment(controllers, "TRANSMITTER")
+    addComment(controllers, "TO COMPLETE ! : User needs to complete some of the following fields")
+    automode = ET.SubElement(controllers, "automode_controller", id="automode", library="PATH_TO_AUTOMODE")
+
+    actuators = ET.SubElement(automode, "actuators")
+    for elem in mission.reference_model.outputs:
+        if elem in controller_output:
+            actuators.append(controller_output[elem])
+    ET.SubElement(actuators, "epuck_range_and_bearing", implementation="medium", medium="rab", data_size="4", range="0.7")
+
+    sensors = ET.SubElement(automode, "sensors")
+    for elem in mission.reference_model.inputs:
+        if elem in controller_input:
+            sensors.append(controller_input[elem])
+    ET.SubElement(sensors, "epuck_range_and_bearing", implementation="medium", medium="rab", data_size="4", nois_std_deviation="1.5", loss_probability="0.85", calibrated="true")
+
+    fsm_config = "TO_COMPLETE"  # TODO : FSM config
+    params = ET.SubElement(automode, "params", attrib={"readable": "false", "history": "false", "hist-folder": "./fsm_history/", "fsm-config": fsm_config})
 
 
 def generateArgosFile(mission: Mission, file_name, **options):
@@ -125,8 +168,7 @@ def generateArgosFile(mission: Mission, file_name, **options):
 
     # Controllers
     addTitle(root, "Controllers")
-    controllers = ET.SubElement(root, "controllers")  # TODO : controllers
-    controllers.tail = " "
+    generateController(mission, root)
 
     # Arena
     addTitle(root, "Arena")

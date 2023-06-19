@@ -138,17 +138,23 @@
     {
       "model": "RM1",
       "name": "Reference Model RM1",
-      "desc": "[...]&"
+      "desc": "[...] a ",
+      "inputs": ["prox", "light", "gnd"],
+      "outputs": ["wheels"]
     },
     {
       "model": "RM2",
       "name": "Reference Model RM2",
-      "desc": "[...]é"
+      "desc": "[...] b ",
+      "inputs": ["prox", "light", "gnd"],
+      "outputs": ["wheels"]
     },
     {
       "model": "RM3",
       "name": "Reference Model RM3",
-      "desc": "[...]'"
+      "desc": "[...] c ",
+      "inputs": ["prox", "light", "gnd", "cam"],
+      "outputs": ["wheels", "leds"]
     }
   ]
 }

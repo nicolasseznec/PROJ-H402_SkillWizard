@@ -1,6 +1,6 @@
 import json
 
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from os.path import basename
 
 from src.mission import MissionController
@@ -86,3 +86,9 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
 
             generateArgosFile(self.mission_controller.current_mission, file_path, **options)
 
+        dialog = QMessageBox()
+        dialog.setWindowTitle("Argos File Generation")
+        dialog.setText("The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
+        dialog.setIcon(QMessageBox.Information)
+        dialog.setStandardButtons(QMessageBox.Ok)
+        dialog.exec_()

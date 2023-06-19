@@ -113,6 +113,7 @@ class MissionController:
 
         self.arenaController = ArenaController()
         self.robotModelController = RobotModelController()
+        self.robotModelController.modelChanged += self.update_robot_model
 
         self.mission_view.registerToCenterPanel(self.arenaController.view)
         self.arenaController.onArenaSelected += self.onItemSelected
@@ -139,7 +140,8 @@ class MissionController:
 
     def update_robot_model(self, reference):
         self.robotModelController.setModel(reference)
-        self.current_mission.setModel(self.robotModelController.current)
+        if self.current_mission:
+            self.current_mission.setModel(self.robotModelController.current)
 
     def update_skills(self, skill_data):
         if skill_data is not None:
