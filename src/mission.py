@@ -30,7 +30,7 @@ class Mission:
     def toJson(self):
         return {
             "Skills": [s.toJson() for s in self.selected_skills if s.active],
-            "Behaviours": [b.toJson() for b in self.behaviours if b.active],
+            "Behaviors": [b.toJson() for b in self.behaviours if b.active],
             "Arena": self.arena.toJson(),
             "ReferenceModel": self.reference_model.toJson(),
         }
@@ -43,7 +43,7 @@ class Mission:
         return {} if self.model_data is None else self.model_data["Skills"]
 
     def getBehaviourData(self):
-        return {} if self.model_data is None else self.model_data["Behaviours"]
+        return {} if self.model_data is None else self.model_data["Behaviors"]
 
     def getArenaData(self):
         return {} if self.model_data is None else self.model_data["Arena"]
@@ -188,6 +188,7 @@ class MissionController:
 
             except json.JSONDecodeError:
                 displayError("Invalid Model File", "The model could not be loaded properly.")
+                raise
 
     def loadRobotModels(self, model_data):
         self.robotModelController.loadModels(model_data["ReferenceModels"])
@@ -227,7 +228,7 @@ class MissionController:
                 self.current_mission.removeBehaviour(controller.behaviour)
 
     def loadBehaviours(self, model_data):
-        for behaviour_def in model_data["Behaviours"]:
+        for behaviour_def in model_data["Behaviors"]:
             self.createBehaviour(behaviour_def)
 
     def createBehaviour(self, data):  # TODO : very similar to createSkill, see how to merge them
@@ -269,6 +270,3 @@ class MissionController:
 
         for b_id in skillController.skill.behaviours:
             self.behaviourControllers[b_id].setHighlighted(True)
-
-    def selectArena(self):
-        self.onItemSelected(self.arenaController)

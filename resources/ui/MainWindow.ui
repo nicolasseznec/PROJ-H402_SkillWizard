@@ -45,7 +45,7 @@ Create a new mission (Ctrl + N)</string>
     <addaction name="actionOpenMission"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
+    <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
     <addaction name="actionGenerateArgosFile"/>
    </widget>
@@ -94,7 +94,7 @@ Create a new mission (Ctrl + N)</string>
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSave_as">
+  <action name="actionSaveAs">
    <property name="text">
     <string>Save as...</string>
    </property>

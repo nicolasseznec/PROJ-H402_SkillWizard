@@ -24,7 +24,7 @@
       ]
     }
   ],
-  "Behaviours": [
+  "Behaviors": [
     {
       "name": "Exploration",
       "id": 0,

@@ -3,7 +3,7 @@ from enum import Enum
 import uuid
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 
 class ResourceLoader:
@@ -81,13 +81,35 @@ class Color(Enum):
     White = 9
 
 
+def createMessage(title, message):
+    dialog = QMessageBox()
+    dialog.setWindowTitle(title)
+    dialog.setText(message)
+    return dialog
+
+
 def displayError(title, message):
-    error_message = QMessageBox()
-    error_message.setIcon(QMessageBox.Critical)
-    error_message.setWindowTitle(title)
-    error_message.setText(message)
-    error_message.exec()
+    dialog = createMessage(title, message)
+    dialog.setIcon(QMessageBox.Critical)
+    dialog.exec()
+
+
+def displayInformation(title, message):
+    dialog = createMessage(title, message)
+    dialog.setIcon(QMessageBox.Information)
+    dialog.setStandardButtons(QMessageBox.Ok)
+    dialog.exec_()
 
 
 def generateUuid():
     return uuid.uuid4()
+
+
+def getOpenFileName(caption, fileFilter):
+    file_dialog = QFileDialog()
+    return file_dialog.getOpenFileName(None, caption=caption, filter=fileFilter)[0]
+
+
+def getSaveFileName(caption, fileFilter):
+    file_dialog = QFileDialog()
+    return file_dialog.getSaveFileName(None, caption=caption, filter=fileFilter)[0]

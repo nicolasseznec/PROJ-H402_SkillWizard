@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from os.path import basename
 
 from src.mission import MissionController
-from src.util import ResourceLoader, displayError
+from src.util import ResourceLoader, displayError, displayInformation
 from src.argosGenerator import generateArgosFile
 
 
@@ -23,12 +23,12 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
         self.actionNewMission.triggered.connect(self.onCreateMission)
         self.actionOpenMission.triggered.connect(self.onOpenMission)
         self.actionSave.triggered.connect(self.onSave)
-        self.actionSave_as.triggered.connect(self.onSaveAs)
+        self.actionSaveAs.triggered.connect(self.onSaveAs)
         self.actionGenerateArgosFile.triggered.connect(self.onGenerateArgos)
 
     def onCreateMission(self):
         self.mission_controller.createMission()
-        self.setCentralWidget(self.mission_controller.getView())
+        self.openMissionView()
 
     def onOpenMission(self):
         file_dialog = QFileDialog()
@@ -40,13 +40,13 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
                 try:
                     mission_data = json.load(mission_file)
                     self.mission_controller.createMission(mission_data)
+                    self.openMissionView()
                     self.currentSavePath = file_path
-                    self.setCentralWidget(self.mission_controller.getView())
                 except json.JSONDecodeError:
                     displayError("Invalid Mission File", "The mission could not be loaded properly.")
 
     def onSave(self):
-        if not self.mission_controller.hasCurrentMission():
+        if not self.canSave():
             return
 
         if self.currentSavePath is None:
@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
             self.saveMission(self.currentSavePath)
 
     def onSaveAs(self):
-        if not self.mission_controller.hasCurrentMission():
+        if not self.canSave():
             return
 
         file_dialog = QFileDialog()
@@ -68,6 +68,9 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
     def saveMission(self, path):
         with open(path, 'w') as mission_file:
             json.dump(self.mission_controller.getMissionData(), mission_file, indent=2)
+
+    def canSave(self):
+        return self.mission_controller.hasCurrentMission()
 
     def openMissionView(self):
         self.setCentralWidget(self.mission_controller.getView())
@@ -86,9 +89,6 @@ class MainWindow(QMainWindow):  # TODO : Controller/View?
 
             generateArgosFile(self.mission_controller.current_mission, file_path, **options)
 
-        dialog = QMessageBox()
-        dialog.setWindowTitle("Argos File Generation")
-        dialog.setText("The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
-        dialog.setIcon(QMessageBox.Information)
-        dialog.setStandardButtons(QMessageBox.Ok)
-        dialog.exec_()
+            displayInformation("Argos File Generation",
+                               "The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
+
