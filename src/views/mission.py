@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from src.util import ResourceLoader
+from src.views.robot import RobotModelView
 
 
 class MissionView(QWidget):
@@ -19,6 +20,12 @@ class MissionView(QWidget):
 
         self.behaviourLayout: QVBoxLayout = self.BehaviourBoxContents.layout()  # TODO : rename behavior in qtdesigner
         self.behaviourLayout.setAlignment(Qt.AlignTop)
+
+        self.robotModelView = RobotModelView()
+
+        self.view.addSettingsTab("Arena")
+        self.view.addSettingsTab("Mission")
+        self.view.addSettingsTab("Model", self.robotModelView)
 
         self.skillViews = {}  # skill views mapped to the id of their skill
         self.behaviorViews = {}  # behavior views mapped to the id of their behavior
@@ -39,8 +46,8 @@ class MissionView(QWidget):
     def registerToCenterPanel(self, view):
         self.CenterPanel.addWidget(view)
 
-    def addSettingsTab(self, view, name):
-        self.SettingsTabs.addTab(view, name)
+    def addSettingsTab(self, name, view=None):
+        self.SettingsTabs.addTab(view if view is not None else QWidget(), name)
 
     def clearBehaviorsHighlight(self):
         for view in self.behaviorViews.values():

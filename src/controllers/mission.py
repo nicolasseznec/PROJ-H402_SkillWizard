@@ -1,6 +1,7 @@
 import json
 
 from src.controllers.behavior import BehaviorLoader
+from src.controllers.robot import RobotModelController, RobotModelLoader
 from src.controllers.skill import SkillLoader
 from src.models.mission import Mission
 from src.util import ResourceLoader, displayError
@@ -16,7 +17,9 @@ class MissionController:
         self.currentMission = None
         self.selectedItem = None
 
-        # TODO : arena controllers, robot model controllers, ...
+        # TODO : arena controllers, ...
+        self.robotModelController = RobotModelController(self.view.robotModelView)
+        self.robotModelController.modelChanged += self.updateRobotModel
 
         self.skills = {}  # references for existing skills
         self.behaviors = {}  # references for existing behaviors
@@ -59,8 +62,10 @@ class MissionController:
         for controller in self.behaviorControllers.values():
             controller.updateView()
 
-    def updateRobotModel(self):
-        pass
+    def updateRobotModel(self, reference):
+        self.robotModelController.setModel(reference)
+        if self.currentMission:
+            self.currentMission.setModel(self.robotModelController.current)
 
     def updateArena(self):
         pass
@@ -73,7 +78,7 @@ class MissionController:
                 modelData = json.load(modelFile)
                 SkillLoader.loadSkills(modelData, self.addSkill, self.onSkillSelected, self.onSkillChecked)
                 BehaviorLoader.loadBehaviors(modelData, self.addBehavior, self.onItemSelected)
-                # TODO : robot model loader
+                RobotModelLoader.loadModels(modelData, self.robotModelController)
 
             except json.JSONDecodeError:
                 displayError("Invalid Model File", "The model could not be loaded properly.")
