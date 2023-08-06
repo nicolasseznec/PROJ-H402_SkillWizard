@@ -6,7 +6,7 @@ class RobotModel(DataContainer):
     Robot Reference model
     """
     def __init__(self, data):
-        self.model = "None"
+        self.reference = "None"
         self.inputs = None
         self.outputs = None
 
@@ -19,7 +19,7 @@ class RobotModel(DataContainer):
 
     def getAttributes(self):
         return {
-            "model": "None",
+            "reference": "None",
             "name": "None",
             "desc": "[...]",
             "inputs": None,
@@ -27,4 +27,4 @@ class RobotModel(DataContainer):
         }
 
     def toJson(self):
-        return self.model
+        return self.reference

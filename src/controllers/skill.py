@@ -17,8 +17,8 @@ class SkillController:
         self.onSelected = Event()
         self.onChecked = Event()
 
-    def getView(self):
-        return self.view
+    def getCenterWidget(self):
+        return self.view.getCenterWidget()
 
     def updateView(self):
         self.view.updateView(self.skill)

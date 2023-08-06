@@ -11,19 +11,14 @@ class RobotModelController:
         self.modelChanged = Event()
         self.view.onModelChanged += self.modelChanged
 
-    def loadModels(self, data):
-        for model in data:
-            self.models[model["model"]] = RobotModel(model)
-            self.view.addModel(model["model"])  # add element to view
-
-        if self.models:
-            self.current = next(iter(self.models.values()))  # select the "first" element as default
-            self.view.updateView(self.current)
-
     def setModel(self, reference):
         if reference in self.models:
             self.current = self.models[reference]
             self.view.updateView(self.current)
+
+    def addModel(self, model):
+        self.models[model.reference] = model
+        self.view.addModel(model.reference)
 
     def getTab(self):
         return self.view
@@ -32,4 +27,5 @@ class RobotModelController:
 class RobotModelLoader:
     @staticmethod
     def loadModels(modelData, controller: RobotModelController):
-        controller.loadModels(modelData["ReferenceModels"])
+        for model in modelData["ReferenceModels"]:
+            controller.addModel(RobotModel(model))

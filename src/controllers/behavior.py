@@ -12,12 +12,12 @@ class BehaviorController:
         self.createParameterControllers()
 
         self.view.updateView(behavior)
-        self.view.onSelected += self.onSelected
+        self.view.onSelected += self.onViewSelected
         self.behavior.onActived += self.onActivated
-        self.onBehaviourSelected = Event()
+        self.onSelected = Event()
 
-    def getView(self):
-        return self.view
+    def getCenterWidget(self):
+        return self.view.getCenterWidget()
 
     def updateView(self):
         self.view.updateView(self.behavior)
@@ -29,8 +29,8 @@ class BehaviorController:
     def onActivated(self, active):
         self.view.setActive(active)
 
-    def onSelected(self):
-        self.onBehaviourSelected(self)
+    def onViewSelected(self):
+        self.onSelected(self)
 
     # -----------------------------------------
 

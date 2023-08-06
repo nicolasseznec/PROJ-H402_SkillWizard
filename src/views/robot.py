@@ -21,5 +21,5 @@ class RobotModelView(QWidget):
         self.ModelInfo.setTitle(model.name)
 
         self.RobotModel.blockSignals(True)
-        self.RobotModel.setCurrentIndex(self.RobotModel.findText(model.model))
+        self.RobotModel.setCurrentIndex(self.RobotModel.findText(model.reference))
         self.RobotModel.blockSignals(False)

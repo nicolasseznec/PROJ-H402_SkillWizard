@@ -32,13 +32,13 @@ class MissionController:
 
     def createMission(self, data=None):
         self.resetModel()  # TODO : check if there already is a mission open
-        self.setCurrentMission(Mission(self.skills, self.behaviors, data))
+        self.setCurrentMission(Mission(self.skills, self.behaviors, self.robotModelController.models, data))
 
     def setCurrentMission(self, mission):
         self.currentMission = mission
         self.updateSkills()
         self.updateBehaviours()
-        self.updateRobotModel()
+        self.updateRobotModel(mission.referenceModel.reference)
         self.updateArena()
 
     def getMissionData(self):

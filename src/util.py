@@ -50,7 +50,7 @@ class DataContainer:
     def loadFromData(self, data):
         attributes = self.getAttributes()
         for attribute in attributes:
-            value = attributes[attribute] if attribute not in data else data[attribute]
+            value = getattr(self, attribute, attributes[attribute]) if attribute not in data else data[attribute]
             setattr(self, attribute, value)
 
     def toJson(self):
@@ -103,6 +103,11 @@ def displayInformation(title, message):
 
 def generateUuid():
     return uuid.uuid4()
+
+
+def generateItems(data, itemFactory):
+    for item in data:
+        yield itemFactory(item)
 
 
 def getOpenFileName(caption, fileFilter):

@@ -136,21 +136,21 @@
   ],
   "ReferenceModels": [
     {
-      "model": "RM1",
+      "reference": "RM1",
       "name": "Reference Model RM1",
       "desc": "[...] a ",
       "inputs": ["prox", "light", "gnd"],
       "outputs": ["wheels"]
     },
     {
-      "model": "RM2",
+      "reference": "RM2",
       "name": "Reference Model RM2",
       "desc": "[...] b ",
       "inputs": ["prox", "light", "gnd"],
       "outputs": ["wheels"]
     },
     {
-      "model": "RM3",
+      "reference": "RM3",
       "name": "Reference Model RM3",
       "desc": "[...] c ",
       "inputs": ["prox", "light", "gnd", "cam"],

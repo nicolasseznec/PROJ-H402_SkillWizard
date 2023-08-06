@@ -6,7 +6,7 @@ from src.util import DataContainer, ResourceLoader, Event
 class RobotModel(DataContainer):
     # Reference model
     def __init__(self, data):
-        self.model = "None"
+        self.reference = "None"
         self.inputs = None
         self.outputs = None
 
@@ -19,7 +19,7 @@ class RobotModel(DataContainer):
 
     def getAttributes(self):
         return {
-            "model": "None",
+            "reference": "None",
             "name": "None",
             "desc": "[...]",
             "inputs": None,
@@ -27,7 +27,7 @@ class RobotModel(DataContainer):
         }
 
     def toJson(self):
-        return self.model
+        return self.reference
 
 
 class RobotModelView(QWidget):
@@ -48,7 +48,7 @@ class RobotModelView(QWidget):
         self.ModelInfo.setTitle(model.name)
 
         self.RobotModel.blockSignals(True)
-        self.RobotModel.setCurrentIndex(self.RobotModel.findText(model.model))
+        self.RobotModel.setCurrentIndex(self.RobotModel.findText(model.reference))
         self.RobotModel.blockSignals(False)
 
 
@@ -62,8 +62,8 @@ class RobotModelController:
 
     def loadModels(self, data):
         for model in data:
-            self.models[model["model"]] = RobotModel(model)
-            self.view.addModel(model["model"])  # add element to view
+            self.models[model["reference"]] = RobotModel(model)
+            self.view.addModel(model["reference"])  # add element to view
 
         if self.models:
             self.current = next(iter(self.models.values()))  # select the "first" element as default

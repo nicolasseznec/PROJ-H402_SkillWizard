@@ -1,31 +1,36 @@
 from collections import defaultdict
 
+from src.models.arena import Arena
+
 
 class Mission:
     """
     Model for a mission (selected skills, behaviours, objective function and other parameters)
     """
-    def __init__(self, skills, behaviors, data=None):
+    def __init__(self, skills, behaviors, referenceModels, data=None):
+        if data is None:
+            data = {}
+
         self.skills = skills
         self.behaviors = behaviors
         self.behaviorsLinks = defaultdict(int)
-        self.model_data = None
-        self.reference_model = None
-        # self.arena = Arena(data)
+        self.referenceModels = referenceModels
+        self.referenceModel = None
+        self.arena = Arena(data.get("Arena", None))
 
-        if data is not None:
+        if data:
             self.loadFromData(data)
 
     def toJson(self):
         return {
             "Skills": [s.toJson() for s in self.skills if s.active],
             "Behaviors": [b.toJson() for b in self.behaviors if b.active],
-            # "Arena": self.arena.toJson(),
-            "ReferenceModel": self.reference_model.toJson(),
+            "Arena": self.arena.toJson(),
+            "ReferenceModel": self.referenceModel.toJson(),
         }
 
     def setModel(self, model):
-        self.reference_model = model
+        self.referenceModel = model
 
     # ------------ Loading Data ----------------
 
@@ -33,7 +38,7 @@ class Mission:
         # TODO : checks for data validity
         self.loadSkills(data["Skills"])
         self.loadBehaviors(data["Behaviors"])
-        # TODO : load robot model
+        self.loadReferenceModel(data["ReferenceModel"])
 
     def loadSkills(self, data):
         for item in data:
@@ -53,6 +58,12 @@ class Mission:
 
             behavior = self.behaviors[behavior_id]
             behavior.loadFromData(item)
+
+    def loadReferenceModel(self, reference):
+        if reference in self.referenceModels:
+            self.referenceModel = self.referenceModels[reference]
+        else:
+            self.referenceModel = next(iter(self.referenceModels.values()))
 
     # ------------ Enabling/Disabling Skills ----------------
 

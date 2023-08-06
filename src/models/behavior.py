@@ -18,7 +18,7 @@ class Behavior:
         self.name = data["name"]
         self.id = data["id"]
         self.skills = data["skills"]
-        self.description = "" if "desc" not in data else data["desc"]
+        self.description = data.get("desc", "")
         for param in data["parameters"]:
             name = param["name"]
             if name in self.parameters:
