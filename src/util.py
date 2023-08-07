@@ -42,9 +42,14 @@ class Event:
         for handler in self.__handlers:
             handler(*args, **kwargs)
 
+    def clear(self):
+        self.__handlers.clear()
+
 
 class DataContainer:
-    def __init__(self, data):
+    def __init__(self, data=None):
+        if data is None:
+            data = {}
         self.loadFromData(data)
 
     def loadFromData(self, data):
@@ -108,6 +113,10 @@ def generateUuid():
 def generateItems(data, itemFactory):
     for item in data:
         yield itemFactory(item)
+
+
+def containsAny(container, *args):
+    return any(element in container for element in args)
 
 
 def getOpenFileName(caption, fileFilter):

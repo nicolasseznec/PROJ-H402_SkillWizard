@@ -1,5 +1,7 @@
 from src.util import DataContainer, Shape
 
+ArenaObjectShape = [Shape.Circle, Shape.Rectangle]
+
 
 class BaseArenaObject(DataContainer):
     def getAttributes(self):
@@ -15,9 +17,6 @@ class BaseArenaObject(DataContainer):
 
 
 class MultiArenaObject(BaseArenaObject):
-    def __init__(self, data):
-        super(MultiArenaObject, self).__init__(data)
-
     def getAttributes(self):
         attributes = super(MultiArenaObject, self).getAttributes()
         attributes.update({
