@@ -3,7 +3,11 @@ from src.models.arenaObjects.obstacle import Obstacle
 
 
 class ObstacleController(MultiArenaObjectController):
-    pass
+    def addToArena(self, arena):
+        arena.obstacles.append(self.model)
+
+    def removeFromArena(self, arena):
+        arena.obstacles.remove(self.model)
 
 
 class ObstacleListController(ArenaListController):
@@ -15,3 +19,6 @@ class ObstacleListController(ArenaListController):
 
     def getDefaultName(self):
         return "New Obstacle"
+
+    def loadArena(self, arena):
+        self.loadItems(arena.obstacles)

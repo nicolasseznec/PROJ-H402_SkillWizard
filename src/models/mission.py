@@ -15,7 +15,7 @@ class Mission:
         self.behaviors = behaviors
         self.behaviorsLinks = defaultdict(int)
         self.referenceModels = referenceModels
-        self.referenceModel = None
+        self.referenceModel = next(iter(self.referenceModels.values()))
         self.arena = Arena(data.get("Arena", None))
 
         if data:
@@ -23,8 +23,8 @@ class Mission:
 
     def toJson(self):
         return {
-            "Skills": [s.toJson() for s in self.skills if s.active],
-            "Behaviors": [b.toJson() for b in self.behaviors if b.active],
+            "Skills": [s.toJson() for s in self.skills.values() if s.active],
+            "Behaviors": [b.toJson() for b in self.behaviors.values() if b.active],
             "Arena": self.arena.toJson(),
             "ReferenceModel": self.referenceModel.toJson(),
         }

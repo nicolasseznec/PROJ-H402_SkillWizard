@@ -1,11 +1,14 @@
 import math
 
-from PyQt5.QtWidgets import QGroupBox, QGraphicsScene, QGraphicsItem, QGraphicsView, QGraphicsPathItem
+from PyQt5.QtWidgets import QGroupBox, QGraphicsScene, QGraphicsView, QGraphicsPathItem
 from PyQt5.QtGui import QPainter, QColor, QPainterPath, QPolygonF, QPen, QBrush
 from PyQt5.QtCore import Qt, QPoint, QPointF
 
 from src.models.arena import ArenaShape
 from src.util import ResourceLoader, Event, Shape
+from src.views.arenaObjects.floor import FloorListView
+from src.views.arenaObjects.light import LightListView
+from src.views.arenaObjects.obstacle import ObstacleListView
 from src.views.arenaObjects.spawn import SpawnView
 
 
@@ -88,13 +91,8 @@ class ArenaSceneView(QGraphicsScene):
         self.shapePaths[shape].setVisible(visible)
         self.shapeContours[shape].setVisible(visible)
 
-
-# class ArenaListViewHandler:
-#     def __init__(self):
-#         self.floorListView = FloorListView()
-#         self.obstacleListView = ObstacleListView()
-#         self.lightListView = LightListView()
-#         self.lists = [self.floorListView, self.obstacleListView, self.lightListView]
+    def getArenaPath(self):
+        return self.shapePaths[self.shape].path()
 
 
 class ArenaView(QGroupBox):
@@ -111,14 +109,17 @@ class ArenaView(QGroupBox):
         self.ArenaEditSettings.setCurrentIndex(0)
 
         self.arenaSceneView = ArenaSceneView(self.graphicsView)
-        self.spawnView = SpawnView()
-        # self.floorListView = FloorListView()
-        # self.obstacleListView = ObstacleListView()
-        # self.lightListView = LightListView()
+        self.spawnView = SpawnView(self)
+        self.floorListView = FloorListView(self)
+        self.obstacleListView = ObstacleListView(self)
+        self.lightListView = LightListView(self)
 
         self.onArenaClicked = Event()
         self.onArenaSettingsChanged = Event()
+        self.onArenaTabChanged = Event()
+        self.onArenaPathChanged = Event()
         self.blockSignal = False
+        self.connectActions()
 
     def connectActions(self):
         self.settingsTab.ArenaEditButton.clicked.connect(self.arenaClicked)
@@ -128,10 +129,18 @@ class ArenaView(QGroupBox):
         self.ArenaEditSettings.currentChanged.connect(self.onTabChanged)
 
     def updateView(self, arena):
-        pass
+        self.blockSignal = True
+        self.arenaSceneView.setShape(arena.shape)
+        self.settingsTab.Shape.setCurrentIndex(ArenaShape.index(arena.shape))
+        self.settingsTab.RobotNumber.setValue(arena.robotNumber)
+        self.settingsTab.SideLength.setValue(arena.sideLength)
+        self.blockSignal = False
 
     def getCenterWidget(self):
         return self
+
+    def getArenaPath(self):
+        return self.arenaSceneView.getArenaPath()
 
     # ---------- Events ------------
 
@@ -143,6 +152,8 @@ class ArenaView(QGroupBox):
     def shapeChanged(self, index):
         if self.blockSignal:
             return
+        self.arenaSceneView.setShape(ArenaShape[index])
+        self.onArenaPathChanged(self.arenaSceneView.getArenaPath())
         self.onArenaSettingsChanged(shape=ArenaShape[index].name)
 
     def numberRobotsChanged(self, value):
@@ -156,6 +167,14 @@ class ArenaView(QGroupBox):
         self.onArenaSettingsChanged(sideLength=value)
 
     def onTabChanged(self, index):
-        pass
+        self.onArenaTabChanged(index)
 
     # ------------------------------
+
+    def addSceneItem(self, item):
+        self.arenaSceneView.addItem(item)
+        self.arenaSceneView.update()
+
+    def removeSceneItem(self, item):
+        self.arenaSceneView.removeItem(item)
+        self.arenaSceneView.update()

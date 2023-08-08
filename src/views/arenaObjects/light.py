@@ -9,20 +9,17 @@ from src.views.arenaObjects.base import ArenaListView, MultiArenaObjectView, Bas
 class LightView(MultiArenaObjectView):
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
-
         self.setZValue(1)
         pen = QPen(Qt.NoPen)
         self.setPen(pen)
 
-        # TODO : ensure correct setup
+        self.lightType = LightType.PointLight
         self.typePaths = {}
         self.gradients = {}
-        # self.updateColor()
-        # self.setType(self.lightType)
-        # self.updateDimensions()
 
     def paint(self, painter, option, widget=None):
-        self.setPath(self.typePaths[self.lightType])
+        if self.lightType in self.typePaths:
+            self.setPath(self.typePaths[self.lightType])
 
         if self.scenePos() != self.prev_pos:
             self.prev_pos = self.scenePos()
@@ -48,16 +45,17 @@ class LightView(MultiArenaObjectView):
             path = rotation.map(path)
         return path
 
-    def updateLights(self, lightType=None, **dimensions):
-        if lightType is not None:
-            if lightType in LightTypes:
-                self.typePaths[lightType] = self.getTypePath(lightType, **dimensions)
+    def updateLights(self, lightType_=None, **dimensions):
+        if lightType_ is not None:
+            if lightType_ in LightTypes:
+                self.typePaths[lightType_] = self.getTypePath(lightType_, **dimensions)
         else:
             self.typePaths = {s: self.getTypePath(s, **dimensions) for s in LightType}
 
     def setType(self, newtype):
         self.lightType = newtype
-        self.setBrush(QBrush(self.gradient[self.lightType]))
+        if self.lightType in self.gradients:
+            self.setBrush(QBrush(self.gradients[self.lightType]))
 
     def updateColor(self, newColor):
         if newColor == Color.Red:
@@ -75,10 +73,11 @@ class LightView(MultiArenaObjectView):
         else:
             color = Qt.white
 
-        self.gradients[LightType.PointLight] = QRadialGradient(QPoint(0, 0), self.radius)
+        # TODO : use dimensions
+        self.gradients[LightType.PointLight] = QRadialGradient(QPoint(0, 0), 50)
         rotation = QTransform()
-        rotation.rotate(self.orientation)
-        self.gradients[LightType.WallLight] = QLinearGradient(QPoint(0, 0), rotation.map(QPoint(0, self.height)))
+        rotation.rotate(0)
+        self.gradients[LightType.WallLight] = QLinearGradient(QPoint(0, 0), rotation.map(QPoint(0, 50)))
 
         for gradient in self.gradients.values():
             gradient.setColorAt(0, Qt.white)
@@ -86,13 +85,13 @@ class LightView(MultiArenaObjectView):
             gradient.setColorAt(0.3, color)
             gradient.setColorAt(1, Qt.transparent)
 
-        self.setBrush(QBrush(self.gradient[self.lightType]))
+        self.setBrush(QBrush(self.gradients[self.lightType]))
 
     def updateView(self, model):
         self.blockSignal = True
         color = Color[model.color]
-        self.setType(LightType[model.lightType])
         self.updateColor(color)
+        self.setType(LightType[model.lightType])
         self.setPos(model.x, model.y)
         self.updatePos()
         self.updateLights(
@@ -103,7 +102,7 @@ class LightView(MultiArenaObjectView):
 
         self.colorSetting.setCurrentIndex(LightColor.index(color))
         self.typeSetting.setCurrentIndex(LightTypes.index(self.lightType))
-        self.orientationSettin.setValue(model.orientation)
+        self.orientationSetting.setValue(model.orientation)
         self.widthSetting.setValue(model.width)
         self.blockSignal = False
 
@@ -175,4 +174,4 @@ class LightListView(ArenaListView):
         return LightView(self.settingsContainer)
 
     def getWidgets(self, settingsContainer):
-        return settingsContainer.LightRemove, settingsContainer.LightAdd, settingsContainer.LightList
+        return settingsContainer.LightAdd, settingsContainer.LightRemove, settingsContainer.LightList

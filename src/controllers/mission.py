@@ -1,5 +1,6 @@
 import json
 
+from src.controllers.arena import ArenaController
 from src.controllers.behavior import BehaviorLoader
 from src.controllers.robot import RobotModelController, RobotModelLoader
 from src.controllers.skill import SkillLoader
@@ -17,9 +18,10 @@ class MissionController:
         self.currentMission = None
         self.selectedItem = None
 
-        # TODO : arena controllers, ...
         self.robotModelController = RobotModelController(self.view.robotModelView)
         self.robotModelController.modelChanged += self.updateRobotModel
+        self.arenaController = ArenaController(self.view.arenaView)
+        self.arenaController.onSelected += self.onItemSelected
 
         self.skills = {}  # references for existing skills
         self.behaviors = {}  # references for existing behaviors
@@ -68,7 +70,7 @@ class MissionController:
             self.currentMission.setModel(self.robotModelController.current)
 
     def updateArena(self):
-        pass
+        self.arenaController.setArena(self.currentMission.arena)
 
     # --------------- Loading the application model (skills and behaviors) ---------------
 

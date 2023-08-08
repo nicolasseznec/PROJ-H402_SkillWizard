@@ -77,3 +77,6 @@ class ApplicationController(ApplicationViewListener):
 
             displayInformation("Argos File Generation",
                                "The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
+
+    def show(self):
+        self.view.show()

@@ -21,8 +21,8 @@ class ApplicationViewListener:
 
 
 class ApplicationView(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args):
+        super().__init__(*args)
         ResourceLoader.loadWidget("MainWindow", self)
         self.setWindowTitle("Robot Skill Wizard")
 

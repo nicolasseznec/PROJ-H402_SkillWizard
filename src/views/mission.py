@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from src.util import ResourceLoader
+from src.views.arena import ArenaView
 from src.views.robot import RobotModelView
 
 
@@ -11,8 +12,8 @@ class MissionView(QWidget):
     """
     UI for a mission
     """
-    def __init__(self):
-        super(MissionView, self).__init__()
+    def __init__(self, *args):
+        super(MissionView, self).__init__(*args)
 
         ResourceLoader.loadWidget("MissionView.ui", self)
         self.skillLayout: QVBoxLayout = self.SkillBoxContents.layout()
@@ -22,10 +23,12 @@ class MissionView(QWidget):
         self.behaviourLayout.setAlignment(Qt.AlignTop)
 
         self.robotModelView = RobotModelView()
+        self.arenaView = ArenaView()
+        self.registerToCenterPanel(self.arenaView.getCenterWidget())
 
-        self.view.addSettingsTab("Arena")
-        self.view.addSettingsTab("Mission")
-        self.view.addSettingsTab("Model", self.robotModelView)
+        self.addSettingsTab("Arena", self.arenaView.settingsTab)
+        self.addSettingsTab("Mission")
+        self.addSettingsTab("Model", self.robotModelView)
 
         self.skillViews = {}  # skill views mapped to the id of their skill
         self.behaviorViews = {}  # behavior views mapped to the id of their behavior
@@ -35,7 +38,7 @@ class MissionView(QWidget):
         self.skillLayout.addWidget(view.getSideWidget())
         self.registerToCenterPanel(view.getCenterWidget())
 
-    def addBehaviour(self, behavior, view):
+    def addBehavior(self, behavior, view):
         self.behaviorViews[behavior.id] = view
         self.behaviourLayout.addWidget(view.getSideWidget())
         self.registerToCenterPanel(view.getCenterWidget())

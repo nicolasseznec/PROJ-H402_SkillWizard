@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from src.MainWindow import MainWindow
+from src.controllers.application import ApplicationController
+from src.views.application import ApplicationView
 
 
 def except_hook(cls, exception, traceback):
@@ -12,8 +14,12 @@ def except_hook(cls, exception, traceback):
 def main():
     sys.excepthook = except_hook
     app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
+    # window = MainWindow()
+    # window.show()
+    mainView = ApplicationView()
+    mainController = ApplicationController(mainView)
+    mainController.show()
+
     app.exec()
 
 

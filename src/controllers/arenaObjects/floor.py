@@ -3,7 +3,11 @@ from src.models.arenaObjects.floor import Floor
 
 
 class FloorController(MultiArenaObjectController):
-    pass
+    def addToArena(self, arena):
+        arena.floors.append(self.model)
+
+    def removeFromArena(self, arena):
+        arena.floors.remove(self.model)
 
 
 class FloorListController(ArenaListController):
@@ -15,3 +19,6 @@ class FloorListController(ArenaListController):
 
     def getDefaultName(self):
         return "New Floor"
+
+    def loadArena(self, arena):
+        self.loadItems(arena.floors)

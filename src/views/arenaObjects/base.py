@@ -20,18 +20,19 @@ class BaseArenaObjectView(QGraphicsPathItem):
         self.prev_pos = QPointF(0, 0)
         self.shape = None
 
-        # TODO : ensure correct setup (shape and shape paths)
+        self.shapePaths = {}
+        self.arenaPath = None
         self.settingsContainer = settingsContainer
         self.connectSettings(settingsContainer)
         self.onItemChanged = Event()
-        self.blockSignal = False
+        self.blockSignal = True
 
     def paint(self, painter, option, widget=None):
-        # TODO : handle arena path
-        intersect = self.arenaPath.intersected(self.shapePaths[self.shape].translated(self.scenePos())) \
-            .translated(-self.scenePos())
-        intersect.closeSubpath()
-        self.setPath(intersect)
+        if self.arenaPath is not None and self.shape in self.shapePaths:
+            intersect = self.arenaPath.intersected(self.shapePaths[self.shape].translated(self.scenePos())) \
+                .translated(-self.scenePos())
+            intersect.closeSubpath()
+            self.setPath(intersect)
 
         if self.scenePos() != self.prev_pos:
             self.prev_pos = self.scenePos()
@@ -53,7 +54,7 @@ class BaseArenaObjectView(QGraphicsPathItem):
 
         self.shapeSetting.setCurrentIndex(ArenaObjectShape.index(self.shape))
         self.radiusSetting.setValue(model.radius)
-        self.orientationSettin.setValue(model.orientation)
+        self.orientationSetting.setValue(model.orientation)
         self.widthSetting.setValue(model.width)
         self.heightSetting.setValue(model.height)
         self.blockSignal = False
@@ -61,6 +62,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
     def updatePos(self):
         self.xSetting.setValue(int(self.x()))
         self.ySetting.setValue(int(self.y()))
+
+    def setArenaPath(self, arenaPath):
+        self.arenaPath = arenaPath
 
     # ---------- Connecting the view ------------
 
@@ -83,7 +87,7 @@ class BaseArenaObjectView(QGraphicsPathItem):
 
     def disconnectSettings(self):
         self.shapeSetting.currentIndexChanged.disconnect(self.shapeChanged)
-        self.resetSetting.disconnect(self.onResetPosition)
+        self.resetSetting.clicked.disconnect(self.onResetPosition)
 
         self.radiusSetting.valueChanged.disconnect(self.radiusChanged)
         self.orientationSetting.valueChanged.disconnect(self.orientationChanged)
@@ -98,9 +102,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
     def setShape(self, shape):
         self.shape = shape
 
-    def updateShapes(self, shape=None, **dimensions):
-        if shape is not None:
-            self.shapePaths[shape] = self.getShapePath(shape, **dimensions)
+    def updateShapes(self, shape_=None, **dimensions):
+        if shape_ is not None:
+            self.shapePaths[shape_] = self.getShapePath(shape_, **dimensions)
         else:
             self.shapePaths = {shape: self.getShapePath(shape, **dimensions) for shape in ArenaObjectShape}
 
@@ -180,6 +184,10 @@ class MultiArenaObjectView(BaseArenaObjectView):
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.onSelected = Event()
 
+    def setSelected(self, selected):
+        super(MultiArenaObjectView, self).setSelected(selected)
+        self.blockSignal = not selected
+
     def setTabFocus(self, focus):
         if focus:
             self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
@@ -191,7 +199,7 @@ class MultiArenaObjectView(BaseArenaObjectView):
     # ---------- Events ------------
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemSelectedHasChanged and value and not self.blockSignal:
+        if change == QGraphicsItem.ItemSelectedHasChanged and value:
             self.onSelected()
         return super(MultiArenaObjectView, self).itemChange(change, value)
 
@@ -228,7 +236,9 @@ class ItemListView:
         return self.listWidget.currentRow()
 
     def selectRow(self, index):
-        self.listWidget.setCurrentRow(index)  # TODO : ensure no event loop
+        self.listWidget.blockSignals(True)
+        self.listWidget.setCurrentRow(index)
+        self.listWidget.blockSignals(False)
 
     def setItemText(self, index, text):
         self.listWidget.item(index).setText(text)
@@ -259,6 +269,12 @@ class ItemListView:
     def removeItem(self, index):
         self.listWidget.takeItem(index)
         self.items.pop(index)
+
+    # -------------------------------------
+
+    def clear(self):
+        self.items.clear()
+        self.listWidget.clear()
 
 
 class TextDialog(QDialog):

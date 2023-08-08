@@ -1,145 +1,11 @@
 {
-  "Skills": [
-    {
-      "name": "Percieve",
-      "id": 0,
-      "parameters": [
-        {
-          "name": "Distance",
-          "resolution": 0,
-          "accuracy": 0,
-          "responseTime": 0
-        }
-      ]
-    },
-    {
-      "name": "Navigate",
-      "id": 1,
-      "parameters": []
-    },
-    {
-      "name": "Communicate",
-      "id": 2,
-      "parameters": []
-    }
-  ],
-  "Behaviors": [
-    {
-      "name": "Phototaxis",
-      "id": 2,
-      "skills": [
-        0
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Anti-Phototaxis",
-      "id": 3,
-      "skills": [
-        0
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Color-Following",
-      "id": 6,
-      "skills": [
-        0
-      ],
-      "parameters": [
-        {
-          "name": "Color to which the behaviors react : ",
-          "type": "color",
-          "color": 0
-        }
-      ]
-    },
-    {
-      "name": "Color-Elusion",
-      "id": 7,
-      "skills": [
-        0
-      ],
-      "parameters": [
-        {
-          "name": "Color to which the behaviors react : ",
-          "type": "color",
-          "color": 0
-        }
-      ]
-    },
-    {
-      "name": "Exploration",
-      "id": 0,
-      "skills": [
-        1
-      ],
-      "parameters": [
-        {
-          "name": "Random step range [0-100]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Stop",
-      "id": 1,
-      "skills": [
-        1
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Attraction",
-      "id": 4,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Attraction factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Repulsion",
-      "id": 5,
-      "skills": [
-        2
-      ],
-      "parameters": [
-        {
-          "name": "Repulsion factor [0,5]",
-          "type": "int",
-          "value": 0
-        }
-      ]
-    },
-    {
-      "name": "Message-Attraction",
-      "id": 8,
-      "skills": [
-        2
-      ],
-      "parameters": []
-    },
-    {
-      "name": "Message-Repulsion",
-      "id": 9,
-      "skills": [
-        2
-      ],
-      "parameters": []
-    }
-  ],
+  "Skills": [],
+  "Behaviors": [],
   "Arena": {
-    "shape": "Dodecagon",
+    "shape": "Square",
     "sideLength": 1,
     "robotNumber": 1,
-    "StartArea": {
+    "spawn": {
       "x": 0,
       "y": 0,
       "width": 100,
@@ -148,8 +14,74 @@
       "shape": "Circle",
       "orientation": 0
     },
-    "floors": [],
-    "obstacles": [],
+    "floors": [
+      {
+        "x": 63,
+        "y": -139,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "new (model)",
+        "color": "Black"
+      },
+      {
+        "x": -140,
+        "y": -106,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "new (model)",
+        "color": "Gray"
+      },
+      {
+        "x": -3,
+        "y": 150,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "w",
+        "color": "White"
+      },
+      {
+        "x": 143,
+        "y": -5,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "new (model)",
+        "color": "Black"
+      }
+    ],
+    "obstacles": [
+      {
+        "x": -124,
+        "y": 30,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "new (model)"
+      },
+      {
+        "x": -35,
+        "y": -152,
+        "width": 100,
+        "height": 100,
+        "radius": 50,
+        "shape": "Circle",
+        "orientation": 0,
+        "name": "new (model)"
+      }
+    ],
     "lights": []
   },
   "ReferenceModel": "RM1"

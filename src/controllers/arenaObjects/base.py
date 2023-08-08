@@ -8,6 +8,7 @@ class BaseArenaObjectController:
         self.model = model
         self.view = view
         self.view.onItemChanged += self.onViewChanged
+        self.updateView()
 
     def updateView(self):
         self.view.updateView(self.model)
@@ -23,6 +24,9 @@ class BaseArenaObjectController:
         if containsAny(kwargs, "radius"):
             self.view.updateShapes(Shape.Circle, **dimensions)
 
+    def setArenaPath(self, arenaPath):
+        self.view.setArenaPath(arenaPath)
+
 
 class MultiArenaObjectController(BaseArenaObjectController):
     def __init__(self, model, view: MultiArenaObjectView):
@@ -36,6 +40,18 @@ class MultiArenaObjectController(BaseArenaObjectController):
 
     def setSelected(self, selected):
         self.view.setSelected(selected)
+
+    def setName(self, text):
+        self.model.name = text
+
+    def setTabFocus(self, focus):
+        self.view.setTabFocus(focus)
+
+    def addToArena(self, arena):
+        pass
+
+    def removeFromArena(self, arena):
+        pass
 
     # ---------- Events ------------
 
@@ -68,12 +84,13 @@ class ItemListController:
         controller = self.createNewController(item, view)
         self.view.addItem(view, self.getDefaultName())
         self.itemsControllers.append(controller)
-        self.onItemAdded(item)
+        self.onItemAdded(controller)
 
     def removeItem(self, index):
         self.view.removeItem(index)
-        self.handleRemoval(self.itemsControllers.pop(index))
-        self.onItemRemoved(index)
+        controller = self.itemsControllers.pop(index)
+        self.handleRemoval(controller)
+        self.onItemRemoved(controller)
 
     def selectItem(self, index):
         pass
@@ -100,10 +117,34 @@ class ItemListController:
     def handleRemoval(self, controller):
         pass
 
-
-class ArenaListController(ItemListController):
-    def unselectAll(self):
+    def clear(self):
         for item in self.itemsControllers:
+            item.handleRemoval()
+        self.itemsControllers.clear()
+        self.view.clear()
+
+
+class ArenaTabController:
+    def __init__(self, index, *args, **kwargs):
+        self.index = index
+
+    def tabChanged(self, index):
+        self.setTabFocus(self.index == index)
+
+    def setTabFocus(self, focus):
+        pass
+
+
+class ArenaListController(ItemListController, ArenaTabController):
+    def __init__(self, view, index):
+        super().__init__(view)
+        ArenaTabController.__init__(self, index)
+        self.onItemLoaded = Event()
+
+    def unselectAll(self, controller=None):
+        for item in self.itemsControllers:
+            if item is controller:
+                continue
             item.setSelected(False)
 
     def setTabFocus(self, focus):
@@ -112,18 +153,23 @@ class ArenaListController(ItemListController):
 
         index = self.view.getCurrentIndex()
         if focus and index >= 0:
-            pass  # select item at current index
+            self.selectItem(index)
 
     def setArenaPath(self, arenaPath):
+        for item in self.itemsControllers:
+            item.setArenaPath(arenaPath)
+
+    def loadArena(self, arena):
         pass
 
     def loadItems(self, items):
+        self.clear()
         for item in items:
             view = self.view.createNewItem()
             controller = self.createNewController(item, view)
             self.view.addItem(view, item.name)
             self.itemsControllers.append(controller)
-            self.onItemAdded(item)
+            self.onItemLoaded(controller)
 
     def createNewController(self, model, view):
         controller = self.controllerFactory(model, view)
@@ -140,8 +186,21 @@ class ArenaListController(ItemListController):
     # ---------- Events ------------
 
     def onControllerSelected(self, controller):
-        self.view.selectRow(self.itemsControllers.index(controller))
+        index = self.itemsControllers.index(controller)
+        self.onItemSelected(controller)
+        self.view.selectRow(index)
+        controller.updateView()
 
     def selectItem(self, index):
-        self.onItemSelected(index)
         self.itemsControllers[index].setSelected(True)
+
+    # ----------------------
+
+    def addItem(self):
+        self.unselectAll()
+        super(ArenaListController, self).addItem()
+        # select new item ?
+
+    def removeItem(self, index):
+        super(ArenaListController, self).removeItem(index)
+

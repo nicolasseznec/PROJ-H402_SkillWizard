@@ -4,6 +4,12 @@ from src.util import containsAny
 
 
 class LightController(MultiArenaObjectController):
+    def addToArena(self, arena):
+        arena.lights.append(self.model)
+
+    def removeFromArena(self, arena):
+        arena.lights.remove(self.model)
+
     # ---------- Events ------------
 
     def onViewChanged(self, **kwargs):
@@ -23,3 +29,6 @@ class LightListController(ArenaListController):
 
     def getDefaultName(self):
         return "New Light"
+
+    def loadArena(self, arena):
+        self.loadItems(arena.lights)
