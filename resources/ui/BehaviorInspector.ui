@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BehaviourInspector</class>
- <widget class="QGroupBox" name="BehaviourInspector">
+ <class>BehaviorInspector</class>
+ <widget class="QGroupBox" name="BehaviorInspector">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -54,7 +54,7 @@
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item alignment="Qt::AlignTop">
-        <widget class="QLabel" name="BehaviourName">
+        <widget class="QLabel" name="BehaviorName">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>

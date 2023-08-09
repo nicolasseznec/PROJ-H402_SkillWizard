@@ -2,9 +2,9 @@ import math
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 
-from src.mission import Mission, Arena
+from src.models.mission import Mission, Arena
 from src.util import Shape
-from src.light import Light
+from src.models.arenaObjects.light import Light
 
 
 def addTitle(element, title):

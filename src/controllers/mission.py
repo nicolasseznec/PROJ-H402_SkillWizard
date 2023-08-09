@@ -39,7 +39,7 @@ class MissionController:
     def setCurrentMission(self, mission):
         self.currentMission = mission
         self.updateSkills()
-        self.updateBehaviours()
+        self.updateBehaviors()
         self.updateRobotModel(mission.referenceModel.reference)
         self.updateArena()
 
@@ -60,7 +60,7 @@ class MissionController:
         for controller in self.skillControllers.values():
             controller.updateView()
 
-    def updateBehaviours(self):
+    def updateBehaviors(self):
         for controller in self.behaviorControllers.values():
             controller.updateView()
 
@@ -96,7 +96,7 @@ class MissionController:
         self.view.addBehavior(behavior, view)
         self.behaviors[behavior.id] = behavior
         for s_id in behavior.skills:
-            self.skills[s_id].linkBehaviour(behavior.id)
+            self.skills[s_id].linkBehavior(behavior.id)
 
     def resetModel(self):
         for skillController in self.skillControllers.values():

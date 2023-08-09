@@ -18,13 +18,13 @@ class SpawnView(BaseArenaObjectView):
             self.setFlag(QGraphicsItem.ItemIsSelectable, False)
 
     def setupSettings(self, container):
-        self.shapeSetting = container.StartAreaShape
-        self.resetSetting = container.StartAreaReset
+        self.shapeSetting = container.SpawnShape
+        self.resetSetting = container.SpawnReset
 
-        self.radiusSetting = container.StartAreaRadius
-        self.orientationSetting = container.StartAreaOrientation
-        self.widthSetting = container.StartAreaWidth
-        self.heightSetting = container.StartAreaHeight
+        self.radiusSetting = container.SpawnRadius
+        self.orientationSetting = container.SpawnOrientation
+        self.widthSetting = container.SpawnWidth
+        self.heightSetting = container.SpawnHeight
 
-        self.xSetting = container.StartAreaX
-        self.ySetting = container.StartAreaY
+        self.xSetting = container.SpawnX
+        self.ySetting = container.SpawnY

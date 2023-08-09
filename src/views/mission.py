@@ -19,8 +19,8 @@ class MissionView(QWidget):
         self.skillLayout: QVBoxLayout = self.SkillBoxContents.layout()
         self.skillLayout.setAlignment(Qt.AlignTop)
 
-        self.behaviourLayout: QVBoxLayout = self.BehaviourBoxContents.layout()  # TODO : rename behavior in qtdesigner
-        self.behaviourLayout.setAlignment(Qt.AlignTop)
+        self.behaviorLayout: QVBoxLayout = self.BehaviorBoxContents.layout()
+        self.behaviorLayout.setAlignment(Qt.AlignTop)
 
         self.robotModelView = RobotModelView()
         self.arenaView = ArenaView()
@@ -40,7 +40,7 @@ class MissionView(QWidget):
 
     def addBehavior(self, behavior, view):
         self.behaviorViews[behavior.id] = view
-        self.behaviourLayout.addWidget(view.getSideWidget())
+        self.behaviorLayout.addWidget(view.getSideWidget())
         self.registerToCenterPanel(view.getCenterWidget())
 
     def setCenterPanel(self, view):

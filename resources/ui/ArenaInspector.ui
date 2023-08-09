@@ -63,9 +63,9 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="StartAreaSettings">
+     <widget class="QWidget" name="SpawnSettings">
       <attribute name="title">
        <string>Start Area</string>
       </attribute>
@@ -81,7 +81,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="StartAreaShape">
+        <widget class="QComboBox" name="SpawnShape">
          <property name="maximumSize">
           <size>
            <width>100</width>
@@ -108,7 +108,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QWidget" name="StartAreaPosVector" native="true">
+        <widget class="QWidget" name="SpawnPosVector" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="leftMargin">
            <number>0</number>
@@ -139,7 +139,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="StartAreaX">
+           <widget class="QSpinBox" name="SpawnX">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>2</horstretch>
@@ -174,7 +174,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="StartAreaY">
+           <widget class="QSpinBox" name="SpawnY">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>2</horstretch>
@@ -193,9 +193,9 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QStackedWidget" name="StartAreaDimensionSettings">
+        <widget class="QStackedWidget" name="SpawnDimensionSettings">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="CirclePage">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -219,7 +219,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="StartAreaRadius">
+            <widget class="QSpinBox" name="SpawnRadius">
              <property name="maximum">
               <number>250</number>
              </property>
@@ -258,7 +258,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="StartAreaWidth">
+            <widget class="QSpinBox" name="SpawnWidth">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>1</horstretch>
@@ -287,7 +287,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="StartAreaHeight">
+            <widget class="QSpinBox" name="SpawnHeight">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>1</horstretch>
@@ -307,7 +307,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QPushButton" name="StartAreaReset">
+        <widget class="QPushButton" name="SpawnReset">
          <property name="text">
           <string>Reset Position</string>
          </property>
@@ -321,7 +321,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="StartAreaOrientation">
+        <widget class="QSpinBox" name="SpawnOrientation">
          <property name="wrapping">
           <bool>true</bool>
          </property>
@@ -359,7 +359,7 @@
         <number>5</number>
        </property>
        <item>
-        <widget class="QFrame" name="GroundFrame">
+        <widget class="QFrame" name="FloorFrame">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -381,7 +381,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="GroundShape">
+           <widget class="QComboBox" name="FloorShape">
             <property name="maximumSize">
              <size>
               <width>100</width>
@@ -401,7 +401,7 @@
            </widget>
           </item>
           <item row="4" column="0" colspan="2">
-           <widget class="QStackedWidget" name="GroundDimensionSettings">
+           <widget class="QStackedWidget" name="FloorDimensionSettings">
             <property name="currentIndex">
              <number>0</number>
             </property>
@@ -427,7 +427,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="GroundRadius">
+               <widget class="QSpinBox" name="FloorRadius">
                 <property name="maximum">
                  <number>250</number>
                 </property>
@@ -466,7 +466,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="GroundWidth">
+               <widget class="QSpinBox" name="FloorWidth">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>1</horstretch>
@@ -495,7 +495,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="GroundHeight">
+               <widget class="QSpinBox" name="FloorHeight">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>1</horstretch>
@@ -553,7 +553,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="GroundX">
+              <widget class="QSpinBox" name="FloorX">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>2</horstretch>
@@ -588,7 +588,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="GroundY">
+              <widget class="QSpinBox" name="FloorY">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>2</horstretch>
@@ -607,14 +607,14 @@
            </widget>
           </item>
           <item row="8" column="0">
-           <widget class="QPushButton" name="GroundReset">
+           <widget class="QPushButton" name="FloorReset">
             <property name="text">
              <string>Reset Position</string>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QSpinBox" name="GroundOrientation">
+           <widget class="QSpinBox" name="FloorOrientation">
             <property name="wrapping">
              <bool>true</bool>
             </property>
@@ -650,7 +650,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QComboBox" name="GroundColor">
+           <widget class="QComboBox" name="FloorColor">
             <item>
              <property name="text">
               <string>Black</string>
@@ -687,7 +687,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QToolButton" name="GroundRemove">
+           <widget class="QToolButton" name="FloorRemove">
             <property name="minimumSize">
              <size>
               <width>20</width>
@@ -700,7 +700,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="GroundAdd">
+           <widget class="QToolButton" name="FloorAdd">
             <property name="minimumSize">
              <size>
               <width>20</width>
@@ -716,7 +716,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QListWidget" name="GroundList"/>
+        <widget class="QListWidget" name="FloorList"/>
        </item>
       </layout>
      </widget>
@@ -787,7 +787,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QWidget" name="StartAreaPosVector_4" native="true">
+           <widget class="QWidget" name="ObstaclePosVector_4" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <property name="leftMargin">
               <number>0</number>
@@ -1442,9 +1442,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>StartAreaShape</sender>
+   <sender>SpawnShape</sender>
    <signal>currentIndexChanged(int)</signal>
-   <receiver>StartAreaDimensionSettings</receiver>
+   <receiver>SpawnDimensionSettings</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1458,9 +1458,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>GroundShape</sender>
+   <sender>FloorShape</sender>
    <signal>currentIndexChanged(int)</signal>
-   <receiver>GroundDimensionSettings</receiver>
+   <receiver>FloorDimensionSettings</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">

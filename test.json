@@ -2,7 +2,7 @@
   "Skills": [],
   "Behaviors": [],
   "Arena": {
-    "shape": "Square",
+    "shape": "Hexagon",
     "sideLength": 1,
     "robotNumber": 1,
     "spawn": {
@@ -18,8 +18,8 @@
     "obstacles": [],
     "lights": [
       {
-        "x": 128,
-        "y": -183,
+        "x": 63,
+        "y": -215,
         "width": 127,
         "height": 100,
         "radius": 50,
@@ -31,8 +31,8 @@
         "strength": 27.0
       },
       {
-        "x": -148,
-        "y": -104,
+        "x": -182,
+        "y": -13,
         "width": 100,
         "height": 100,
         "radius": 50,

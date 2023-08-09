@@ -22,17 +22,17 @@ class FloorView(MultiArenaObjectView):
         self.colorSetting.currentIndexChanged.disconnect(self.colorChanged)
 
     def setupSettings(self, container):
-        self.shapeSetting = container.GroundShape
-        self.resetSetting = container.GroundReset
-        self.colorSetting = container.GroundColor
+        self.shapeSetting = container.FloorShape
+        self.resetSetting = container.FloorReset
+        self.colorSetting = container.FloorColor
 
-        self.radiusSetting = container.GroundRadius
-        self.orientationSetting = container.GroundOrientation
-        self.widthSetting = container.GroundWidth
-        self.heightSetting = container.GroundHeight
+        self.radiusSetting = container.FloorRadius
+        self.orientationSetting = container.FloorOrientation
+        self.widthSetting = container.FloorWidth
+        self.heightSetting = container.FloorHeight
 
-        self.xSetting = container.GroundX
-        self.ySetting = container.GroundY
+        self.xSetting = container.FloorX
+        self.ySetting = container.FloorY
 
     def updateView(self, model):
         self.blockSignal = True
@@ -65,4 +65,4 @@ class FloorListView(ArenaListView):
         return FloorView(self.settingsContainer)
 
     def getWidgets(self, settingsContainer):
-        return settingsContainer.GroundAdd, settingsContainer.GroundRemove, settingsContainer.GroundList
+        return settingsContainer.FloorAdd, settingsContainer.FloorRemove, settingsContainer.FloorList

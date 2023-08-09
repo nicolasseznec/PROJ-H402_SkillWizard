@@ -54,7 +54,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-244</y>
         <width>373</width>
         <height>930</height>
        </rect>
@@ -165,7 +165,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="BehaviourBox">
+        <widget class="QGroupBox" name="BehaviorBox">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -173,7 +173,7 @@
           </size>
          </property>
          <property name="title">
-          <string>Behaviours</string>
+          <string>Behaviors</string>
          </property>
          <property name="flat">
           <bool>false</bool>
@@ -199,7 +199,7 @@
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="BehaviourBoxContents">
+            <widget class="QWidget" name="BehaviorBoxContents">
              <property name="geometry">
               <rect>
                <x>0</x>

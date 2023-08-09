@@ -1,7 +1,7 @@
 import json
 from os.path import basename
 
-from src.argosGenerator import generateArgosFile
+from src.models.argosGenerator import generateArgosFile
 from src.controllers.mission import MissionController
 
 from src.views.application import ApplicationView, ApplicationViewListener

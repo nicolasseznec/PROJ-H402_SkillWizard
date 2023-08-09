@@ -56,7 +56,7 @@
       <string notr="true">font: 9pt &quot;MS Shell Dlg 2&quot;; text-align:left;</string>
      </property>
      <property name="text">
-      <string>Behaviour Name</string>
+      <string>Behavior Name</string>
      </property>
      <property name="checkable">
       <bool>false</bool>

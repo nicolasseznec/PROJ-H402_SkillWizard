@@ -25,7 +25,7 @@ class Skill:
             "parameters": [p.toJson() for p in self.parameters.values()],
         }
 
-    def linkBehaviour(self, behavior_id):
+    def linkBehavior(self, behavior_id):
         self.behaviors.append(behavior_id)
 
     def reset(self):

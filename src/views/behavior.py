@@ -7,8 +7,8 @@ from src.util import ResourceLoader, Event
 
 class BehaviorView:
     def __init__(self):
-        self.behaviorItem = ResourceLoader.loadWidget("BehaviourItem.ui")
-        self.inspector = ResourceLoader.loadWidget("BehaviourInspector.ui")
+        self.behaviorItem = ResourceLoader.loadWidget("BehaviorItem.ui")
+        self.inspector = ResourceLoader.loadWidget("BehaviorInspector.ui")
         self.inspectorLayout = self.inspector.scrollAreaWidgetContents.layout()
         self.inspectorLayout.setAlignment(Qt.AlignTop)
         self.baseItemColor = self.behaviorItem.palette().color(QPalette.Window)
@@ -19,7 +19,7 @@ class BehaviorView:
 
     def updateView(self, behavior):
         self.behaviorItem.LabelButton.setText(behavior.name)
-        self.inspector.BehaviourName.setText(behavior.name)
+        self.inspector.BehaviorName.setText(behavior.name)
         self.inspector.description.setText(behavior.description)
         self.setActive(behavior.active)
 
