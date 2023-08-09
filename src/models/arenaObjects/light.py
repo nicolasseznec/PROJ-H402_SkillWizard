@@ -28,3 +28,11 @@ class Light(MultiArenaObject):
         return Light({
             "strength": 0,
         })
+
+    @staticmethod
+    def strengthToRadius(strength):
+        return int(strength * 5)
+
+    @staticmethod
+    def strengthToHeight(strength):
+        return int(strength * 3)

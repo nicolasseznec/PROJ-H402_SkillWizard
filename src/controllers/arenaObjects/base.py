@@ -120,8 +120,8 @@ class ItemListController:
     def clear(self):
         for item in self.itemsControllers:
             item.handleRemoval()
-        self.itemsControllers.clear()
         self.view.clear()
+        self.itemsControllers.clear()
 
 
 class ArenaTabController:
@@ -140,6 +140,7 @@ class ArenaListController(ItemListController, ArenaTabController):
         super().__init__(view)
         ArenaTabController.__init__(self, index)
         self.onItemLoaded = Event()
+        self.onItemUnloaded = Event()
 
     def unselectAll(self, controller=None):
         for item in self.itemsControllers:
@@ -182,6 +183,11 @@ class ArenaListController(ItemListController, ArenaTabController):
     def handleRemoval(self, controller):
         controller.onSelected -= self.onControllerSelected
         controller.handleRemoval()
+
+    def clear(self):
+        for item in self.itemsControllers:
+            self.onItemUnloaded(item)
+        super(ArenaListController, self).clear()
 
     # ---------- Events ------------
 

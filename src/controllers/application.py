@@ -19,6 +19,7 @@ class ApplicationController(ApplicationViewListener):
     def onCreateMission(self):
         self.missionController.createMission()
         self.openMissionView()
+        self.currentSavePath = None
 
     def onOpenMission(self):
         filePath = getOpenFileName("Open Mission", "Mission files (*.*)")

@@ -41,6 +41,7 @@ class BaseArenaObjectView(QGraphicsPathItem):
         super(BaseArenaObjectView, self).paint(painter, option, widget)
 
     def updateView(self, model):
+        block = self.blockSignal
         self.blockSignal = True
         self.setShape(Shape[model.shape])
         self.setPos(model.x, model.y)
@@ -57,7 +58,7 @@ class BaseArenaObjectView(QGraphicsPathItem):
         self.orientationSetting.setValue(model.orientation)
         self.widthSetting.setValue(model.width)
         self.heightSetting.setValue(model.height)
-        self.blockSignal = False
+        self.blockSignal = block
 
     def updatePos(self):
         self.xSetting.setValue(int(self.x()))
@@ -184,10 +185,6 @@ class MultiArenaObjectView(BaseArenaObjectView):
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.onSelected = Event()
 
-    def setSelected(self, selected):
-        super(MultiArenaObjectView, self).setSelected(selected)
-        self.blockSignal = not selected
-
     def setTabFocus(self, focus):
         if focus:
             self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
@@ -199,8 +196,11 @@ class MultiArenaObjectView(BaseArenaObjectView):
     # ---------- Events ------------
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemSelectedHasChanged and value:
-            self.onSelected()
+        if change == QGraphicsItem.ItemSelectedHasChanged:
+            if value:
+                self.onSelected()
+            self.blockSignal = not value
+
         return super(MultiArenaObjectView, self).itemChange(change, value)
 
 
@@ -273,8 +273,10 @@ class ItemListView:
     # -------------------------------------
 
     def clear(self):
-        self.items.clear()
+        self.listWidget.blockSignals(True)
         self.listWidget.clear()
+        self.listWidget.blockSignals(False)
+        self.items.clear()
 
 
 class TextDialog(QDialog):

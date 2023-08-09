@@ -12,6 +12,7 @@ class ArenaListControllerHandler:
         self.onItemAdded = Event()
         self.onItemRemoved = Event()
         self.onItemLoaded = Event()
+        self.onItemUnloaded = Event()
         self.connectEvents()
 
     def connectEvents(self):
@@ -19,6 +20,7 @@ class ArenaListControllerHandler:
             elements.onItemAdded += self.onItemAdded
             elements.onItemRemoved += self.onItemRemoved
             elements.onItemLoaded += self.onItemLoaded
+            elements.onItemUnloaded += self.onItemUnloaded
             elements.onItemSelected += self.onItemSelected
 
     def onItemSelected(self, controller):
@@ -56,6 +58,7 @@ class ArenaController:
         self.listHandler.onItemAdded += self.onItemAdded
         self.listHandler.onItemRemoved += self.onItemRemoved
         self.listHandler.onItemLoaded += self.onItemLoaded
+        self.listHandler.onItemUnloaded += self.onItemUnloaded
 
         self.onSelected = Event()
 
@@ -89,6 +92,9 @@ class ArenaController:
 
     def onItemRemoved(self, controller):
         controller.removeFromArena(self.arena)
+        self.onItemUnloaded(controller)
+
+    def onItemUnloaded(self, controller):
         self.view.removeSceneItem(controller.view)
 
     # ------------------------------
@@ -101,6 +107,6 @@ class ArenaController:
 
         if arena is not None:
             self.spawn.setSpawn(arena.spawn)
+            self.listHandler.updateViews(arena)
             self.view.updateView(arena)
             self.onArenaPathChanged(self.view.getArenaPath())
-            self.listHandler.updateViews(arena)

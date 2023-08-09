@@ -1,6 +1,6 @@
 from src.controllers.arenaObjects.base import MultiArenaObjectController, ArenaListController
 from src.models.arenaObjects.light import Light
-from src.util import containsAny
+from src.util import containsAny, Color
 
 
 class LightController(MultiArenaObjectController):
@@ -18,6 +18,8 @@ class LightController(MultiArenaObjectController):
         dimensions = self.model.toJson()
         if containsAny(kwargs, "strength", "orientation", "width"):
             self.view.updateLights(**dimensions)
+        if containsAny(kwargs, "color", "strength", "orientation"):
+            self.view.updateColor(Color[self.model.color], **dimensions)
 
 
 class LightListController(ArenaListController):
