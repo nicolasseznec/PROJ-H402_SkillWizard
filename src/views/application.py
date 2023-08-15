@@ -16,7 +16,20 @@ class ApplicationViewListener:
     def onSaveAs(self):
         pass
 
+    # -------------------------
+
     def onGenerateArgos(self):
+        pass
+
+    def onGenerateFunctions(self):
+        pass
+
+    # -------------------------
+
+    def onEditArena(self):
+        pass
+
+    def onEditObjective(self):
         pass
 
 
@@ -25,7 +38,6 @@ class ApplicationView(QMainWindow):
         super().__init__(*args)
         ResourceLoader.loadWidget("MainWindow", self)
         self.setWindowTitle("Robot Skill Wizard")
-
         self.missionView = MissionView()
 
     def connectActions(self, listener: ApplicationViewListener):
@@ -34,6 +46,9 @@ class ApplicationView(QMainWindow):
         self.actionSave.triggered.connect(listener.onSave)
         self.actionSaveAs.triggered.connect(listener.onSaveAs)
         self.actionGenerateArgosFile.triggered.connect(listener.onGenerateArgos)
+        self.actionGenerateLoopFunctions.triggered.connect(listener.onGenerateFunctions)
+        self.actionEditArena.triggered.connect(listener.onEditArena)
+        self.actionEditObjective.triggered.connect(listener.onEditObjective)
 
     def displayMissionView(self):
         self.setCentralWidget(self.missionView)

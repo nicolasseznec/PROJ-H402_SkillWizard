@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from src.util import ResourceLoader
 from src.views.arena import ArenaView
+from src.views.objective import ObjectiveView
 from src.views.robot import RobotModelView
 
 
@@ -25,9 +26,11 @@ class MissionView(QWidget):
         self.robotModelView = RobotModelView()
         self.arenaView = ArenaView()
         self.registerToCenterPanel(self.arenaView.getCenterWidget())
+        self.objectiveView = ObjectiveView()
+        self.registerToCenterPanel(self.objectiveView.getCenterWidget())
 
         self.addSettingsTab("Arena", self.arenaView.settingsTab)
-        self.addSettingsTab("Mission")
+        self.addSettingsTab("Objective", self.objectiveView.settingsTab)
         self.addSettingsTab("Model", self.robotModelView)
 
         self.skillViews = {}  # skill views mapped to the id of their skill
@@ -51,6 +54,9 @@ class MissionView(QWidget):
 
     def addSettingsTab(self, name, view=None):
         self.SettingsTabs.addTab(view if view is not None else QWidget(), name)
+
+    def setSettingsTab(self, index):
+        self.SettingsTabs.setCurrentIndex(index)
 
     def clearBehaviorsHighlight(self):
         for view in self.behaviorViews.values():

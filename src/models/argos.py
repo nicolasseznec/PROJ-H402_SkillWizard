@@ -1,3 +1,7 @@
+"""
+Argos File Generation utilities
+"""
+
 import math
 from xml.dom import minidom
 import xml.etree.ElementTree as ET

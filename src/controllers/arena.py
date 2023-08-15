@@ -43,6 +43,7 @@ class ArenaListControllerHandler:
 class ArenaController:
     def __init__(self, view: ArenaView):
         self.view = view
+        self.arena = None
         self.view.onArenaClicked += self.onArenaClicked
         self.view.onArenaSettingsChanged += self.onSettingsChanged
         self.view.onArenaTabChanged += self.onTabChanged

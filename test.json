@@ -2,7 +2,7 @@
   "Skills": [],
   "Behaviors": [],
   "Arena": {
-    "shape": "Hexagon",
+    "shape": "Square",
     "sideLength": 1,
     "robotNumber": 1,
     "spawn": {
@@ -16,34 +16,10 @@
     },
     "floors": [],
     "obstacles": [],
-    "lights": [
-      {
-        "x": 63,
-        "y": -215,
-        "width": 127,
-        "height": 100,
-        "radius": 50,
-        "shape": "Circle",
-        "orientation": 0,
-        "name": "new (model)",
-        "color": "Blue",
-        "lightType": "WallLight",
-        "strength": 27.0
-      },
-      {
-        "x": -182,
-        "y": -13,
-        "width": 100,
-        "height": 100,
-        "radius": 50,
-        "shape": "Circle",
-        "orientation": 0,
-        "name": "new (model)",
-        "color": "Green",
-        "lightType": "PointLight",
-        "strength": 10
-      }
-    ]
+    "lights": []
   },
-  "ReferenceModel": "RM1"
+  "ReferenceModel": "RM1",
+  "Objective": {
+    "name": "Lmao"
+  }
 }

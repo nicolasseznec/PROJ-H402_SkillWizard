@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from src.models.arena import Arena
+from src.models.objective import Objective
 
 
 class Mission:
@@ -17,6 +18,7 @@ class Mission:
         self.referenceModels = referenceModels
         self.referenceModel = next(iter(self.referenceModels.values()))
         self.arena = Arena(data.get("Arena", None))
+        self.objective = Objective(data.get("Objective", None))
 
         if data:
             self.loadFromData(data)
@@ -27,6 +29,7 @@ class Mission:
             "Behaviors": [b.toJson() for b in self.behaviors.values() if b.active],
             "Arena": self.arena.toJson(),
             "ReferenceModel": self.referenceModel.toJson(),
+            "Objective": self.objective.toJson()
         }
 
     def setModel(self, model):

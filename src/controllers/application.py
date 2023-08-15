@@ -1,7 +1,7 @@
 import json
 from os.path import basename
 
-from src.models.argosGenerator import generateArgosFile
+from src.models.argos import generateArgosFile
 from src.controllers.mission import MissionController
 
 from src.views.application import ApplicationView, ApplicationViewListener
@@ -15,6 +15,8 @@ class ApplicationController(ApplicationViewListener):
         self.view.connectActions(self)
 
         self.missionController = MissionController(self.view.getMissionView())
+
+    # ----------- Events --------------
 
     def onCreateMission(self):
         self.missionController.createMission()
@@ -63,6 +65,8 @@ class ApplicationController(ApplicationViewListener):
     def openMissionView(self):
         self.view.displayMissionView()
 
+    # -------------------------
+
     def onGenerateArgos(self):
         if not self.missionController.hasCurrentMission():
             return
@@ -74,10 +78,27 @@ class ApplicationController(ApplicationViewListener):
             if self.currentSavePath:
                 options["source"] = basename(self.currentSavePath)
 
-            generateArgosFile(self.missionController.current_mission, filePath, **options)
+            generateArgosFile(self.missionController.currentMission, filePath, **options)
 
             displayInformation("Argos File Generation",
                                "The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
+
+    def onGenerateFunctions(self):
+        if not self.missionController.hasCurrentMission():
+            return
+        pass
+
+    # -------------------------
+
+    def onEditArena(self):
+        if not self.missionController.hasCurrentMission():
+            return
+        self.missionController.selectArena()
+
+    def onEditObjective(self):
+        if not self.missionController.hasCurrentMission():
+            return
+        self.missionController.selectObjective()
 
     def show(self):
         self.view.show()

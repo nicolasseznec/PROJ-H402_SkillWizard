@@ -2,6 +2,7 @@ import json
 
 from src.controllers.arena import ArenaController
 from src.controllers.behavior import BehaviorLoader
+from src.controllers.objective import ObjectiveController
 from src.controllers.robot import RobotModelController, RobotModelLoader
 from src.controllers.skill import SkillLoader
 from src.models.mission import Mission
@@ -22,6 +23,8 @@ class MissionController:
         self.robotModelController.modelChanged += self.updateRobotModel
         self.arenaController = ArenaController(self.view.arenaView)
         self.arenaController.onSelected += self.onItemSelected
+        self.objectiveController = ObjectiveController(self.view.objectiveView)
+        self.objectiveController.onSelected += self.onItemSelected
 
         self.skills = {}  # references for existing skills
         self.behaviors = {}  # references for existing behaviors
@@ -42,6 +45,7 @@ class MissionController:
         self.updateBehaviors()
         self.updateRobotModel(mission.referenceModel.reference)
         self.updateArena()
+        self.updateObjective()
 
     def getMissionData(self):
         if self.currentMission is None:
@@ -54,7 +58,15 @@ class MissionController:
     def hasCurrentMission(self):
         return self.currentMission is not None
 
-    # ------------ Updating ----------------------------------------
+    def selectArena(self):
+        self.onItemSelected(self.arenaController)
+        self.view.setSettingsTab(0)
+
+    def selectObjective(self):
+        self.onItemSelected(self.objectiveController)
+        self.view.setSettingsTab(1)
+
+    # ------------ Updating ---------------
 
     def updateSkills(self):
         for controller in self.skillControllers.values():
@@ -71,6 +83,9 @@ class MissionController:
 
     def updateArena(self):
         self.arenaController.setArena(self.currentMission.arena)
+
+    def updateObjective(self):
+        self.objectiveController.setObjective(self.currentMission.objective)
 
     # --------------- Loading the application model (skills and behaviors) ---------------
 
