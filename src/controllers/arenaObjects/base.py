@@ -1,3 +1,4 @@
+from src.controllers.utils.itemList import ItemListController
 from src.models.arenaObjects.base import BaseArenaObject
 from src.util import Event, Shape, containsAny
 from src.views.arenaObjects.base import BaseArenaObjectView, MultiArenaObjectView
@@ -60,68 +61,6 @@ class MultiArenaObjectController(BaseArenaObjectController):
 
 
 # ------------ Item Lists --------------
-
-class ItemListController:
-    def __init__(self, view):
-        self.itemsControllers = []
-
-        self.view = view
-
-        self.onItemAdded = Event()
-        self.onItemRemoved = Event()
-        self.onItemSelected = Event()
-
-        self.view.onItemAdded += self.addItem
-        self.view.onItemRemoved += self.removeItem
-        self.view.onItemSelected += self.selectItem
-        self.view.onItemDoubleClicked += self.onItemDoubleClicked
-
-    # ----------------------
-
-    def addItem(self):
-        item = self.createNewItem()
-        view = self.view.createNewItem()
-        controller = self.createNewController(item, view)
-        self.view.addItem(view, self.getDefaultName())
-        self.itemsControllers.append(controller)
-        self.onItemAdded(controller)
-
-    def removeItem(self, index):
-        self.view.removeItem(index)
-        controller = self.itemsControllers.pop(index)
-        self.handleRemoval(controller)
-        self.onItemRemoved(controller)
-
-    def selectItem(self, index):
-        pass
-
-    def onItemDoubleClicked(self, index):
-        controller = self.itemsControllers[index]
-        dialog = self.view.getTextDialog(index)
-        text = dialog.getNewText()
-        if text:
-            self.view.setItemText(index, text)
-            controller.setName(text)
-
-    # ------------------------------
-
-    def getDefaultName(self):
-        return "New Item"
-
-    def createNewController(self, model, view):
-        pass
-
-    def createNewItem(self):
-        pass
-
-    def handleRemoval(self, controller):
-        pass
-
-    def clear(self):
-        for item in self.itemsControllers:
-            item.handleRemoval()
-        self.view.clear()
-        self.itemsControllers.clear()
 
 
 class ArenaTabController:

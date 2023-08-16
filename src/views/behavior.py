@@ -100,7 +100,7 @@ class BpColorView(BehaviorParameterView):
         self.color.currentIndexChanged.connect(self.onValueChanged)
 
     def loadWidget(self, parameter):
-        ResourceLoader.loadWidget("BpColorInspector.ui", self)
+        ResourceLoader.loadWidget("behaviors/BpColorInspector.ui", self)
         self.name.setText(parameter.name)
         self.description.setText(parameter.description)
 
@@ -118,7 +118,7 @@ class BpIntView(BehaviorParameterView):
         self.value.valueChanged.connect(self.onValueChanged)
 
     def loadWidget(self, parameter):
-        ResourceLoader.loadWidget("BpIntInspector.ui", self)
+        ResourceLoader.loadWidget("behaviors/BpIntInspector.ui", self)
         self.setupWidget(parameter)
 
     def setupWidget(self, parameter):
@@ -138,5 +138,5 @@ class BpIntView(BehaviorParameterView):
 
 class BpFloatView(BpIntView):
     def loadWidget(self, parameter):
-        ResourceLoader.loadWidget("BpFloatInspector.ui", self)
+        ResourceLoader.loadWidget("behaviors/BpFloatInspector.ui", self)
         self.setupWidget(parameter)

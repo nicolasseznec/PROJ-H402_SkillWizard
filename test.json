@@ -20,6 +20,18 @@
   },
   "ReferenceModel": "RM1",
   "Objective": {
-    "name": "Lmao"
+    "name": "New objective",
+    "postStepStages": [
+      {
+        "name": "stage0",
+        "increment": true,
+        "code": "Text text txt"
+      },
+      {
+        "name": "stage1",
+        "increment": true,
+        "code": ""
+      }
+    ]
   }
 }

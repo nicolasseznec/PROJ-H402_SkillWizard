@@ -1,6 +1,8 @@
-from PyQt5.QtWidgets import QGroupBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QGroupBox, QVBoxLayout
 
 from src.util import ResourceLoader, Event
+from src.views.objectiveStage.postStep import PostStepStageView
 
 
 class ObjectiveView(QGroupBox):
@@ -12,6 +14,9 @@ class ObjectiveView(QGroupBox):
         self.onObjectiveClicked = Event()
         self.onGenerateClicked = Event()
         self.onObjectiveSettingsChanged = Event()
+
+        self.postStepView = PostStepStageView(self)
+        self.addToLayout(self.postStepView, self.PostStepStage)
 
         self.blockSignal = False
         self.connectActions()
@@ -25,7 +30,7 @@ class ObjectiveView(QGroupBox):
         return self
 
     def updateView(self, objective):
-        pass
+        self.updatePostStepFunction(objective.postStepStages)
 
     # ---------- Events ------------
 
@@ -43,3 +48,25 @@ class ObjectiveView(QGroupBox):
         if self.blockSignal:
             return
         self.onObjectiveSettingsChanged(name=self.settingsTab.ObjectiveName.text())
+
+    # ----------------------
+
+    def addToLayout(self, widget, parent):
+        layout = QVBoxLayout()
+        layout.addWidget(widget, alignment=Qt.AlignTop)
+        layout.setContentsMargins(0, 0, 0, 0)
+        parent.setLayout(layout)
+
+    def updatePostStepFunction(self, stages):
+        self.PostStepFunction.setText(self.getFunctionFromStages(stages))
+
+    def getFunctionFromStages(self, stages):
+        first = True
+        function = ""
+        for stage in stages:
+            if stage.increment:
+                if not first:
+                    function += " + "
+                function += stage.name
+                first = False
+        return function
