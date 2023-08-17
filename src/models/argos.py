@@ -11,6 +11,62 @@ from src.util import Shape
 from src.models.arenaObjects.light import Light
 
 
+def generateArgosFile(mission: Mission, file_name, **options):
+    root = ET.Element("argos-configuration")
+
+    if "source" in options:
+        disclaimer = ET.Comment("Generated from " + str(options["source"]))
+        disclaimer.tail = " "
+        root.append(disclaimer)
+
+    # Framework
+    addTitle(root, "Framework")
+    framework = ET.SubElement(root, "framework")
+    ET.SubElement(framework, "experiment", length="60", ticks_per_second="10", random_seed="0")
+    framework.tail = " "
+
+    # Loop functions
+    addTitle(root, "Loop functions")
+    addComment(root, "TO COMPLETE ! : User needs to complete some of the following fields")
+    loop_functions = ET.SubElement(root, "loop_functions", library="PATH_TO_LOOP_FUNCTION", label="LOOP_FUNCTIONS_LABEL")
+    ET.SubElement(loop_functions, "params", dist_radius="1.2", number_robots=str(mission.arena.robotNumber))
+    loop_functions.tail = " "
+
+    # Controllers
+    addTitle(root, "Controllers")
+    generateController(mission, root)
+
+    # Arena
+    addTitle(root, "Arena")
+    generateArena(mission.arena, root)
+
+    # E-Puck
+    # distribute
+
+    # Physics engines
+    addTitle(root, "Physics engines")
+    physics_engines = ET.SubElement(root, "physics_engines")
+    ET.SubElement(physics_engines, "dynamics2d", id="dyn2d")
+    physics_engines.tail = " "
+
+    # Media
+    addTitle(root, "Media")
+    media = ET.SubElement(root, "media")
+    ET.SubElement(media, "led", id="leds", grid_size="1,1,1")
+    ET.SubElement(media, "range_and_bearing", id="ircom")
+    ET.SubElement(media, "range_and_bearing", id="rab")
+    media.tail = " "
+
+    # Visualization
+    addTitle(root, "Visualization")
+    visualization = ET.SubElement(root, "visualization")
+    visualization.tail = " "
+
+    dom = minidom.parseString(ET.tostring(root))
+    with open(file_name, 'w') as file:
+        file.write(dom.toprettyxml(indent='  '))
+
+
 def addTitle(element, title):
     titleStr = ' * ' + title + ' * '
     line = ' ' + '*' * (len(titleStr) - 2) + ' '
@@ -134,72 +190,16 @@ def generateController(mission, element):
     automode = ET.SubElement(controllers, "automode_controller", id="automode", library="PATH_TO_AUTOMODE")
 
     actuators = ET.SubElement(automode, "actuators")
-    for elem in mission.reference_model.outputs:
+    for elem in mission.referenceModel.outputs:
         if elem in controller_output:
             actuators.append(controller_output[elem])
     ET.SubElement(actuators, "epuck_range_and_bearing", implementation="medium", medium="rab", data_size="4", range="0.7")
 
     sensors = ET.SubElement(automode, "sensors")
-    for elem in mission.reference_model.inputs:
+    for elem in mission.referenceModel.inputs:
         if elem in controller_input:
             sensors.append(controller_input[elem])
     ET.SubElement(sensors, "epuck_range_and_bearing", implementation="medium", medium="rab", data_size="4", nois_std_deviation="1.5", loss_probability="0.85", calibrated="true")
 
     fsm_config = "TO_COMPLETE"  # TODO : FSM config
     params = ET.SubElement(automode, "params", attrib={"readable": "false", "history": "false", "hist-folder": "./fsm_history/", "fsm-config": fsm_config})
-
-
-def generateArgosFile(mission: Mission, file_name, **options):
-    root = ET.Element("argos-configuration")
-
-    if "source" in options:
-        disclaimer = ET.Comment("Generated from " + str(options["source"]))
-        disclaimer.tail = " "
-        root.append(disclaimer)
-
-    # Framework
-    addTitle(root, "Framework")
-    framework = ET.SubElement(root, "framework")
-    ET.SubElement(framework, "experiment", length="60", ticks_per_second="10", random_seed="0")
-    framework.tail = " "
-
-    # Loop functions
-    addTitle(root, "Loop functions")
-    addComment(root, "TO COMPLETE ! : User needs to complete some of the following fields")
-    loop_functions = ET.SubElement(root, "loop_functions", library="PATH_TO_LOOP_FUNCTION", label="LOOP_FUNCTIONS_LABEL")
-    ET.SubElement(loop_functions, "params", dist_radius="1.2", number_robots=str(mission.arena.robotNumber))
-    loop_functions.tail = " "
-
-    # Controllers
-    addTitle(root, "Controllers")
-    generateController(mission, root)
-
-    # Arena
-    addTitle(root, "Arena")
-    generateArena(mission.arena, root)
-
-    # E-Puck
-    # distribute
-
-    # Physics engines
-    addTitle(root, "Physics engines")
-    physics_engines = ET.SubElement(root, "physics_engines")
-    ET.SubElement(physics_engines, "dynamics2d", id="dyn2d")
-    physics_engines.tail = " "
-
-    # Media
-    addTitle(root, "Media")
-    media = ET.SubElement(root, "media")
-    ET.SubElement(media, "led", id="leds", grid_size="1,1,1")
-    ET.SubElement(media, "range_and_bearing", id="ircom")
-    ET.SubElement(media, "range_and_bearing", id="rab")
-    media.tail = " "
-
-    # Visualization
-    addTitle(root, "Visualization")
-    visualization = ET.SubElement(root, "visualization")
-    visualization.tail = " "
-
-    dom = minidom.parseString(ET.tostring(root))
-    with open(file_name, 'w') as file:
-        file.write(dom.toprettyxml(indent='  '))

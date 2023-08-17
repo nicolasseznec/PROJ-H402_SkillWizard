@@ -1,4 +1,4 @@
-from src.util import ResourceLoader, Event
+from src.util import ResourceLoader
 from src.views.objectiveStage.stage import StageView, StageListView
 
 

@@ -1,4 +1,4 @@
-from src.models.objectiveStage.stage import Stage
+from src.models.objectiveUtils.stage import Stage
 
 
 class Objective:

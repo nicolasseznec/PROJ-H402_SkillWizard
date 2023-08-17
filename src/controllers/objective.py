@@ -15,7 +15,6 @@ class ObjectiveController:
         self.postStepController.onIncrementChanged += self.updatePostStepFunction
 
         self.view.onObjectiveClicked += self.onViewClicked
-        self.view.onGenerateClicked += self.onGenerateClicked
         self.view.onObjectiveSettingsChanged += self.onSettingsChanged
 
     def getCenterWidget(self):
@@ -44,3 +43,7 @@ class ObjectiveController:
         if objective is not None:
             self.postStepController.setStageList(objective.postStepStages)
             self.view.updateView(objective)
+
+    def setFunctionGenerator(self, functionGenerator):
+        self.view.onGenerateClicked.clear()
+        self.view.onGenerateClicked += functionGenerator

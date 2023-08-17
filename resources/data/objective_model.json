@@ -1,0 +1,29 @@
+{
+  "types": [
+    "Real",
+    "Pos",
+    "List[Pos]",
+    "List[Real]"
+  ],
+  "variables": [
+
+  ],
+  "functions": [
+    {
+      "name": "sum",
+      "arguments": [
+        {
+          "type": "List[Real]"
+        }
+      ],
+      "return": "Real",
+      "code": ""
+    },
+    {
+      "name": "dist",
+      "arguments": [
+
+      ]
+    }
+  ]
+}

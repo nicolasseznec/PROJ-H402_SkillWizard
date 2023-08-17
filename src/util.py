@@ -1,3 +1,4 @@
+import re
 from importlib import resources
 from enum import Enum
 import uuid
@@ -113,6 +114,12 @@ def generateUuid():
 def generateItems(data, itemFactory):
     for item in data:
         yield itemFactory(item)
+
+
+def cleanIdentifier(name):
+    if not name.isidentifier():
+        name = re.sub(r'\W|^(?=\d)', '_', name)
+    return name
 
 
 def containsAny(container, *args):

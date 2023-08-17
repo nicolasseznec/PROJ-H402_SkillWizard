@@ -3,6 +3,7 @@ from os.path import basename
 
 from src.models.argos import generateArgosFile
 from src.controllers.mission import MissionController
+from src.models.objectiveUtils.loopFunctions import generateLoopFunctions
 
 from src.views.application import ApplicationView, ApplicationViewListener
 from src.util import getOpenFileName, getSaveFileName, displayError, displayInformation  # TODO : utils in MVC
@@ -15,6 +16,7 @@ class ApplicationController(ApplicationViewListener):
         self.view.connectActions(self)
 
         self.missionController = MissionController(self.view.getMissionView())
+        self.missionController.setFunctionGenerator(self.onGenerateFunctions)
 
     # ----------- Events --------------
 
@@ -86,7 +88,18 @@ class ApplicationController(ApplicationViewListener):
     def onGenerateFunctions(self):
         if not self.missionController.hasCurrentMission():
             return
-        pass
+
+        filePath = getSaveFileName("Generate C++ file", "C++ files (*.cpp)")
+
+        if filePath:
+            options = {}
+            if self.currentSavePath:
+                options["source"] = basename(self.currentSavePath)
+
+            generateLoopFunctions(self.missionController.currentMission, filePath, **options)
+
+            displayInformation("Loop Functions File Generation",
+                               "TODO")
 
     # -------------------------
 

@@ -1,5 +1,5 @@
 from src.controllers.utils.itemList import SingleItemListController
-from src.models.objectiveStage.stage import Stage
+from src.models.objectiveUtils.stage import Stage
 
 
 class StageController:

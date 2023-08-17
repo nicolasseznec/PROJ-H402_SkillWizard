@@ -66,6 +66,9 @@ class MissionController:
         self.onItemSelected(self.objectiveController)
         self.view.setSettingsTab(1)
 
+    def setFunctionGenerator(self, functionGenerator):
+        self.objectiveController.setFunctionGenerator(functionGenerator)
+
     # ------------ Updating ---------------
 
     def updateSkills(self):

@@ -25,10 +25,15 @@
       {
         "name": "stage0",
         "increment": true,
-        "code": "Text text txt"
+        "code": "dist(arg1, 1 + arg2)"
       },
       {
         "name": "stage1",
+        "increment": false,
+        "code": ""
+      },
+      {
+        "name": "stage2",
         "increment": true,
         "code": ""
       }
