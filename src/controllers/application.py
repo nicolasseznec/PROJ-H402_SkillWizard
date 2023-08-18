@@ -1,6 +1,8 @@
 import json
 from os.path import basename
 
+from lark import LarkError
+
 from src.models.argos import generateArgosFile
 from src.controllers.mission import MissionController
 from src.models.objectiveUtils.loopFunctions import generateLoopFunctions
@@ -96,10 +98,15 @@ class ApplicationController(ApplicationViewListener):
             if self.currentSavePath:
                 options["source"] = basename(self.currentSavePath)
 
-            generateLoopFunctions(self.missionController.currentMission, filePath, **options)
+            try:
+                generateLoopFunctions(self.missionController.currentMission, filePath, **options)
+                displayInformation("Loop Functions File Generation",
+                                   "TODO")
+            except LarkError:
+                displayError("Generation Error", "Failed to generate the loop functions files due to a parsing error. One of the stages is not valid.")
 
-            displayInformation("Loop Functions File Generation",
-                               "TODO")
+
+
 
     # -------------------------
 

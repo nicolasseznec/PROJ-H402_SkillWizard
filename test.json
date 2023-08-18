@@ -25,7 +25,7 @@
       {
         "name": "stage0",
         "increment": true,
-        "code": "dist(arg1, 1 + arg2)"
+        "code": "dist(robotsPos, pos1 + pos2) + 2 + dist(ps1, ps2)"
       },
       {
         "name": "stage1",
@@ -35,7 +35,7 @@
       {
         "name": "stage2",
         "increment": true,
-        "code": ""
+        "code": "count(robotsPos)"
       }
     ]
   }

@@ -1,29 +1,111 @@
 {
   "types": [
-    "Real",
-    "Pos",
-    "List[Pos]",
-    "List[Real]"
+    {
+      "name": "Real",
+      "code": "Real"
+    },
+    {
+      "name": "Pos",
+      "code": "CVector2"
+    },
+    {
+      "name": "List[Real]",
+      "code": "std::vector<Real>"
+    },
+    {
+      "name": "List[Pos]",
+      "code": "std::vector<CVector2>"
+    }
   ],
   "variables": [
-
+    {
+      "name": "robotsPos",
+      "type": "List[Pos]",
+      "code": "CVector2 robotsPos;\n"
+    }
   ],
   "functions": [
     {
       "name": "sum",
-      "arguments": [
-        {
-          "type": "List[Real]"
-        }
-      ],
+      "call": "sum",
+      "arguments": ["List[Real]"],
       "return": "Real",
-      "code": ""
+      "declaration": "Real Sum(std::vector<Real>&);\n",
+      "definition": "Real ${objective_name}LoopFunction::Sum(std::vector<Real>& elements) {\n    Real temp = 0;\n    for (Real value: elements)\n        temp += value;\n    return temp;\n}\n",
+      "description": ""
     },
     {
-      "name": "dist",
-      "arguments": [
-
-      ]
+      "name": "dist 1-1",
+      "call": "dist",
+      "arguments": ["Pos", "Pos"],
+      "return": "Real",
+      "declaration": "Real Dist(CVector2&, CVector2&);\n",
+      "definition": "Real ${objective_name}LoopFunction::Dist(CVector2& pos1, CVector2& pos2) {\n    return (pos1 - pos2).Length();\n}\n",
+      "description": ""
+    },
+    {
+      "name": "dist N-1",
+      "call": "dist",
+      "arguments": ["List[Pos]", "Pos"],
+      "return": "List[Real]",
+      "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, CVector2&);\n",
+      "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(std::vector<CVector2>& positions, CVector2& pos1) {\n    std::vector<CVector2> temp;\n    for (CVector2 pos: positions)\n        temp.push_back(Dist(pos, pos1));\n    return temp;\n}\n",
+      "description": ""
+    },
+    {
+      "name": "dist 1-N",
+      "call": "dist",
+      "arguments": ["Pos", "List[Pos]"],
+      "return": "List[Real]",
+      "declaration": "std::vector<Real> Dist(CVector2&, std::vector<CVector2>&);\n",
+      "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(CVector2& pos1, std::vector<CVector2> positions) {\n    return Dist(positions, pos1);\n}\n",
+      "description": ""
+    },
+    {
+      "name": "dist N-N",
+      "call": "dist",
+      "arguments": ["List[Pos]", "List[Pos]"],
+      "return": "List[Real]",
+      "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, std::vector<CVector2>&);\n",
+      "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(std::vector<CVector2> positions1, std::vector<CVector2> positions2) {\n    std::vector<CVector2> temp;\n    for (int i = 0; i < std::min(positions1.size(), positions2.size()); i++)\n        temp.push_back(Dist(positions1[i], positions2[i]));\n\n    return temp;\n}",
+      "description": ""
+    },
+    {
+      "name": "dist NxN",
+      "call": "distX",
+      "requires": ["dist"],
+      "arguments": ["List[Pos]", "List[Pos]"],
+      "return": "List[Real]",
+      "declaration": "std::vector<Real> DistX(std::vector<CVector2>&, std::vector<CVector2>&);\n",
+      "definition": "std::vector<Real> ${objective_name}LoopFunction::DistX(std::vector<CVector2> positions1, std::vector<CVector2> positions2) {\n    std::vector<CVector2> temp;\n    for (int i = 0; i < positions1.size(); i++) {\n        for (int j = 0; j < positions2.size(); j++) {\n            temp.push_back(Dist(positions1[i], positions2[j]));\n    }\n    return temp;\n}\n",
+      "description": ""
+    },
+    {
+      "name": "count pos",
+      "call": "count",
+      "arguments": ["List[Pos]"],
+      "return": "Real",
+      "declaration": "template <typename T>\n    Real Count(const std::vector<T>& vec);",
+      "definition": "template <typename T>\nReal ${objective_name}LoopFunction::Count(const std::vector<T>& vec) {\n    return vec.size();\n}\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<Real>& vec);\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<CVector2>& vec);\n",
+      "description": ""
+    },
+    {
+      "name": "count Real",
+      "call": "count",
+      "arguments": ["List[Real]"],
+      "return": "Real",
+      "declaration": "",
+      "definition": "",
+      "description": ""
+    },
+    {
+      "name": "closest",
+      "call": "ClosestNeighbors",
+      "arguments": ["List[Pos]"],
+      "return": "List[Pos]",
+      "declaration": "std::vector<CVector2> ClosestNeighbors(std::vector<CVector2>&);\n",
+      "definition": "std::vector<CVector2> ClosestNeighbors(std::vector<CVector2>& positions) {\n    std::vector<CVector2> temp;\n    for (const CVector2& currentPos : positions) {\n        Real minDistance = -1;\n        CVector2 closestNeighbor;\n        for (const CVector2& otherPos : positions) {\n            if (&currentPos == &otherPos) continue;\n            Real distance = (currentPos - otherPos).Length();\n            if (distance < minDistance || minDistance < 0) {\n                minDistance = distance;\n                closestNeighbor = otherPos;\n            }\n        }\n        temp.push_back(closestNeighbor);\n    }\n    return temp;\n}\n",
+      "description": ""
     }
   ]
 }

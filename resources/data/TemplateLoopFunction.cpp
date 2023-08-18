@@ -1,3 +1,5 @@
+${source_header}
+
 #include "${objective_name}LoopFunc.h"
 
 /****************************************/
@@ -89,5 +91,11 @@ CVector3 ${objective_name}LoopFunction::GetRandomPosition() {
   Real fPosY = b * m_fDistributionRadius * sin(2 * CRadians::PI.GetValue() * (a/b));
   return CVector3(fPosX, fPosY, 0);
 }
+
+/****************************************/
+/****************************************/
+
+${private_function_def}
+
 
 REGISTER_LOOP_FUNCTIONS(${objective_name}LoopFunction, "${objective_name_lower}_loop_functions");

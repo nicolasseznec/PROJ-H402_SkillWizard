@@ -1,3 +1,5 @@
+${source_header}
+
 #ifndef ${OBJECTIVE_NAME}_LOOP_FUNC
 #define ${OBJECTIVE_NAME}_LOOP_FUNC
 
@@ -36,7 +38,8 @@ class ${objective_name}LoopFunction: public CoreLoopFunctions {
   private:
     virtual Real ComputeStepObjectiveValue();
     Real m_ObjectiveFunction;
-    ${private_variables}
+${private_variables}
+${private_function_decl}
 };
 
 #endif
