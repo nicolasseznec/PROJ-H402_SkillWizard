@@ -21,13 +21,18 @@
     {
       "name": "robotsPos",
       "type": "List[Pos]",
-      "code": "CVector2 robotsPos;\n"
+      "code": "  std::vector<CVector2> robotsPos;\n  CSpace::TMapPerType& tEpuckMap = GetSpace().GetEntitiesByType(\"epuck\");\n  for (CSpace::TMapPerType::iterator it = tEpuckMap.begin(); it != tEpuckMap.end(); ++it) {\n    CEPuckEntity* pcEpuck = any_cast<CEPuckEntity*>(it->second);\n    robotsPos.push_back(CVector2(pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(), pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetY()));\n  }\n"
+    },
+    {
+      "name": "objective",
+      "type": "Real",
+      "code": "  Real objective = m_ObjectiveFunction;\n"
     }
   ],
   "functions": [
     {
       "name": "sum",
-      "call": "sum",
+      "call": "Sum",
       "arguments": ["List[Real]"],
       "return": "Real",
       "declaration": "Real Sum(std::vector<Real>&);\n",
@@ -36,7 +41,7 @@
     },
     {
       "name": "dist 1-1",
-      "call": "dist",
+      "call": "Dist",
       "arguments": ["Pos", "Pos"],
       "return": "Real",
       "declaration": "Real Dist(CVector2&, CVector2&);\n",
@@ -45,7 +50,7 @@
     },
     {
       "name": "dist N-1",
-      "call": "dist",
+      "call": "Dist",
       "arguments": ["List[Pos]", "Pos"],
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, CVector2&);\n",
@@ -54,7 +59,7 @@
     },
     {
       "name": "dist 1-N",
-      "call": "dist",
+      "call": "Dist",
       "arguments": ["Pos", "List[Pos]"],
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(CVector2&, std::vector<CVector2>&);\n",
@@ -63,7 +68,7 @@
     },
     {
       "name": "dist N-N",
-      "call": "dist",
+      "call": "Dist",
       "arguments": ["List[Pos]", "List[Pos]"],
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, std::vector<CVector2>&);\n",
@@ -72,7 +77,7 @@
     },
     {
       "name": "dist NxN",
-      "call": "distX",
+      "call": "DistX",
       "requires": ["dist"],
       "arguments": ["List[Pos]", "List[Pos]"],
       "return": "List[Real]",
@@ -82,16 +87,16 @@
     },
     {
       "name": "count pos",
-      "call": "count",
+      "call": "Count",
       "arguments": ["List[Pos]"],
       "return": "Real",
-      "declaration": "template <typename T>\n    Real Count(const std::vector<T>& vec);",
+      "declaration": "template <typename T> Real Count(const std::vector<T>& vec);\n",
       "definition": "template <typename T>\nReal ${objective_name}LoopFunction::Count(const std::vector<T>& vec) {\n    return vec.size();\n}\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<Real>& vec);\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<CVector2>& vec);\n",
       "description": ""
     },
     {
       "name": "count Real",
-      "call": "count",
+      "call": "Count",
       "arguments": ["List[Real]"],
       "return": "Real",
       "declaration": "",
@@ -104,7 +109,43 @@
       "arguments": ["List[Pos]"],
       "return": "List[Pos]",
       "declaration": "std::vector<CVector2> ClosestNeighbors(std::vector<CVector2>&);\n",
-      "definition": "std::vector<CVector2> ClosestNeighbors(std::vector<CVector2>& positions) {\n    std::vector<CVector2> temp;\n    for (const CVector2& currentPos : positions) {\n        Real minDistance = -1;\n        CVector2 closestNeighbor;\n        for (const CVector2& otherPos : positions) {\n            if (&currentPos == &otherPos) continue;\n            Real distance = (currentPos - otherPos).Length();\n            if (distance < minDistance || minDistance < 0) {\n                minDistance = distance;\n                closestNeighbor = otherPos;\n            }\n        }\n        temp.push_back(closestNeighbor);\n    }\n    return temp;\n}\n",
+      "definition": "std::vector<CVector2> ${objective_name}LoopFunction::ClosestNeighbors(std::vector<CVector2>& positions) {\n    std::vector<CVector2> temp;\n    for (const CVector2& currentPos : positions) {\n        Real minDistance = -1;\n        CVector2 closestNeighbor;\n        for (const CVector2& otherPos : positions) {\n            if (&currentPos == &otherPos) continue;\n            Real distance = (currentPos - otherPos).Length();\n            if (distance < minDistance || minDistance < 0) {\n                minDistance = distance;\n                closestNeighbor = otherPos;\n            }\n        }\n        temp.push_back(closestNeighbor);\n    }\n    return temp;\n}\n",
+      "description": ""
+    },
+    {
+      "name": "update 1-1 pos",
+      "call": "Update",
+      "arguments": ["Pos", "Pos"],
+      "return": "Real",
+      "declaration": "template <typename T> Real Update(T&, T&);\n",
+      "definition": "template <typename T>\nvoid ${objective_name}LoopFunction::Update(T& subject, T& target) {\n    subject = target;\n    return 0;\n}\ntemplate Real ${objective_name}LoopFunction::Update(Real&, Real&);\ntemplate Real ${objective_name}LoopFunction::Update(CVector2&, CVector2&);\n",
+      "description": ""
+    },
+    {
+      "name": "update 1-1 real",
+      "call": "Update",
+      "arguments": ["Real", "Real"],
+      "return": "Real",
+      "declaration": "",
+      "definition": "",
+      "description": ""
+    },
+    {
+      "name": "update N-N pos",
+      "call": "Update",
+      "arguments": ["List[Pos]", "List[Pos]"],
+      "return": "Real",
+      "declaration": "template <typename T> Real Update(std::vector<T>&, std::vector<T>&);\n",
+      "definition": "template <typename T>\nReal ${objective_name}LoopFunction::Update(std::vector<T>& subject, std::vector<T>& target) {\n    for (int i = 0; i < subject.size(); i++) {\n        if (i >= target.size()) break;\n        subject[i] = target[i];\n    }\n    return 0;\n}\ntemplate Real ${objective_name}LoopFunction::Update(std::vector<Real>&, std::vector<Real>&);\ntemplate Real ${objective_name}LoopFunction::Update(std::vector<CVector2>&, std::vector<CVector2>&);\n",
+      "description": ""
+    },
+    {
+      "name": "update N-N real",
+      "call": "Update",
+      "arguments": ["List[Real]", "List[Real]"],
+      "return": "Real",
+      "declaration": "",
+      "definition": "",
       "description": ""
     }
   ]

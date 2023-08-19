@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout
 
 from src.util import ResourceLoader, Event
+from src.views.objectiveStage.postExp import PostExpStageView
 from src.views.objectiveStage.postStep import PostStepStageView
 
 
@@ -17,6 +18,8 @@ class ObjectiveView(QGroupBox):
 
         self.postStepView = PostStepStageView(self)
         self.addToLayout(self.postStepView, self.PostStepStage)
+        self.postExpView = PostExpStageView(self)
+        self.addToLayout(self.postExpView, self.PostExpStage)
 
         self.blockSignal = False
         self.connectActions()
@@ -31,6 +34,7 @@ class ObjectiveView(QGroupBox):
 
     def updateView(self, objective):
         self.updatePostStepFunction(objective.postStepStages)
+        self.updatePostExpFunction(objective.postExpStages)
 
     # ---------- Events ------------
 
@@ -58,9 +62,12 @@ class ObjectiveView(QGroupBox):
         parent.setLayout(layout)
 
     def updatePostStepFunction(self, stages):
-        self.PostStepFunction.setText(self.getFunctionFromStages(stages))
+        self.PostStepFunction.setText(self.getFunctionFromStages(stages, "0"))
 
-    def getFunctionFromStages(self, stages):
+    def updatePostExpFunction(self, stages):
+        self.PostExpFunction.setText(self.getFunctionFromStages(stages, "objective"))
+
+    def getFunctionFromStages(self, stages, default=""):
         first = True
         function = ""
         for stage in stages:
@@ -69,4 +76,8 @@ class ObjectiveView(QGroupBox):
                     function += " + "
                 function += stage.name
                 first = False
+
+        if first:  # no stages are active
+            function = default
+
         return function

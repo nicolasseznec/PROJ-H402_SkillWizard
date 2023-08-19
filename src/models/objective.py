@@ -7,8 +7,8 @@ class Objective:
             data = {}
 
         self.name = "New objective"
-        # TODO : stage lists
         self.postStepStages = []
+        self.postExpStages = []
 
         if data:
             self.loadFromData(data)
@@ -17,9 +17,12 @@ class Objective:
         self.name = data.get("name", self.name)
         if "postStepStages" in data:
             self.postStepStages = [Stage(stage) for stage in data["postStepStages"]]
+        if "postExpStages" in data:
+            self.postExpStages = [Stage(stage) for stage in data["postExpStages"]]
 
     def toJson(self):
         return {
             "name": self.name,
             "postStepStages": [stage.toJson() for stage in self.postStepStages],
+            "postExpStages": [stage.toJson() for stage in self.postExpStages],
         }

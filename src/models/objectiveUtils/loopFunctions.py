@@ -28,7 +28,7 @@ def generateLoopFunctions(mission, filePath, **options):
     cppTemplate = Template(cppRawTemplate)
     hTemplate = Template(hRawTemplate)
 
-    parser = StageParser("objective_model.json", "objective_stage.lark")
+    parser = StageParser("objective_model.json", "objective_grammar.lark")
 
     objective = mission.objective
 
@@ -75,7 +75,7 @@ def generateSourceHeader(source):
 
 
 def generateFunctionCode(functions, data, objective_name):
-    declarations = ""
+    declarations = "    /********* Generated Functions **********/\n\n"
     definitions = "/********* Generated Functions **********/\n\n"
 
     # dependencies = set()
@@ -102,10 +102,19 @@ def generateFunctionCode(functions, data, objective_name):
     return declarations, definitions
 
 
+def generateVariableInitialisation(variables, varData):
+    initialisation = ""
+    for var in variables:
+        if var in varData:
+            initialisation += varData[var]["code"]
+    return initialisation
+
+
 # -----------------------------------------------------------------------------
 
-def generatePostStepCode(stages, parser):
-    code = "Real temp = 0;\n"
+def generateStageCode(stages, parser):
+    initialisation = "Real temp = 0;\n"
+    code = ""
     CppTransformer.tempVarIndex = 0
     functions = set()
     variables = set()
@@ -127,12 +136,23 @@ def generatePostStepCode(stages, parser):
         if stage.increment:
             code += f"  temp += {stageVar};\n"
 
+    return initialisation, code, functions, variables
+
+
+def generatePostStepCode(stages, parser):
+    initialisation, code, functions, variables = generateStageCode(stages, parser)
     code += "\n  return temp;"
-
-    initialisation = ""
     varData = parser.getVariables()
-    for var in variables:
-        if var in varData:
-            initialisation += varData[var]["code"]
+    initialisation += generateVariableInitialisation(variables, varData)
+    return initialisation + code, functions, variables
 
+
+def generatePostExpCode(stages, parser):
+    if True in [s.increment for s in stages]:  # at least one stage is used
+        initialisation, code, functions, variables = generateStageCode(stages, parser)
+        code += "\n  m_ObjectiveFunction = temp;"
+        varData = parser.getVariables()
+        initialisation += generateVariableInitialisation(variables, varData)
+    else:
+        initialisation, code, functions, variables = "", "", set(), set()
     return initialisation + code, functions, variables

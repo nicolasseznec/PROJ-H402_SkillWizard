@@ -24,5 +24,5 @@ class PostStepStageController(StageController):
     def onStageRemoved(self, index):
         if self.stages is None:
             return
-        super(PostStepStageController, self).onStageAdded(index)
+        super(PostStepStageController, self).onStageRemoved(index)
         self.onIncrementChanged()

@@ -25,17 +25,19 @@
       {
         "name": "stage0",
         "increment": true,
-        "code": "dist(robotsPos, pos1 + pos2) + 2 + dist(ps1, ps2)"
+        "code": "Sum(Dist(robotsPos, pos1))"
       },
       {
         "name": "stage1",
-        "increment": false,
-        "code": ""
-      },
-      {
-        "name": "stage2",
         "increment": true,
-        "code": "count(robotsPos)"
+        "code": "Count(robotsPos)"
+      }
+    ],
+    "postExpStages": [
+      {
+        "name": "stage0",
+        "increment": false,
+        "code": "Count(robotsPos)"
       }
     ]
   }

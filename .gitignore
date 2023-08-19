@@ -2,3 +2,4 @@
 __pycache__
 src/_outdated
 test.*
+resources/data/testFunctions.cpp

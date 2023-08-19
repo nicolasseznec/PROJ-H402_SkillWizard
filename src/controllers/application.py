@@ -100,13 +100,10 @@ class ApplicationController(ApplicationViewListener):
 
             try:
                 generateLoopFunctions(self.missionController.currentMission, filePath, **options)
-                displayInformation("Loop Functions File Generation",
-                                   "TODO")
-            except LarkError:
+                displayInformation("Loop Functions Generation",
+                                   "Functions have been generated in a .h and .cpp file.")
+            except (LarkError, KeyError):
                 displayError("Generation Error", "Failed to generate the loop functions files due to a parsing error. One of the stages is not valid.")
-
-
-
 
     # -------------------------
 
