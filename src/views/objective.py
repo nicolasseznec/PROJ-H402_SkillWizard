@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout
 
 from src.util import ResourceLoader, Event
+from src.views.objectiveStage.initStage import InitStageView
 from src.views.objectiveStage.postExp import PostExpStageView
 from src.views.objectiveStage.postStep import PostStepStageView
 
@@ -20,6 +21,8 @@ class ObjectiveView(QGroupBox):
         self.addToLayout(self.postStepView, self.PostStepStage)
         self.postExpView = PostExpStageView(self)
         self.addToLayout(self.postExpView, self.PostExpStage)
+        self.initView = InitStageView(self)
+        self.addToLayout(self.initView, self.InitStage)
 
         self.blockSignal = False
         self.connectActions()

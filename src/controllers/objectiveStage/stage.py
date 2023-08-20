@@ -17,6 +17,9 @@ class StageController:
         self.stageListController.onItemRemoved += self.onStageRemoved
         self.stageListController.onItemSelected += self.onStageSelected
 
+        self.functionSelectorController = FunctionSelectorController(self.view.functionSelectorView)
+        self.functionSelectorController.onCodeInserted += self.onCodeInserted
+
     def createStageListController(self, view):
         return StageListController(view)
 
@@ -68,6 +71,22 @@ class StageController:
         if self.currentStage is not None:
             self.currentStage.loadFromData(kwargs)
 
+    def onCodeInserted(self, element, elementType):
+        name = element.get("call", element["name"])
+        code = ""
+        if elementType == "func":
+            code = f"{name}(\n"
+            first = True
+            for _ in element["arguments"]:
+                if not first:
+                    code += " ,\n"
+                first = False
+            code += "\n)"
+        elif elementType == "var":
+            code = name
+
+        self.view.insertCode(code)
+
 
 # --------------------------
 
@@ -88,6 +107,9 @@ class StageListController(SingleItemListController):
 
     def setItemText(self, index, text):
         self.view.setItemText(index, text)
+
+    def setCurrentText(self, text):
+        self.setItemText(self.view.getCurrentIndex(), text)
 
     def loadStages(self, stages):
         self.view.clear()
@@ -159,10 +181,10 @@ class FunctionSelectorController:
             for func in modelData["functions"]:
                 call = func["call"]
                 if call in self.functions:
-                    self.functions[call]["description"] += f'\n\nOverload {func["arguments"]} : {func["description"]}'
+                    self.functions[call]["description"] += f'\n\nOverload {func["arguments"]} : {func["description"]}\nReturn : {func["return"]}'
                 else:
                     self.functions[call] = func
-                    self.functions[call]["description"] = f'Arguments {func["arguments"]} : {func["description"]}'
+                    self.functions[call]["description"] = f'Arguments {func["arguments"]} : {func["description"]}\nReturn : {func["return"]}'
 
             self.functions = list(self.functions.values())
             self.variables = modelData["variables"]

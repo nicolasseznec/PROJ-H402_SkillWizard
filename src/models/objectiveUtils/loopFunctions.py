@@ -15,13 +15,12 @@ from src.util import ResourceLoader, cleanIdentifier
 # ----- CPP ------
 # init_function
 # reset_function
-# post_experiment_function
 
 
 def generateLoopFunctions(mission, filePath, **options):
     content = defaultdict(str)
 
-    basePath = splitext(filePath)[0]  # Get the file path without extension
+    basePath = splitext(filePath)[0]
     cppPath = f"{basePath}.cpp"
     hPath = f"{basePath}.h"
     cppRawTemplate, hRawTemplate = getTemplates("TemplateLoopFunction.cpp", "TemplateLoopFunction.h")
@@ -38,9 +37,18 @@ def generateLoopFunctions(mission, filePath, **options):
     functions = set()
     variables = set()
     content.update(getObjectiveNames(objective.name))
+
     content["compute_step_function"], postStepFuncs, postStepVars = generatePostStepCode(objective.postStepStages, parser)
     functions.update(postStepFuncs)
     variables.update(postStepVars)  # TODO : every var not defined in model needs to be in the private vars
+
+    content["post_experiment_function"], postExpFuncs, postExpVars = generatePostExpCode(objective.postExpStages, parser)
+    functions.update(postExpFuncs)
+    variables.update(postExpVars)
+
+    content["init_function"], content["private_variables"], initFuncs, initVars = generateInitCode(objective.initStages,                                                                 parser)
+    functions.update(initFuncs)
+    variables.update(initVars)
 
     content["private_function_decl"], content["private_function_def"] = generateFunctionCode(functions, parser.getFunctions(), content["objective_name"])
 
@@ -156,3 +164,30 @@ def generatePostExpCode(stages, parser):
     else:
         initialisation, code, functions, variables = "", "", set(), set()
     return initialisation + code, functions, variables
+
+
+def generateInitCode(stages, parser):
+    code = ""
+    CppTransformer.tempVarIndex = 0
+    functions = set()
+    variables = set()
+    variableHeader = ""
+
+    for variable in stages:
+        varName = cleanIdentifier(variable.name)
+
+        if not variable.code:
+            continue
+
+        stageNode = parser.parse(variable.code)
+        stageNode.assignToStage(varName)
+        code += stageNode.code
+        variableHeader += f"    {stageNode.valueType} {varName};\n"
+
+        functions.update(stageNode.getFunctions())
+        variables.update(stageNode.getVariables())
+
+    varData = parser.getVariables()
+    initialisation = generateVariableInitialisation(variables, varData)
+
+    return initialisation + code, variableHeader, functions, variables

@@ -15,6 +15,10 @@
     {
       "name": "List[Pos]",
       "code": "std::vector<CVector2>"
+    },
+    {
+      "name": "String",
+      "code": "std::string"
     }
   ],
   "variables": [
@@ -22,13 +26,13 @@
       "name": "robotsPos",
       "type": "List[Pos]",
       "code": "  std::vector<CVector2> robotsPos;\n  CSpace::TMapPerType& tEpuckMap = GetSpace().GetEntitiesByType(\"epuck\");\n  for (CSpace::TMapPerType::iterator it = tEpuckMap.begin(); it != tEpuckMap.end(); ++it) {\n    CEPuckEntity* pcEpuck = any_cast<CEPuckEntity*>(it->second);\n    robotsPos.push_back(CVector2(pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(), pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetY()));\n  }\n",
-      "description": ""
+      "description": "List of the positions of each robot."
     },
     {
       "name": "objective",
       "type": "Real",
       "code": "  Real objective = m_ObjectiveFunction;\n",
-      "description": ""
+      "description": "Current value of the objective function."
     }
   ],
   "functions": [
@@ -39,7 +43,7 @@
       "return": "Real",
       "declaration": "Real Sum(std::vector<Real>&);\n",
       "definition": "Real ${objective_name}LoopFunction::Sum(std::vector<Real>& elements) {\n    Real temp = 0;\n    for (Real value: elements)\n        temp += value;\n    return temp;\n}\n",
-      "description": ""
+      "description": "Sum of each element of a list."
     },
     {
       "name": "dist 1-1",
@@ -48,7 +52,7 @@
       "return": "Real",
       "declaration": "Real Dist(CVector2&, CVector2&);\n",
       "definition": "Real ${objective_name}LoopFunction::Dist(CVector2& pos1, CVector2& pos2) {\n    return (pos1 - pos2).Length();\n}\n",
-      "description": ""
+      "description": "Distance between two positions."
     },
     {
       "name": "dist N-1",
@@ -57,7 +61,7 @@
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, CVector2&);\n",
       "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(std::vector<CVector2>& positions, CVector2& pos1) {\n    std::vector<CVector2> temp;\n    for (CVector2 pos: positions)\n        temp.push_back(Dist(pos, pos1));\n    return temp;\n}\n",
-      "description": ""
+      "description": "List of distances from each position in a list to one position"
     },
     {
       "name": "dist 1-N",
@@ -66,7 +70,7 @@
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(CVector2&, std::vector<CVector2>&);\n",
       "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(CVector2& pos1, std::vector<CVector2> positions) {\n    return Dist(positions, pos1);\n}\n",
-      "description": ""
+      "description": "List of distances from each position in a list to one position"
     },
     {
       "name": "dist N-N",
@@ -75,7 +79,7 @@
       "return": "List[Real]",
       "declaration": "std::vector<Real> Dist(std::vector<CVector2>&, std::vector<CVector2>&);\n",
       "definition": "std::vector<Real> ${objective_name}LoopFunction::Dist(std::vector<CVector2> positions1, std::vector<CVector2> positions2) {\n    std::vector<CVector2> temp;\n    for (int i = 0; i < std::min(positions1.size(), positions2.size()); i++)\n        temp.push_back(Dist(positions1[i], positions2[i]));\n\n    return temp;\n}",
-      "description": ""
+      "description": "List of distances between each position in the first list and its counterpart in the second list."
     },
     {
       "name": "dist NxN",
@@ -85,7 +89,7 @@
       "return": "List[Real]",
       "declaration": "std::vector<Real> DistX(std::vector<CVector2>&, std::vector<CVector2>&);\n",
       "definition": "std::vector<Real> ${objective_name}LoopFunction::DistX(std::vector<CVector2> positions1, std::vector<CVector2> positions2) {\n    std::vector<CVector2> temp;\n    for (int i = 0; i < positions1.size(); i++) {\n        for (int j = 0; j < positions2.size(); j++) {\n            temp.push_back(Dist(positions1[i], positions2[j]));\n    }\n    return temp;\n}\n",
-      "description": ""
+      "description": "List of distances between each position in the first list and every position in the second list."
     },
     {
       "name": "count pos",
@@ -94,7 +98,7 @@
       "return": "Real",
       "declaration": "template <typename T> Real Count(const std::vector<T>& vec);\n",
       "definition": "template <typename T>\nReal ${objective_name}LoopFunction::Count(const std::vector<T>& vec) {\n    return vec.size();\n}\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<Real>& vec);\ntemplate Real ${objective_name}LoopFunction::Count(const std::vector<CVector2>& vec);\n",
-      "description": ""
+      "description": "Number of elements in a list."
     },
     {
       "name": "count Real",
@@ -103,7 +107,7 @@
       "return": "Real",
       "declaration": "",
       "definition": "",
-      "description": ""
+      "description": "''"
     },
     {
       "name": "closest",
@@ -112,7 +116,7 @@
       "return": "List[Pos]",
       "declaration": "std::vector<CVector2> ClosestNeighbors(std::vector<CVector2>&);\n",
       "definition": "std::vector<CVector2> ${objective_name}LoopFunction::ClosestNeighbors(std::vector<CVector2>& positions) {\n    std::vector<CVector2> temp;\n    for (const CVector2& currentPos : positions) {\n        Real minDistance = -1;\n        CVector2 closestNeighbor;\n        for (const CVector2& otherPos : positions) {\n            if (&currentPos == &otherPos) continue;\n            Real distance = (currentPos - otherPos).Length();\n            if (distance < minDistance || minDistance < 0) {\n                minDistance = distance;\n                closestNeighbor = otherPos;\n            }\n        }\n        temp.push_back(closestNeighbor);\n    }\n    return temp;\n}\n",
-      "description": ""
+      "description": "For each position in the given list, find the other closest position in that list."
     },
     {
       "name": "update 1-1 pos",
@@ -121,7 +125,7 @@
       "return": "Real",
       "declaration": "template <typename T> Real Update(T&, T&);\n",
       "definition": "template <typename T>\nvoid ${objective_name}LoopFunction::Update(T& subject, T& target) {\n    subject = target;\n    return 0;\n}\ntemplate Real ${objective_name}LoopFunction::Update(Real&, Real&);\ntemplate Real ${objective_name}LoopFunction::Update(CVector2&, CVector2&);\n",
-      "description": ""
+      "description": "Updates the value of the first argument (a user custom variable) with the value of the second argument."
     },
     {
       "name": "update 1-1 real",
@@ -130,7 +134,7 @@
       "return": "Real",
       "declaration": "",
       "definition": "",
-      "description": ""
+      "description": "''"
     },
     {
       "name": "update N-N pos",
@@ -139,7 +143,7 @@
       "return": "Real",
       "declaration": "template <typename T> Real Update(std::vector<T>&, std::vector<T>&);\n",
       "definition": "template <typename T>\nReal ${objective_name}LoopFunction::Update(std::vector<T>& subject, std::vector<T>& target) {\n    for (int i = 0; i < subject.size(); i++) {\n        if (i >= target.size()) break;\n        subject[i] = target[i];\n    }\n    return 0;\n}\ntemplate Real ${objective_name}LoopFunction::Update(std::vector<Real>&, std::vector<Real>&);\ntemplate Real ${objective_name}LoopFunction::Update(std::vector<CVector2>&, std::vector<CVector2>&);\n",
-      "description": ""
+      "description": "''"
     },
     {
       "name": "update N-N real",
@@ -148,7 +152,16 @@
       "return": "Real",
       "declaration": "",
       "definition": "",
-      "description": ""
+      "description": "''"
+    },
+    {
+      "name": "lightpos",
+      "call": "LightPos",
+      "arguments": ["String"],
+      "return": "Pos",
+      "declaration": "CVector2 LightPos(const std::string& name);\n",
+      "definition": "CVector2 ${objective_name}LoopFunction::LightPos(const std::string& name) {\n    CLightEntity* light = any_cast<CLightEntity*>(GetSpace().GetEntitiesByType(\"light\")[name]);\n    return CVector2(light->GetPosition().GetX(), light->GetPosition().GetY());\n}\n",
+      "description": "Position of a light from its name"
     }
   ]
 }

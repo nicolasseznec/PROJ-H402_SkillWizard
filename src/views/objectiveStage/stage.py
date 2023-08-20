@@ -10,6 +10,9 @@ class StageView(QWidget):
         self.loadWidget()
         self.stageListView = self.createStageListView(container)
 
+        self.functionSelectorView = FunctionSelectorView()
+        self.layout().addWidget(self.functionSelectorView)
+
         self.onStageChanged = Event()
         self.CodeArea.textChanged.connect(self.codeAreaChanged)
 

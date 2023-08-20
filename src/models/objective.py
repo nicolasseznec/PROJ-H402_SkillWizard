@@ -9,6 +9,7 @@ class Objective:
         self.name = "New objective"
         self.postStepStages = []
         self.postExpStages = []
+        self.initStages = []
 
         if data:
             self.loadFromData(data)
@@ -19,10 +20,13 @@ class Objective:
             self.postStepStages = [Stage(stage) for stage in data["postStepStages"]]
         if "postExpStages" in data:
             self.postExpStages = [Stage(stage) for stage in data["postExpStages"]]
+        if "initStages" in data:
+            self.initStages = [Stage(stage) for stage in data["initStages"]]
 
     def toJson(self):
         return {
             "name": self.name,
             "postStepStages": [stage.toJson() for stage in self.postStepStages],
             "postExpStages": [stage.toJson() for stage in self.postExpStages],
+            "initStages": [stage.toJson() for stage in self.initStages],
         }

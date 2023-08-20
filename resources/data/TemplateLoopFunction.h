@@ -3,6 +3,7 @@ ${source_header}
 #ifndef ${OBJECTIVE_NAME}_LOOP_FUNC
 #define ${OBJECTIVE_NAME}_LOOP_FUNC
 
+#include <string>
 #include <vector>
 #include <cmath>
 

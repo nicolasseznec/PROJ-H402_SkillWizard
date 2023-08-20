@@ -1,3 +1,4 @@
+from src.controllers.objectiveStage.initStage import InitStageController
 from src.controllers.objectiveStage.postExp import PostExpStageController
 from src.controllers.objectiveStage.postStep import PostStepStageController
 from src.util import Event
@@ -16,6 +17,7 @@ class ObjectiveController:
         self.postStepController.onIncrementChanged += self.updatePostStepFunction
         self.postExpController = PostExpStageController(view.postExpView)
         self.postExpController.onIncrementChanged += self.updatePostExpFunction
+        self.initController = InitStageController(view.initView)
 
         self.view.onObjectiveClicked += self.onViewClicked
         self.view.onObjectiveSettingsChanged += self.onSettingsChanged
@@ -49,6 +51,7 @@ class ObjectiveController:
         if objective is not None:
             self.postStepController.setStageList(objective.postStepStages)
             self.postExpController.setStageList(objective.postExpStages)
+            self.initController.setStageList(objective.initStages)
             self.view.updateView(objective)
 
     def setFunctionGenerator(self, functionGenerator):

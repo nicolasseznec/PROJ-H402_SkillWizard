@@ -70,8 +70,9 @@ class CppTransformer(Transformer):
         (n, ) = n
         return StageNode("number", "Real", value=float(n), instruction=str(n))
 
-    def string(self, children):
-        pass
+    def string(self, s):
+        (s,) = s
+        return StageNode("string", "String", value=str(s), instruction=str(s))
 
     def var(self, v):
         (v,) = v
@@ -81,27 +82,31 @@ class CppTransformer(Transformer):
     # ---- Operations ----
 
     def add(self, children):
+        return self.operation("add", "+", children)
+
+    def sub(self, children):
+        return self.operation("sub", "-", children)
+
+    def mul(self, children):
+        return self.operation("mul", "*", children)
+
+    def div(self, children):
+        return self.operation("div", "/", children)
+
+    def neg(self, v):
+        (v,) = v
+        valueType = v.valueType
+        code = self.getCode(v)
+        instruction = f"-{v.instruction}"
+        return StageNode("neg", valueType, children=[v], code=code, instruction=instruction)
+
+    def operation(self, name, operator, children):
         left, right = children
         valueType = left.valueType
         # verify types are the same
         code = self.getCode(left, right)
-        instruction = left.instruction + " + " + right.instruction
-        return StageNode("add", valueType, children=children, code=code, instruction=instruction)
-
-    def sub(self, children):
-        pass
-
-    def mul(self, children):
-        valueType = children[0].valueType
-        # verify types are the same
-        # Code for multiplication ?
-        return StageNode("mul", valueType, children=children)
-
-    def div(self, children):
-        pass
-
-    def neg(self, children):
-        pass
+        instruction = f"({left.instruction} {operator} {right.instruction})"
+        return StageNode(name, valueType, children=children, code=code, instruction=instruction)
 
     # ------------ Utils ----------------
     @staticmethod
