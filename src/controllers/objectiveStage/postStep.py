@@ -1,4 +1,4 @@
-from src.controllers.objectiveStage.stage import StageController
+from src.controllers.objectiveStage.stage import StageController, FunctionSelectorController
 from src.util import Event
 
 
@@ -6,6 +6,9 @@ class PostStepStageController(StageController):
     def __init__(self, view):
         super().__init__(view)
         self.onIncrementChanged = Event()
+
+        self.functionSelectorController = FunctionSelectorController(self.view.functionSelectorView)
+        self.functionSelectorController.onCodeInserted += self.onCodeInserted
 
     def onViewChanged(self, **kwargs):
         super(PostStepStageController, self).onViewChanged(**kwargs)
@@ -26,3 +29,22 @@ class PostStepStageController(StageController):
             return
         super(PostStepStageController, self).onStageRemoved(index)
         self.onIncrementChanged()
+
+    def onCodeInserted(self, element, elementType):
+        name = element.get("call", element["name"])
+        code = ""
+        if elementType == "func":
+            code = f"{name}(\n"
+            first = True
+            for _ in element["arguments"]:
+                if not first:
+                    code += " ,\n"
+                first = False
+            code += "\n)"
+        elif elementType == "var":
+            code = name
+
+        self.view.insertCode(code)
+
+        # print("Insert", elementType, ":", code)
+

@@ -20,25 +20,14 @@
   },
   "ReferenceModel": "RM1",
   "Objective": {
-    "name": "New objective",
+    "name": "AggregaDestructuration",
     "postStepStages": [
       {
         "name": "stage0",
         "increment": true,
-        "code": "Sum(Dist(robotsPos, pos1))"
-      },
-      {
-        "name": "stage1",
-        "increment": true,
-        "code": "Count(robotsPos)"
+        "code": "Sum(\nDist(\nrobotsPos ,\nlightPos\n)\n)"
       }
     ],
-    "postExpStages": [
-      {
-        "name": "stage0",
-        "increment": false,
-        "code": "Count(robotsPos)"
-      }
-    ]
+    "postExpStages": []
   }
 }

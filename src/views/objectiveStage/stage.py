@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QToolButton, QListWidget
+from PyQt5.QtWidgets import QWidget, QToolButton, QListWidget, QGroupBox
 
-from src.util import Event
+from src.util import Event, ResourceLoader
 from src.views.utils.itemList import SingleItemListView
 
 
@@ -24,7 +24,7 @@ class StageView(QWidget):
 
     def updateView(self, stage):
         self.blockSignals = True
-        self.StageName.setText('<html><head/><body><p><span style=" font-size:11pt;">{}</span></p></body></html>'.format(stage.name))
+        self.StageName.setText(f'<html><head/><body><p><span style=" font-size:11pt;">{stage.name}</span></p></body></html>')
         self.CodeArea.setPlainText(stage.code)
         self.blockSignals = False
         self.setEnabled(True)
@@ -33,6 +33,12 @@ class StageView(QWidget):
         self.StageName.setText("")
         self.CodeArea.setPlainText("")
         self.setEnabled(False)
+
+    def insertCode(self, code):
+        cursor = self.CodeArea.textCursor()
+        cursor.movePosition(cursor.StartOfLine)
+        cursor.insertText(code)
+        self.CodeArea.setFocus()
 
     # ---------- Events ------------
 
@@ -50,3 +56,42 @@ class StageListView(SingleItemListView):
 
     def getWidgets(self, settingsContainer):
         return QToolButton(), QToolButton(), QListWidget()
+
+
+# --------------------------
+
+class FunctionSelectorView(QGroupBox):
+    def __init__(self, *__args):
+        super().__init__(*__args)
+        ResourceLoader.loadWidget("objective/FunctionSelector.ui", self)
+
+        self.onInsert = Event()
+        self.onFunctionSelected = Event()
+        self.onVariableSelected = Event()
+
+        self.InsertButton.clicked.connect(self.onInsertButtonClicked)
+        self.FunctionList.currentRowChanged.connect(self.onFunctionChanged)
+        self.VariableList.currentRowChanged.connect(self.onVariableChanged)
+
+    def updateView(self, name, description):
+        self.SelectionName.setText(f'<html><head/><body><p><span style=" font-size:10pt; font-weight:600;">{name}</span></p></body></html>')
+        self.SelectionDescription.setText(description)
+
+    # ---------- Events ------------
+
+    def onInsertButtonClicked(self):
+        self.onInsert()
+
+    def onFunctionChanged(self, index):
+        self.onFunctionSelected(index)
+
+    def onVariableChanged(self, index):
+        self.onVariableSelected(index)
+
+    # --------------------------
+
+    def addFunction(self, name):
+        self.FunctionList.addItem(name)
+
+    def addVariable(self, name):
+        self.VariableList.addItem(name)

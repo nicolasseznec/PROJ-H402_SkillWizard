@@ -1,11 +1,13 @@
 from src.util import ResourceLoader
-from src.views.objectiveStage.stage import StageView, StageListView
+from src.views.objectiveStage.stage import StageView, StageListView, FunctionSelectorView
 
 
 class PostStepStageView(StageView):
     def __init__(self, container, *__args):
         super().__init__(container, *__args)
         self.IncrementCheckBox.clicked.connect(self.incrementClicked)
+        self.functionSelectorView = FunctionSelectorView()
+        self.layout().addWidget(self.functionSelectorView)
 
     def loadWidget(self):
         ResourceLoader.loadWidget("objective/PostStepStage.ui", self)

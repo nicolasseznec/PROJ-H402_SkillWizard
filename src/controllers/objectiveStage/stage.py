@@ -1,5 +1,8 @@
+import json
+
 from src.controllers.utils.itemList import SingleItemListController
 from src.models.objectiveUtils.stage import Stage
+from src.util import Event, ResourceLoader
 
 
 class StageController:
@@ -90,3 +93,76 @@ class StageListController(SingleItemListController):
         self.view.clear()
         for _ in stages:
             self.view.addItem(self.getDefaultName())
+
+
+# --------------------------
+
+class FunctionSelectorController:
+    def __init__(self, view):
+        self.view = view
+        self.view.onInsert += self.onInsert
+        self.view.onFunctionSelected += self.onFunctionSelected
+        self.view.onVariableSelected += self.onVariableSelected
+
+        self.selection = None
+        self.selectionType = None
+        self.onCodeInserted = Event()
+
+        self.functions = {}
+        self.variables = []
+        self.loadElements()
+        self.setupView()
+
+        self.updateView()
+
+    def updateView(self):
+        description = ""
+        name = ""
+
+        if self.selectionType == "func":
+            description = self.selection["description"]
+            name = self.selection["call"]
+        elif self.selectionType == "var":
+            description = f'{self.selection["description"]}\n\nType: {self.selection["type"]}'
+            name = self.selection["name"]
+
+        self.view.updateView(name, description)
+
+    def setupView(self):
+        for func in self.functions:
+            self.view.addFunction(func["call"])
+        for var in self.variables:
+            self.view.addVariable(var["name"])
+
+    # ---------- Events ------------
+
+    def onInsert(self):
+        if self.selection is None:
+            return
+        self.onCodeInserted(self.selection, self.selectionType)
+
+    def onFunctionSelected(self, index):
+        self.selection = self.functions[index]
+        self.selectionType = "func"
+        self.updateView()
+
+    def onVariableSelected(self, index):
+        self.selection = self.variables[index]
+        self.selectionType = "var"
+        self.updateView()
+
+    # --------------------------
+
+    def loadElements(self):
+        with ResourceLoader.openData("objective_model.json") as functionFile:
+            modelData = json.load(functionFile)
+            for func in modelData["functions"]:
+                call = func["call"]
+                if call in self.functions:
+                    self.functions[call]["description"] += f'\n\nOverload {func["arguments"]} : {func["description"]}'
+                else:
+                    self.functions[call] = func
+                    self.functions[call]["description"] = f'Arguments {func["arguments"]} : {func["description"]}'
+
+            self.functions = list(self.functions.values())
+            self.variables = modelData["variables"]

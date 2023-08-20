@@ -21,12 +21,14 @@
     {
       "name": "robotsPos",
       "type": "List[Pos]",
-      "code": "  std::vector<CVector2> robotsPos;\n  CSpace::TMapPerType& tEpuckMap = GetSpace().GetEntitiesByType(\"epuck\");\n  for (CSpace::TMapPerType::iterator it = tEpuckMap.begin(); it != tEpuckMap.end(); ++it) {\n    CEPuckEntity* pcEpuck = any_cast<CEPuckEntity*>(it->second);\n    robotsPos.push_back(CVector2(pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(), pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetY()));\n  }\n"
+      "code": "  std::vector<CVector2> robotsPos;\n  CSpace::TMapPerType& tEpuckMap = GetSpace().GetEntitiesByType(\"epuck\");\n  for (CSpace::TMapPerType::iterator it = tEpuckMap.begin(); it != tEpuckMap.end(); ++it) {\n    CEPuckEntity* pcEpuck = any_cast<CEPuckEntity*>(it->second);\n    robotsPos.push_back(CVector2(pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(), pcEpuck->GetEmbodiedEntity().GetOriginAnchor().Position.GetY()));\n  }\n",
+      "description": ""
     },
     {
       "name": "objective",
       "type": "Real",
-      "code": "  Real objective = m_ObjectiveFunction;\n"
+      "code": "  Real objective = m_ObjectiveFunction;\n",
+      "description": ""
     }
   ],
   "functions": [
