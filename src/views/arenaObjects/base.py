@@ -114,19 +114,19 @@ class BaseArenaObjectView(QGraphicsPathItem):
             scene.update()
 
     @staticmethod
-    def getShapePath(shape, **dimensions):
+    def getShapePath(shape_, **dimensions):
         width = dimensions.get("width", 100)
         height = dimensions.get("height", 100)
         radius = dimensions.get("radius", 50)
         orientation = dimensions.get("orientation", 0)
 
         path = QPainterPath()
-        if shape == Shape.Rectangle:
+        if shape_ == Shape.Rectangle:
             path.addRect(-width / 2, -height / 2, width, height)
             rotation = QTransform()
             rotation.rotate(orientation)
             path = rotation.map(path)
-        elif shape == Shape.Circle:
+        elif shape_ == Shape.Circle:
             path.addEllipse(-radius, -radius, radius * 2, radius * 2)
 
         return path
@@ -163,13 +163,13 @@ class BaseArenaObjectView(QGraphicsPathItem):
     def posXChanged(self, value):
         if self.blockSignal:
             return
-        self.setX(value)
+        # self.setX(value)
         self.onItemChanged(x=value)
 
     def posYChanged(self, value):
         if self.blockSignal:
             return
-        self.setY(value)
+        # self.setY(value)
         self.onItemChanged(y=value)
 
     def onResetPosition(self):

@@ -8,6 +8,7 @@ class SpawnView(BaseArenaObjectView):
         super().__init__(settingsContainer, *__args)
         self.setZValue(2)
         self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
+        self.blockSignal = False
 
     def setTabFocus(self, focus):
         self.setOpacity(0.7 if focus else 0.3)

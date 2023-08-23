@@ -24,6 +24,10 @@ class BaseArenaObjectController:
             self.view.updateShapes(Shape.Rectangle, **dimensions)
         if containsAny(kwargs, "radius"):
             self.view.updateShapes(Shape.Circle, **dimensions)
+        if containsAny(kwargs, "x"):
+            self.view.setX(kwargs["x"])
+        if containsAny(kwargs, "y"):
+            self.view.setY(kwargs["y"])
 
     def setArenaPath(self, arenaPath):
         self.view.setArenaPath(arenaPath)
