@@ -138,21 +138,42 @@
     {
       "reference": "RM1",
       "name": "Reference Model RM1",
-      "desc": "[...] a ",
+      "desc": "Sensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - distance of neighbors\n - angle of neighbors\n\nActuators :\n - target linear wheel velocity",
       "inputs": ["prox", "light", "gnd"],
       "outputs": ["wheels"]
+    },
+    {
+      "reference": "RM1.1",
+      "name": "Reference Model RM1.1",
+      "desc": "Slightly modified version of RM1\n\nSensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - attraction vector (based on percieved robots)\n\nActuators :\n - target linear wheel velocity\n",
+      "inputs": ["prox", "light", "gnd"],
+      "outputs" : ["wheels"]
     },
     {
       "reference": "RM2",
       "name": "Reference Model RM2",
-      "desc": "[...] b ",
+      "desc": "A modified version of RM1.1\n\nSensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - number of messaging neighbors perceived\n - attraction vector (based on broadcasting robots)\n\nActuators :\n - target linear wheel velocity\n - broadcast state",
       "inputs": ["prox", "light", "gnd"],
       "outputs": ["wheels"]
     },
     {
+      "reference": "RM2.1-l",
+      "name": "Reference Model RM2.1-l",
+      "desc": "A modified version of RM2\n\nSensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - number of messaging neighbors perceived\n - attraction vector (based on broadcasting robots)\n\nActuators :\n - target linear wheel velocity\n - broadcast state",
+      "inputs": ["prox", "light", "gnd"],
+      "outputs" : ["wheels"]
+    },
+    {
+      "reference": "RM2.2",
+      "name": "Reference Model RM1.1",
+      "desc": "A modified version of RM1.1\n\nSensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - distance, angle and signal for each neigboring robot perceived\n\nActuators :\n - target linear wheel velocity\n - broadcast signal",
+      "inputs": ["prox", "light", "gnd"],
+      "outputs" : ["wheels"]
+    },
+    {
       "reference": "RM3",
       "name": "Reference Model RM3",
-      "desc": "[...] c ",
+      "desc": "A modified version of RM1.1\n\nSensors :\n - reading of proximity sensor\n - reading of light sensor\n - reading of ground sensor\n - number of neighboring robots perceived\n - relative aggregate position of perceived robots\n - colors perceived\n - relative aggregate direction of perceived colors\n\nActuators :\n - target linear wheel velocity\n - color displayed by the LEDs",
       "inputs": ["prox", "light", "gnd", "cam"],
       "outputs": ["wheels", "leds"]
     }
