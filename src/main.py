@@ -1,3 +1,15 @@
+"""
+Nicolas Seznec
+2023
+
+PROJ-H402 Computing Project
+Swarm Skill Wizard
+
+Required Packages:
+ - PyQt 5
+ - Lakrk
+"""
+
 import sys
 from PyQt5.QtWidgets import QApplication
 

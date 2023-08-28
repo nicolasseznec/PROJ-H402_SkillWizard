@@ -8,6 +8,9 @@ from src.views.utils.itemList import ItemListView, TextDialog
 
 
 class BaseArenaObjectView(QGraphicsPathItem):
+    """
+    View for a basic arena object.
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(*__args)
 
@@ -28,6 +31,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
         self.blockSignal = True
 
     def paint(self, painter, option, widget=None):
+        """
+        PyQt paint event of QGraphicsPathItem, called each time the item is drawn.
+        """
         if self.arenaPath is not None and self.shape in self.shapePaths:
             intersect = self.arenaPath.intersected(self.shapePaths[self.shape].translated(self.scenePos())) \
                 .translated(-self.scenePos())
@@ -41,6 +47,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
         super(BaseArenaObjectView, self).paint(painter, option, widget)
 
     def updateView(self, model):
+        """
+        Update the content of the view from the given model
+        """
         block = self.blockSignal
         self.blockSignal = True
         self.setShape(Shape[model.shape])
@@ -73,6 +82,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
         pass
 
     def connectSettings(self, container):
+        """
+        Connect the settings signals to the view's own events.
+        """
         self.setupSettings(container)
 
         self.shapeSetting.currentIndexChanged.connect(self.shapeChanged)
@@ -115,6 +127,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
 
     @staticmethod
     def getShapePath(shape_, **dimensions):
+        """
+        Creates the QPainterPath of this item for a given shape.
+        """
         width = dimensions.get("width", 100)
         height = dimensions.get("height", 100)
         radius = dimensions.get("radius", 50)
@@ -180,6 +195,9 @@ class BaseArenaObjectView(QGraphicsPathItem):
 
 
 class MultiArenaObjectView(BaseArenaObjectView):
+    """
+    View for an arena object that can be put in a list.
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
@@ -196,6 +214,9 @@ class MultiArenaObjectView(BaseArenaObjectView):
     # ---------- Events ------------
 
     def itemChange(self, change, value):
+        """
+        Called from PyQt when any event occurs. Catch the selection event and relays it to a controller.
+        """
         if change == QGraphicsItem.ItemSelectedHasChanged:
             if value:
                 self.onSelected()

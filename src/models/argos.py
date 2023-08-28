@@ -94,7 +94,7 @@ def addWall(parent, index, length, angle, x, y):
 
 
 def generateArenaBorders(arena: Arena, element):
-    shape = Shape[arena.shape]
+    shape = arena.shape
     # TODO : Square, Circle shapes
     if shape == Shape.Square:
         pass

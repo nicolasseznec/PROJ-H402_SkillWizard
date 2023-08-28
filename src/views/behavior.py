@@ -6,6 +6,9 @@ from src.util import ResourceLoader, Event
 
 
 class BehaviorView:
+    """
+    View for a behavior inspector and the item in the side panel.
+    """
     def __init__(self):
         self.behaviorItem = ResourceLoader.loadWidget("BehaviorItem.ui")
         self.inspector = ResourceLoader.loadWidget("BehaviorInspector.ui")
@@ -18,6 +21,9 @@ class BehaviorView:
         self.setActive(False)
 
     def updateView(self, behavior):
+        """
+        Update the view's contents from a given behavior.
+        """
         self.behaviorItem.LabelButton.setText(behavior.name)
         self.inspector.BehaviorName.setText(behavior.name)
         self.inspector.description.setText(behavior.description)
@@ -27,6 +33,9 @@ class BehaviorView:
         self.behaviorItem.LabelButton.clicked.connect(self.labelClicked)
 
     def labelClicked(self):
+        """
+        Called when the behavior is selected in the side pnel
+        """
         self.onSelected()
 
     def getCenterWidget(self):
@@ -60,6 +69,9 @@ class BehaviorView:
 
 
 class BehaviorParameterView(QWidget):
+    """
+    Base view for a generic behavior parameter.
+    """
     def __init__(self, parameter):
         super(BehaviorParameterView, self).__init__()
         self.loadWidget(parameter)
@@ -71,31 +83,52 @@ class BehaviorParameterView(QWidget):
         self.connectView()
 
     def updateView(self, parameter):
+        """
+        Update the content of the view to the given parameter.
+        """
         self.blockSignal = True
         self.setValues(parameter)
         self.blockSignal = False
 
     def onValueChanged(self):
+        """
+        Called when a value in the view has been modified.
+        """
         if self.blockSignal:
             return
         self.onParameterChanged()
 
     def connectView(self):
-        pass  # value onchanged connect onValueChanged
+        """
+        Connect the signals to onValueChanged
+        """
+        pass
 
     def loadWidget(self, parameter):
-        pass  # ResourceLoader.loadWidget(self.uiFile, self)
+        """
+        Loads the view widget. See ResourceLoader.loadWidget(self.uiFile, self)
+        """
+        pass
 
     def getValues(self):
-        pass  # return values in dict
+        """
+        Returns all values of the view in a dict.
+        """
+        pass
 
     def setValues(self, parameter):
-        pass  # set values from parameter
+        """
+        Set the content of the view to the given parameter.
+        """
+        pass
 
 
 # ------------- Behavior Parameters ---------------
 
 class BpColorView(BehaviorParameterView):
+    """
+    View for a color behavior parameter.
+    """
     def connectView(self):
         self.color.currentIndexChanged.connect(self.onValueChanged)
 
@@ -114,6 +147,9 @@ class BpColorView(BehaviorParameterView):
 
 
 class BpIntView(BehaviorParameterView):
+    """
+    View for an integer behavior parameter.
+    """
     def connectView(self):
         self.value.valueChanged.connect(self.onValueChanged)
 
@@ -137,6 +173,9 @@ class BpIntView(BehaviorParameterView):
 
 
 class BpFloatView(BpIntView):
+    """
+    View for a float behavior parameter
+    """
     def loadWidget(self, parameter):
         ResourceLoader.loadWidget("behaviors/BpFloatInspector.ui", self)
         self.setupWidget(parameter)

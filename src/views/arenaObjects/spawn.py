@@ -4,6 +4,9 @@ from src.views.arenaObjects.base import BaseArenaObjectView
 
 
 class SpawnView(BaseArenaObjectView):
+    """
+    View for the spawn area object
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
         self.setZValue(2)

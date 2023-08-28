@@ -7,6 +7,9 @@ from src.views.arenaObjects.base import MultiArenaObjectView, ArenaListView
 
 
 class FloorView(MultiArenaObjectView):
+    """
+    View for a floor object
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
         self.setBrush(QBrush(Qt.black))

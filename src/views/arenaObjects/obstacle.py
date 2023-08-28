@@ -5,6 +5,9 @@ from src.views.arenaObjects.base import MultiArenaObjectView, ArenaListView
 
 
 class ObstacleView(MultiArenaObjectView):
+    """
+    View for a obstacle object
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
         self.setZValue(2)

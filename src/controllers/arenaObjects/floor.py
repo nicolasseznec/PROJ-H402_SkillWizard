@@ -3,6 +3,9 @@ from src.models.arenaObjects.floor import Floor
 
 
 class FloorController(MultiArenaObjectController):
+    """
+    Controller for a floor object
+    """
     def addToArena(self, arena):
         arena.floors.append(self.model)
 

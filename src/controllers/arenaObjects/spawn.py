@@ -4,6 +4,9 @@ from src.views.arenaObjects.spawn import SpawnView
 
 
 class SpawnController(BaseArenaObjectController, ArenaTabController):
+    """
+    Controller for the spawn area object.
+    """
     def __init__(self, view: SpawnView, index):
         self.model = ArenaSpawn()
         super().__init__(self.model, view)

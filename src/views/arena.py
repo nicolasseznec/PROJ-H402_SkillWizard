@@ -13,6 +13,9 @@ from src.views.arenaObjects.spawn import SpawnView
 
 
 class ArenaSceneView(QGraphicsScene):
+    """
+    View of the arena scene itself.
+    """
     def __init__(self, graphicsView, *__args):
         super().__init__(*__args)
 
@@ -27,6 +30,9 @@ class ArenaSceneView(QGraphicsScene):
         self.shape = Shape.Dodecagon
 
     def setupScene(self, graphicsView):
+        """
+        Initializes the scene.
+        """
         self.setSceneRect(-250, -250, 500, 500)
         self.addRect(-250, -250, 500, 500, QPen(Qt.NoPen), QBrush(Qt.black, Qt.Dense2Pattern))
         graphicsView.setScene(self)
@@ -36,6 +42,9 @@ class ArenaSceneView(QGraphicsScene):
     # ------------ Handling Arena Shape -----------------
 
     def getShapePath(self, shape):
+        """
+        Creates a QGraphicsPathItem for the arena depending on the given shape
+        """
         path = QPainterPath()
 
         if shape == Shape.Square:
@@ -66,6 +75,9 @@ class ArenaSceneView(QGraphicsScene):
         return QGraphicsPathItem(path)
 
     def initShapes(self):
+        """
+        Setup the brush, color, ... for every of its shape
+        """
         for shape in self.shapePaths:
             path = self.shapePaths[shape]
             self.addItem(path)
@@ -82,12 +94,18 @@ class ArenaSceneView(QGraphicsScene):
             contour.setVisible(False)
 
     def setShape(self, shape):
+        """
+        Set the current shape of the arena.
+        """
         self.setShapeVisibility(self.shape, False)
         self.setShapeVisibility(shape, True)
         self.shape = shape
         self.update()
 
     def setShapeVisibility(self, shape, visible):
+        """
+        Set the visibility of a shape to visible or invisble.
+        """
         self.shapePaths[shape].setVisible(visible)
         self.shapeContours[shape].setVisible(visible)
 
@@ -96,6 +114,9 @@ class ArenaSceneView(QGraphicsScene):
 
 
 class ArenaView(QGroupBox):
+    """
+    View for arena editor and the arena settings tab.
+    """
     def __init__(self, *__args):
         super().__init__(*__args)
         ResourceLoader.loadWidget("ArenaInspector.ui", self)
@@ -129,6 +150,9 @@ class ArenaView(QGroupBox):
         self.ArenaEditSettings.currentChanged.connect(self.onTabChanged)
 
     def updateView(self, arena):
+        """
+        Update the view contents with the new arena.
+        """
         self.blockSignal = True
         self.arenaSceneView.setShape(arena.shape)
         self.settingsTab.Shape.setCurrentIndex(ArenaShape.index(arena.shape))
@@ -145,6 +169,9 @@ class ArenaView(QGroupBox):
     # ---------- Events ------------
 
     def arenaClicked(self):
+        """
+        Called when the user clicks on edit arena.
+        """
         if self.blockSignal:
             return
         self.onArenaClicked()
@@ -172,9 +199,15 @@ class ArenaView(QGroupBox):
     # ------------------------------
 
     def addSceneItem(self, item):
+        """
+        Adds a graphic item to the arena scene
+        """
         self.arenaSceneView.addItem(item)
         self.arenaSceneView.update()
 
     def removeSceneItem(self, item):
+        """
+        Remove a graphic item from the arena scene
+        """
         self.arenaSceneView.removeItem(item)
         self.arenaSceneView.update()

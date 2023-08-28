@@ -34,6 +34,11 @@ class ApplicationViewListener:
 
 
 class ApplicationView(QMainWindow):
+    """
+    Main Window View
+
+    Relays the user actions (from the action bar) to its controller
+    """
     def __init__(self, *args):
         super().__init__(*args)
         ResourceLoader.loadWidget("MainWindow", self)
@@ -41,6 +46,9 @@ class ApplicationView(QMainWindow):
         self.missionView = MissionView()
 
     def connectActions(self, listener: ApplicationViewListener):
+        """
+        Connects its actions to the given listener.
+        """
         self.actionNewMission.triggered.connect(listener.onCreateMission)
         self.actionOpenMission.triggered.connect(listener.onOpenMission)
         self.actionSave.triggered.connect(listener.onSave)
@@ -51,6 +59,9 @@ class ApplicationView(QMainWindow):
         self.actionEditObjective.triggered.connect(listener.onEditObjective)
 
     def displayMissionView(self):
+        """
+        Displays the mission editor.
+        """
         self.setCentralWidget(self.missionView)
 
     def getMissionView(self):

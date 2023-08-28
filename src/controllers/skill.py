@@ -4,6 +4,9 @@ from src.views.skill import SkillView, SkillParameterView
 
 
 class SkillController:
+    """
+    Controller for a robot skill.
+    """
     def __init__(self, skill, view):
         self.skill = skill
         self.view = view
@@ -18,9 +21,15 @@ class SkillController:
         self.onChecked = Event()
 
     def getCenterWidget(self):
+        """
+        Returns the main panel (the skill inspector).
+        """
         return self.view.getCenterWidget()
 
     def updateView(self):
+        """
+        Update the view contents to the skill.
+        """
         self.view.updateView(self.skill)
         for controller in self.parameterControllers:
             controller.updateView()
@@ -31,11 +40,17 @@ class SkillController:
     # ---------- Events ------------
 
     def onViewSelected(self):
+        """
+        Called when the skill is selected in the side panel.
+        """
         self.onSelected(self)
 
     def onViewChecked(self, checked):
+        """
+        Called when the skill is enabled or disabled.
+        """
         self.setChecked(checked)
-        self.skill.setActive(checked)  # TODO : duplicate from mission model
+        self.skill.setActive(checked)
         self.onChecked(self.skill, checked)
         # TODO : better visual feedback
 
@@ -48,17 +63,26 @@ class SkillController:
         self.view.setSelected(selected)
 
     def createParameterControllers(self):
+        """
+        Create every parameter for this skill
+        """
         for param in self.skill.parameters.values():
             controller = SkillParameterController(param)
             self.parameterControllers.append(controller)
             self.view.addParameter(controller.view)
 
     def reset(self):
+        """
+        Resets the skill and its parameters to a blank state.
+        """
         self.skill.reset()
         self.updateView()
 
 
 class SkillParameterController:
+    """
+    Controller for a generic behavior parameter. Creates a specific view depending in the parameters's type.
+    """
     def __init__(self, parameter):
         self.parameter = parameter
         self.view = SkillParameterView(parameter)
@@ -74,6 +98,9 @@ class SkillParameterController:
 
 
 class SkillLoader:
+    """
+    Loader for the skills. Creates every skills given a model, and connects its events.
+    """
     @staticmethod
     def loadSkills(modelData, registerSkill, onSelected, onChecked):
         for data in modelData["Skills"]:

@@ -3,6 +3,9 @@ from src.util import Event
 
 
 class PostStepStageController(StageController):
+    """
+    Controller for the Post Step function
+    """
     def __init__(self, view):
         super().__init__(view)
         self.onIncrementChanged = Event()

@@ -7,6 +7,9 @@ from src.views.arenaObjects.base import ArenaListView, MultiArenaObjectView, Bas
 
 
 class LightView(MultiArenaObjectView):
+    """
+    View for a light object
+    """
     def __init__(self, settingsContainer, *__args):
         super().__init__(settingsContainer, *__args)
         self.setZValue(1)

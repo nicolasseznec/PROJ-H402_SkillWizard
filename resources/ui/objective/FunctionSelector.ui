@@ -70,7 +70,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="Tabs">
      <property name="maximumSize">
       <size>
        <width>150</width>

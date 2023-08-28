@@ -4,6 +4,9 @@ from src.util import containsAny, Color
 
 
 class LightController(MultiArenaObjectController):
+    """
+    Controller for a light object
+    """
     def addToArena(self, arena):
         arena.lights.append(self.model)
 

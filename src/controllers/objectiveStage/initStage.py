@@ -3,6 +3,9 @@ from src.models.objectiveUtils.stage import Stage
 
 
 class InitStageController(StageController):
+    """
+    Controller for the Init function.
+    """
     def __init__(self, view):
         super().__init__(view)
 
@@ -28,6 +31,9 @@ class InitStageController(StageController):
 
 
 class InitVariableListController(StageListController):
+    """
+    controller for the Init variables list.
+    """
     def getNameFromIndex(self, index):
         return f"NewVariable_{index}"
 

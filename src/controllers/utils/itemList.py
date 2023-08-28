@@ -2,6 +2,9 @@ from src.util import Event
 
 
 class SingleItemListController:
+    """
+    Base Controller for a generic item list.
+    """
     def __init__(self, view):
         self.view = view
 

@@ -8,6 +8,9 @@ from src.views.objectiveStage.postStep import PostStepStageView
 
 
 class ObjectiveView(QGroupBox):
+    """
+    View for objective editor and the objective settings tab.
+    """
     def __init__(self, *__args):
         super().__init__(*__args)
         ResourceLoader.loadWidget("ObjectiveInspector.ui", self)
@@ -36,22 +39,34 @@ class ObjectiveView(QGroupBox):
         return self
 
     def updateView(self, objective):
+        """
+        Update the view contents with the new objective.
+        """
         self.updatePostStepFunction(objective.postStepStages)
         self.updatePostExpFunction(objective.postExpStages)
 
     # ---------- Events ------------
 
     def onEditObjective(self):
+        """
+        Called when the user clicks on edit objective.
+        """
         if self.blockSignal:
             return
         self.onObjectiveClicked()
 
     def onGenerateLoopFunctions(self):
+        """
+        Called when the user clicks on generatae loop functions
+        """
         if self.blockSignal:
             return
         self.onGenerateClicked()
 
     def onObjectiveNameChanged(self):
+        """
+        Called when the name of the objective has been changed
+        """
         if self.blockSignal:
             return
         self.onObjectiveSettingsChanged(name=self.settingsTab.ObjectiveName.text())
@@ -65,12 +80,25 @@ class ObjectiveView(QGroupBox):
         parent.setLayout(layout)
 
     def updatePostStepFunction(self, stages):
+        """
+        Sets the Post Step function text. See getFunctionFromStages
+        """
         self.PostStepFunction.setText(self.getFunctionFromStages(stages, "0"))
 
     def updatePostExpFunction(self, stages):
+        """
+        Sets the Post Experiment function text. See getFunctionFromStages
+        """
         self.PostExpFunction.setText(self.getFunctionFromStages(stages, "objective"))
 
     def getFunctionFromStages(self, stages, default=""):
+        """
+        Creates the text of the function expression from the list of stages.
+        For instance, if the list contains 3 stages but the second one does not count in the final function (increment
+        is set to false), the output will be : "stage0 + stage2"
+
+        If not stage should count, the output is set to default
+        """
         first = True
         function = ""
         for stage in stages:

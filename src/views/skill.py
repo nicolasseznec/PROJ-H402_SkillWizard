@@ -6,6 +6,9 @@ from src.util import ResourceLoader, Event
 
 
 class SkillView:
+    """
+    View for a skill inspector and the item in the side panel.
+    """
     def __init__(self):
         self.skillItem = ResourceLoader.loadWidget("Skillitem.ui")
         self.inspector = ResourceLoader.loadWidget("Skillinspector.ui")
@@ -25,6 +28,9 @@ class SkillView:
         self.skillItem.CheckBox.clicked.connect(self.checkBoxClicked)
 
     def updateView(self, skill):
+        """
+        Update the view's contents from a given skill.
+        """
         self.skillItem.LabelButton.setText(skill.name)
         self.inspector.SkillName.setText(skill.name)
         self.blockSignal = True
@@ -34,10 +40,16 @@ class SkillView:
     # ---------- Events ------------
 
     def labelClicked(self):
+        """
+        Called when the skill is selected in the side pnel
+        """
         if not self.blockSignal:
             self.onSelected()
 
     def checkBoxClicked(self, checked):
+        """
+        Called when the skill checkbox is clicked in the side pnel
+        """
         if not self.blockSignal:
             self.onChecked(checked)
 
@@ -77,6 +89,9 @@ class SkillView:
 
 
 class SkillParameterView(QGroupBox):
+    """
+    Base view for a generic skill parameter.
+    """
     def __init__(self, parameter):
         super().__init__()
         ResourceLoader.loadWidget("ParameterInspector.ui", self)

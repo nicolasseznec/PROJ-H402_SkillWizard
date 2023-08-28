@@ -122,6 +122,15 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="accelerated">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
         <property name="value">
          <double>66.000000000000000</double>
         </property>

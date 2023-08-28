@@ -3,6 +3,9 @@ from src.views.objectiveStage.stage import StageView, StageListView
 
 
 class InitStageView(StageView):
+    """
+    View for the Init function and the variable inspector.
+    """
     def loadWidget(self):
         ResourceLoader.loadWidget("objective/InitStage.ui", self)
         self.StageName = self.VariableName

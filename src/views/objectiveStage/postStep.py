@@ -3,6 +3,9 @@ from src.views.objectiveStage.stage import StageView, StageListView
 
 
 class PostStepStageView(StageView):
+    """
+    View for the Post Step function and its stage inspector.
+    """
     def __init__(self, container, *__args):
         super().__init__(container, *__args)
         self.IncrementCheckBox.clicked.connect(self.incrementClicked)

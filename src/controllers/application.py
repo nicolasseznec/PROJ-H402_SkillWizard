@@ -12,6 +12,11 @@ from src.util import getOpenFileName, getSaveFileName, displayError, displayInfo
 
 
 class ApplicationController(ApplicationViewListener):
+    """
+    Main application controller
+
+    Handles the actions for file creation, loading and saving.
+    """
     def __init__(self, view: ApplicationView):
         self.currentSavePath = None
         self.view = view
@@ -23,11 +28,17 @@ class ApplicationController(ApplicationViewListener):
     # ----------- Events --------------
 
     def onCreateMission(self):
+        """
+        Called when the user creates a new file. Creates a blank mission.
+        """
         self.missionController.createMission()
         self.openMissionView()
         self.currentSavePath = None
 
     def onOpenMission(self):
+        """
+        Called when the user laods a mission file. Loads the file data into a new mission.
+        """
         filePath = getOpenFileName("Open Mission", "Mission files (*.*)")
 
         if filePath:
@@ -41,6 +52,9 @@ class ApplicationController(ApplicationViewListener):
                     displayError("Invalid Mission File", "The mission could not be loaded properly.")
 
     def onSave(self):
+        """
+        Called when the user saves the current mission. If it is not assiciated to a file yet, it calls onSaveAs instead.
+        """
         if not self.canSave():
             return
 
@@ -50,6 +64,9 @@ class ApplicationController(ApplicationViewListener):
             self.saveMission(self.currentSavePath)
 
     def onSaveAs(self):
+        """
+        Called when the user wants to save the current mission to a specific file.
+        """
         if not self.canSave():
             return
 
@@ -60,18 +77,31 @@ class ApplicationController(ApplicationViewListener):
             self.currentSavePath = filePath
 
     def saveMission(self, path):
+        """
+        Save the current mission to the specified path.
+        """
         with open(path, 'w') as mission_file:
             json.dump(self.missionController.getMissionData(), mission_file, indent=2)
 
     def canSave(self):
+        """
+        Whether the current mission can be saved or not.
+        """
         return self.missionController.hasCurrentMission()
 
     def openMissionView(self):
+        """
+        Called when a mission is opened or created, to display its interface.
+        """
         self.view.displayMissionView()
 
     # -------------------------
 
     def onGenerateArgos(self):
+        """
+        Called when the user wants to generate the ARGoS file from the current mission.
+        Opens a file browser and saves the generated code to the desired files.
+        """
         if not self.missionController.hasCurrentMission():
             return
 
@@ -88,6 +118,10 @@ class ApplicationController(ApplicationViewListener):
                                "The generated file still needs to be completed by the user at places indicated by 'TO COMPLETE'")
 
     def onGenerateFunctions(self):
+        """
+        Called when the user wants to generate the Objective functions files from the current mission.
+        Opens a file browser and saves the generated code to the desired files.
+        """
         if not self.missionController.hasCurrentMission():
             return
 
@@ -108,14 +142,25 @@ class ApplicationController(ApplicationViewListener):
     # -------------------------
 
     def onEditArena(self):
+        """
+        Called when the user clicks on the "Edit Arena" action.
+        Selects the arena inspector in the main panel
+        """
         if not self.missionController.hasCurrentMission():
             return
         self.missionController.selectArena()
 
     def onEditObjective(self):
+        """
+        Called when the user clicks on the "Edit Objective" action.
+        Selects the objective inspector in the main panel
+        """
         if not self.missionController.hasCurrentMission():
             return
         self.missionController.selectObjective()
 
     def show(self):
+        """
+        Displays the application window.
+        """
         self.view.show()

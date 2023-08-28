@@ -3,6 +3,9 @@ from src.models.arenaObjects.obstacle import Obstacle
 
 
 class ObstacleController(MultiArenaObjectController):
+    """
+    Controller for an obstacle object
+    """
     def addToArena(self, arena):
         arena.obstacles.append(self.model)
 
