@@ -78,17 +78,7 @@ CVector3 ${objective_name}LoopFunction::GetRandomPosition() {
   Real a;
   Real b;
   Real temp;
-
-  a = m_pcRng->Uniform(CRange<Real>(0.0f, 1.0f));
-  b = m_pcRng->Uniform(CRange<Real>(0.0f, 1.0f));
-  // If b < a, swap them
-  if (b < a) {
-    temp = a;
-    a = b;
-    b = temp;
-  }
-  Real fPosX = b * m_fDistributionRadius * cos(2 * CRadians::PI.GetValue() * (a/b));
-  Real fPosY = b * m_fDistributionRadius * sin(2 * CRadians::PI.GetValue() * (a/b));
+  ${random_position_function}
   return CVector3(fPosX, fPosY, 0);
 }
 

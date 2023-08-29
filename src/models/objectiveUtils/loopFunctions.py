@@ -1,12 +1,13 @@
 """
 Loop Functions Generation utilities
 """
+from math import pi
 from os.path import splitext
 from collections import defaultdict
 from string import Template
 
 from src.models.objectiveUtils.stageParser import StageParser, CppTransformer
-from src.util import ResourceLoader, cleanIdentifier
+from src.util import ResourceLoader, cleanIdentifier, Shape, shape_scale_factor
 
 
 def generateLoopFunctions(mission, filePath, **options):
@@ -38,11 +39,13 @@ def generateLoopFunctions(mission, filePath, **options):
     functions.update(postExpFuncs)
     variables.update(postExpVars)
 
-    content["init_function"], content["private_variables"], initFuncs, initVars = generateInitCode(objective.initStages,                                                                 parser)
+    content["init_function"], content["private_variables"], initFuncs, initVars = generateInitCode(objective.initStages, parser)
     functions.update(initFuncs)
     variables.update(initVars)
 
     content["private_function_decl"], content["private_function_def"] = generateFunctionCode(functions, parser.getFunctions(), content["objective_name"])
+
+    content["random_position_function"] = generateRandomPositionFunctionCode(mission.arena)
 
     with open(cppPath, 'w') as file:
         file.write(cppTemplate.substitute(content))
@@ -92,8 +95,10 @@ def generateFunctionCode(functions, data, objective_name):
     #             functions.update(function["requires"])
     #
     for function in data.values():
-        declarations += "    " + function["declaration"]
-        definitions += "\n" + function["definition"]
+        if function["declaration"]:
+            declarations += "    " + function["declaration"]
+        if function["definition"]:
+            definitions += "\n" + function["definition"]
 
     definitions = Template(definitions).substitute({
         "objective_name": objective_name
@@ -184,3 +189,34 @@ def generateInitCode(stages, parser):
     initialisation = generateVariableInitialisation(variables, varData)
 
     return initialisation + code, variableHeader, functions, variables
+
+
+def generateRandomPositionFunctionCode(arena):
+    code = "a = m_pcRng->Uniform(CRange<Real>(0.0f, 1.0f));\n  b = m_pcRng->Uniform(CRange<Real>(0.0f, 1.0f));\n"
+    spawn = arena.spawn
+    shape = Shape[spawn.shape]
+    coord_scale = (arena.sideLength * shape_scale_factor[arena.shape]) / (240 * 100)
+
+    x0 = spawn.x * coord_scale
+    y0 = spawn.y * coord_scale
+
+    if shape == Shape.Circle:
+        code += "  if (b<a) {\n" \
+                "    temp = a;\n" \
+                "    a = b;\n" \
+                "    b = temp;\n" \
+                "  }\n"
+        radius = spawn.radius * coord_scale
+        code += f"  Real fPosX = b * {round(radius, 2)} * cos(2 * CRadians::PI.GetValue() * (a / b)) + {round(x0, 2)};\n"
+        code += f"  Real fPosY = b * {round(radius, 2)} * sin(2 * CRadians::PI.GetValue() * (a / b)) + {round(y0, 2)};\n"
+
+    elif shape == Shape.Rectangle:
+        width = spawn.width * coord_scale
+        height = spawn.height * coord_scale
+        angle = round(spawn.orientation * pi/180, 3)
+        code += f"  Real tempX = a * {round(width, 2)};\n"
+        code += f"  Real tempY = b * {round(height, 2)};\n"
+        code += f"  Real fPosX = cos({angle}) * tempX + sin({angle}) * tempY + {round(x0, 2)};\n"
+        code += f"  Real fPosY = -sin({angle}) * tempX + cos({angle}) * tempY + {round(y0, 2)};\n"
+
+    return code

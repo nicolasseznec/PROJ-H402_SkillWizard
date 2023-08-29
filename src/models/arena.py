@@ -13,7 +13,7 @@ class Arena:
             data = {}
 
         self.shape = ArenaShape[0]
-        self.sideLength = 1
+        self.sideLength = 100
         self.robotNumber = 1
         self.spawn = ArenaSpawn(data.get("spawn", None))
         self.obstacles = []

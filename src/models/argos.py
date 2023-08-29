@@ -7,7 +7,7 @@ from xml.dom import minidom
 import xml.etree.ElementTree as ET
 
 from src.models.mission import Mission, Arena
-from src.util import Shape
+from src.util import Shape, shape_scale_factor
 from src.models.arenaObjects.light import Light
 
 
@@ -151,7 +151,7 @@ def generateArena(arena: Arena, element):
     addComment(arenaElement, "Arena floor")
     addFloor(arenaElement, arena.floors)
 
-    coord_scale = arena.sideLength / 250
+    coord_scale = (arena.sideLength * shape_scale_factor[arena.shape]) / (240 * 100)
     addComment(arenaElement, "Arena lights")
     if not arena.lights:
         addLight(arenaElement, Light.dummyLight(), 0, 0)
@@ -201,5 +201,5 @@ def generateController(mission, element):
             sensors.append(controller_input[elem])
     ET.SubElement(sensors, "epuck_range_and_bearing", implementation="medium", medium="rab", data_size="4", nois_std_deviation="1.5", loss_probability="0.85", calibrated="true")
 
-    fsm_config = "TO_COMPLETE"  # TODO : FSM config
-    params = ET.SubElement(automode, "params", attrib={"readable": "false", "history": "false", "hist-folder": "./fsm_history/", "fsm-config": fsm_config})
+    fsm_config = "TO_COMPLETE"
+    ET.SubElement(automode, "params", attrib={"readable": "false", "history": "false", "hist-folder": "./fsm_history/", "fsm-config": fsm_config})

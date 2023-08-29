@@ -87,6 +87,15 @@ class Color(Enum):
     White = 9
 
 
+shape_scale_factor = {
+    Shape.Square: 0.5,
+    Shape.Hexagon: 0.866,
+    Shape.Octagon: 1.207,
+    Shape.Dodecagon: 1.866,
+    Shape.Circle: 1,
+}
+
+
 def createMessage(title, message):
     dialog = QMessageBox()
     dialog.setWindowTitle(title)
