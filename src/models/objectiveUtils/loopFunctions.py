@@ -8,14 +8,6 @@ from string import Template
 from src.models.objectiveUtils.stageParser import StageParser, CppTransformer
 from src.util import ResourceLoader, cleanIdentifier
 
-# Remaining Template tags
-# ----- H -------
-# private_variables
-
-# ----- CPP ------
-# init_function
-# reset_function
-
 
 def generateLoopFunctions(mission, filePath, **options):
     content = defaultdict(str)
@@ -172,6 +164,7 @@ def generateInitCode(stages, parser):
     functions = set()
     variables = set()
     variableHeader = ""
+    types = parser.getTypes()
 
     for variable in stages:
         varName = cleanIdentifier(variable.name)
@@ -182,7 +175,7 @@ def generateInitCode(stages, parser):
         stageNode = parser.parse(variable.code)
         stageNode.assignToStage(varName)
         code += stageNode.code
-        variableHeader += f"    {stageNode.valueType} {varName};\n"
+        variableHeader += f"    {types[stageNode.valueType]} {varName};\n"
 
         functions.update(stageNode.getFunctions())
         variables.update(stageNode.getVariables())

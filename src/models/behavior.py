@@ -44,6 +44,7 @@ class Behavior:
         }
 
     def reset(self):
+        self.active = False
         for param in self.parameters.values():
             param.reset()
 

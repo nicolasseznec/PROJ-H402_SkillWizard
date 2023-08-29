@@ -29,6 +29,7 @@ class Skill:
         self.behaviors.append(behavior_id)
 
     def reset(self):
+        self.active = False
         for param in self.parameters.values():
             param.reset()
 

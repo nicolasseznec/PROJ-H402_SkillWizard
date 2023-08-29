@@ -44,6 +44,7 @@ class ObjectiveView(QGroupBox):
         """
         self.updatePostStepFunction(objective.postStepStages)
         self.updatePostExpFunction(objective.postExpStages)
+        self.settingsTab.ObjectiveName.setText(objective.name)
 
     # ---------- Events ------------
 

@@ -25,6 +25,9 @@ class StageParser(Lark):
     def getVariables(self):
         return self.transformer.variables
 
+    def getTypes(self):
+        return self.transformer.types
+
 
 class CppTransformer(Transformer):
     tempVarIndex = 0

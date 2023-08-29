@@ -85,6 +85,7 @@ class ArenaTabController:
     """
     def __init__(self, index, *args, **kwargs):
         self.index = index
+        self.setTabFocus(False)
 
     def tabChanged(self, index):
         self.setTabFocus(self.index == index)

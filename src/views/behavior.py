@@ -26,7 +26,8 @@ class BehaviorView:
         """
         self.behaviorItem.LabelButton.setText(behavior.name)
         self.inspector.BehaviorName.setText(behavior.name)
-        self.inspector.description.setText(behavior.description)
+        if behavior.description:
+            self.inspector.description.setText(behavior.description)
         self.setActive(behavior.active)
 
     def connectButtons(self):

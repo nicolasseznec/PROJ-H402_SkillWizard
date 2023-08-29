@@ -154,8 +154,8 @@ class StageListController(SingleItemListController):
         Creates every stage from stages to load
         """
         self.view.clear()
-        for _ in stages:
-            self.view.addItem(self.getDefaultName())
+        for stage in stages:
+            self.view.addItem(stage.name)
 
 
 # --------------------------

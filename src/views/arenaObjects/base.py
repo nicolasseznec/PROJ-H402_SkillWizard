@@ -59,7 +59,7 @@ class BaseArenaObjectView(QGraphicsPathItem):
             radius=model.radius,
             orientation=model.orientation,
             width=model.width,
-            heigth=model.height,
+            height=model.height
         )
 
         self.shapeSetting.setCurrentIndex(ArenaObjectShape.index(self.shape))

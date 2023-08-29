@@ -11,6 +11,7 @@ class SpawnController(BaseArenaObjectController, ArenaTabController):
         self.model = ArenaSpawn()
         super().__init__(self.model, view)
         ArenaTabController.__init__(self, index)
+        self.setTabFocus(True)
 
     def setSpawn(self, spawn):
         self.model = spawn
