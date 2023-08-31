@@ -6,6 +6,16 @@ This is the repositery for the code of the Robot Skill Wizard project.
 
 ## Dependencies and Setup
 
+After clone the repository, create a python virtual environment using the following command :
+```commandline
+python -m venv env_name
+```
+
+And activate it using :
+```
+.\env_name\Scripts\activate
+```
+
 The required libraries, included in `requirement.txt`, are the following :
 
 - [PyQt 5](https://pypi.org/project/PyQt5/) Graphical Interface : `pip install PyQt5`
